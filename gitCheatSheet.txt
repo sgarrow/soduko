@@ -12,3 +12,6 @@ git commit .\gitCheatSheet.txt -m "initial commit"
 
 git diff:
 git diff
+
+commit changes to existing file:
+git commit .\gitCheatSheet.txt -m "added new cheat"
