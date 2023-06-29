@@ -1,0 +1,7 @@
+set remote repository on github:
+git remote set-url origin https://github.com/sgarrow/soduko.git
+
+push local repository to github:
+git push -u origin main
+
+
