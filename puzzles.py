@@ -76,33 +76,33 @@ puzWtf = [ [8, 0, 0, 0, 0, 0, 0, 0, 0],
 
 puzzlesDict = {
 
-    'puzzleEsy' : { 'puzzle' : puzEsy, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
-    'puzzleMed' : { 'puzzle' : puzMed, 'solution' : [], 'start0s' : 0, 'end0s' : 0, 
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
-    'puzzleHrd' : { 'puzzle' : puzHrd, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
-    'puzzleExp' : { 'puzzle' : puzExp, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
-    'puzzleEvl' : { 'puzzle' : puzEvl, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
+    #'puzzleEsy' : { 'puzzle' : puzEsy, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
+    #'puzzleMed' : { 'puzzle' : puzMed, 'solution' : [], 'start0s' : 0, 'end0s' : 0, 
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
+    #'puzzleHrd' : { 'puzzle' : puzHrd, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
+    #'puzzleExp' : { 'puzzle' : puzExp, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
+    #'puzzleEvl' : { 'puzzle' : puzEvl, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
     'puzzleEv2' : { 'puzzle' : puzEv2, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
     
-    'puzzleWtf' : { 'puzzle' : puzWtf, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0}
+    #'puzzleWtf' : { 'puzzle' : puzWtf, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0}
     }
 
 if __name__ == '__main__':

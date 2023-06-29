@@ -8,6 +8,16 @@ def printRowDupsLst(rowDups):
     return
 #############################################################################
 
+def printColDupsLst(colDups):
+    for cIdx,currListOfDupPairs in enumerate(colDups):
+        if currListOfDupPairs != []:
+            for idxOfCurrDupPair,currDupPairAndCoord in enumerate(currListOfDupPairs):
+                print( '  Col {} contains naked pair {} at rows {}.'.\
+                    format(cIdx,currDupPairAndCoord[0], currDupPairAndCoord[1]))
+    print()
+    return
+#############################################################################
+
 def prettyPrint3DArray(array):
     for row in array:
         str1 = ' '.join(str(e).ljust(19) for e in row)
