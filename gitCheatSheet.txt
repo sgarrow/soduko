@@ -4,4 +4,11 @@ git remote set-url origin https://github.com/sgarrow/soduko.git
 push local repository to github:
 git push -u origin main
 
+add new file to local repository:
+git add .\gitCheatSheet.txt
 
+commit new file to local repository:
+git commit .\gitCheatSheet.txt -m "initial commit"
+
+git diff:
+git diff
