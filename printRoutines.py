@@ -1,20 +1,24 @@
 def printRowDupsLst(rowDups):
+    if rowDups == [[],[],[],[],[],[],[],[],[]]:
+        print( '  No row naked pairs found') 
+        return
     for rIdx,currListOfDupPairs in enumerate(rowDups):
         if currListOfDupPairs != []:
             for idxOfCurrDupPair,currDupPairAndCoord in enumerate(currListOfDupPairs):
                 print( '  Row {} contains naked pair {} at cols {}.'.\
                     format(rIdx,currDupPairAndCoord[0], currDupPairAndCoord[1]))
-    print()
     return
 #############################################################################
 
 def printColDupsLst(colDups):
+    if colDups == [[],[],[],[],[],[],[],[],[]]:
+        print( '  No col naked pairs found') 
+        return
     for cIdx,currListOfDupPairs in enumerate(colDups):
         if currListOfDupPairs != []:
             for idxOfCurrDupPair,currDupPairAndCoord in enumerate(currListOfDupPairs):
                 print( '  Col {} contains naked pair {} at rows {}.'.\
                     format(cIdx,currDupPairAndCoord[0], currDupPairAndCoord[1]))
-    print()
     return
 #############################################################################
 
