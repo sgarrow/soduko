@@ -22,6 +22,18 @@ def printColDupsLst(colDups):
     return
 #############################################################################
 
+def printSqrDupsLst(sqrDups):
+    if sqrDups == [[],[],[],[],[],[],[],[],[]]:
+        print( '  No sqr naked pairs found') 
+        return
+    for sIdx,currListOfDupPairs in enumerate(sqrDups):
+        if currListOfDupPairs != []:
+            for currDupPair in currListOfDupPairs:
+                print( '  Sqr {} contains naked pair {}.'.\
+                    format(sIdx,currDupPair))
+    return
+#############################################################################
+
 def prettyPrint3DArray(array):
     for row in array:
         str1 = ' '.join(str(e).ljust(19) for e in row)

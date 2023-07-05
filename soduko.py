@@ -79,51 +79,26 @@ def buildSqrDupsLst(canidates):
         rowsInSq = [ x+squareNum[0]*3 for x in [0,1,2] ]
         colsInSq = [ x+squareNum[1]*3 for x in [0,1,2] ]
 
-        coordsInSq  = [ [r,c] for r in rowsInSq for c in colsInSq ]
-        canidatesSq = [ canidates[x[0]][x[1]] for x in coordsInSq ] 
-        canidatesLen2 = [ x for x in canidatesSq if x != 0 and len(x)==2]
-        canLen2Appear2 = [ x for x in canidatesLen2 if canidatesLen2.count(x) == 2 ]
-        cordLen2Appear2 = [ coordsInSq[ii] for ii,x in  enumerate(canidatesSq) if x in canLen2Appear2 ]
-            
+        coordsInSq     = [ [r,c] for r in rowsInSq for c in colsInSq ]
+        candatesSq     = [ canidates[x[0]][x[1]] for x in coordsInSq ] 
+        candatesLen2   = [ x for x in candatesSq if x != 0 and len(x)==2]
+        canLen2Appear2 = [ x for x in candatesLen2 if candatesLen2.count(x) == 2 ]
+        canL2A2NoDup   = []
+        [canL2A2NoDup.append(x) for x in canLen2Appear2 if x not in canL2A2NoDup ]
 
-        print('*******')
-        print('*******', 'coordsInSq      = ', coordsInSq      )
-        print('*******', 'canidatesSq     = ', canidatesSq     )
-        print('*******', 'canidatesLen2   = ', canidatesLen2   )
-        print('*******', 'canLen2Appear2  = ', canLen2Appear2  )
-        print('*******', 'cordLen2Appear2 = ', cordLen2Appear2 )
-        print('*******')
+        #print('*******')
+        #print('*******', 'coordsInSq    = ', coordsInSq    )
+        #print('*******', 'candatesSq    = ', candatesSq    )
+        #print('*******', 'candatesLen2  = ', candatesLen2  )
+        #print('*******', 'canLen2Appear2= ', canLen2Appear2)
+        #print('*******', 'canL2A2NoDup  = ', canL2A2NoDup  )
+        #print('*******')
 
-        if len(canLen2Appear2) == 4: exit()
+        sqrDups.append(canL2A2NoDup)
+        #print('*******', 'sqrDups  = ', sqrDups )
+        #if len(canL2A2NoDup) == 2: exit()
 
-
-    #    if len(binsHeightOne) > 0:
-    #        valOfBinHeight1 = binsHeightOne[0]
-    #        subListContainingThatVal = \
-    #            [ x for x in canidatesSq if x != 0 and valOfBinHeight1 in x]
-    #        idxOfSubLst =  canidatesSq.index(subListContainingThatVal[0])
-    #        r = rowsInSq[(idxOfSubLst // 3)]
-    #        c = colsInSq[(idxOfSubLst %  3)]
-    #
-    #        print('  Placing {} at {},{}'.format(valOfBinHeight1, r, c ))
-    #        solution[r][c] = valOfBinHeight1
-    #        numFilled += 1
-    #
-    #
-    #for rIdx,row in enumerate(canidates):
-    #    dup1 = [ el for ii, el in enumerate(row) if el in row[:ii] ]
-    #    dupNo0 = [ x for x in dup1 if x !=0 ]
-    #    dupNo0Len2 = [x for x in dupNo0 if len(x)==2]
-    #    rowDups.append(dupNo0Len2)
-    #
-    #for rIdx,currListOfDupPairs in enumerate(rowDups):
-    #    if currListOfDupPairs != []:
-    #        for idxOfCurrDupPair, currDupPair in enumerate(currListOfDupPairs):
-    #            colsOfThisDupPair = \
-    #            [col for col,el in enumerate(canidates[rIdx]) if el==currDupPair]
-    #            rowDups[rIdx][idxOfCurrDupPair] = \
-    #            [currDupPair,colsOfThisDupPair]
-    #return rowDups
+    return sqrDups
 #############################################################################
 
 def pruneNakedPairs(canidates):
@@ -132,13 +107,12 @@ def pruneNakedPairs(canidates):
     # Print canidates before pruning wrt naked pairs.
     #print('before pruning')
     #pr.prettyPrint3DArray(canidates)
-    buildSqrDupsLst(canidates)
 
     ####################################################################
     # Make a list containing info on naked pairs in each row and col.
     print('  Finding naked canidate pairs in rows and cols.')
     rowDups = buildRowDupsLst(canidates)
-    pr.printRowDupsLst(rowDups)
+    #pr.printRowDupsLst(rowDups)
     #print()
     numPruned = 0
     print('\n  Pruning wrt rows')
@@ -157,7 +131,7 @@ def pruneNakedPairs(canidates):
                             except:
                                 pass
     print('  numPruned = {}.\n'.format(numPruned))
-    pr.prettyPrint3DArray(canidates)
+    #pr.prettyPrint3DArray(canidates)
 
     print('  Pruning wrt squares (based on row dups)')
     for rIdx,currListOfDupPairs in enumerate(rowDups):
@@ -190,11 +164,12 @@ def pruneNakedPairs(canidates):
                                                 pass
 
     print('  numPruned = {}.\n'.format(numPruned))
-    pr.prettyPrint3DArray(canidates)
+    #pr.prettyPrint3DArray(canidates)
     ####################################################################
 
     colDups = buildColDupsLst(canidates)
-    pr.printColDupsLst(colDups)
+    #pr.printColDupsLst(colDups)
+    #print()
 
     print('  Pruning wrt cols')
     for cIdx,currListOfDupPairs in enumerate(colDups):
@@ -212,7 +187,7 @@ def pruneNakedPairs(canidates):
                             except:
                                 pass
     print('  numPruned = {}.\n'.format(numPruned))
-    pr.prettyPrint3DArray(canidates)
+    #pr.prettyPrint3DArray(canidates)
 
     print('  Pruning wrt squares (based on col dups)')
     for cIdx,currListOfDupPairs in enumerate(colDups):
@@ -245,13 +220,35 @@ def pruneNakedPairs(canidates):
                                                 pass
 
     print('  numPruned = {}.\n'.format(numPruned))
-    pr.prettyPrint3DArray(canidates)
+    #pr.prettyPrint3DArray(canidates)
     ####################################################################
-    colDups = buildColDupsLst(canidates)
-    pr.printColDupsLst(colDups)
 
-    #exit()
-    return(canidates)
+    sqrDups = buildSqrDupsLst(canidates)
+    pr.printSqrDupsLst(sqrDups)
+    print()
+    print('  Pruning wrt squares.' )
+
+    squareCoords = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]] 
+
+    for ii,squareCoord in enumerate(squareCoords):
+        rowsInSq = [ x+squareCoord[0]*3 for x in [0,1,2] ]
+        colsInSq = [ x+squareCoord[1]*3 for x in [0,1,2] ]
+
+        for r in rowsInSq:
+            for c in colsInSq:
+                for currDup in sqrDups[ii]:
+                    if canidates[r][c] != currDup:
+                        for val in currDup:
+                            try:
+                                canidates[r][c].remove(val)
+                                print('    Removing {} from [{},{}]'.format(val, r, c ))
+                                numPruned += 1
+                            except:
+                                pass
+
+    print('  numPruned = {}.\n'.format(numPruned))
+    pr.prettyPrint3DArray(canidates)
+    return(numPruned, canidates)
 #############################################################################
 
 def updateCanidatesList(solution,canidates):
@@ -329,9 +326,11 @@ if __name__ == '__main__':
                     if sum(x.count(0) for x in solution)==0: break
                     canidates = ir.initCanidates()
                     canidates = updateCanidatesList(solution, canidates)
-                    canidates = pruneNakedPairs(canidates)
-                    #canidates = pruneNakedPairs(canidates)
-                    #canidates = pruneNakedPairs(canidates)
+
+                    numPruned = 1
+                    while numPruned:
+                       numPruned, canidates = pruneNakedPairs(canidates)
+
                     numFilled, solution = dicOfFuncs[k]['func']( solution, canidates )
                     dicOfFuncs[k]['calls']   += 1
                     dicOfFuncs[k]['replace'] += numFilled
