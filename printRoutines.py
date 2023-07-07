@@ -36,7 +36,7 @@ def printSqrDupsLst(sqrDups):
 
 def prettyPrint3DArray(array):
     for row in array:
-        str1 = ' '.join(str(e).ljust(19) for e in row)
+        str1 = ' '.join(str(e).ljust(21) for e in row)
         print('  ',str1)
     print()
     return
