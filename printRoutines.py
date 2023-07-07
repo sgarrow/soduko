@@ -1,8 +1,8 @@
-def printRowDupsLst(rowDups):
-    if rowDups == [[],[],[],[],[],[],[],[],[]]:
+def printRowNakedPairsLst(rowNakedPairsLst):
+    if rowNakedPairsLst == [[],[],[],[],[],[],[],[],[]]:
         print( '  No row naked pairs found') 
         return
-    for rIdx,currListOfDupPairs in enumerate(rowDups):
+    for rIdx,currListOfDupPairs in enumerate(rowNakedPairsLst):
         if currListOfDupPairs != []:
             for idxOfCurrDupPair,currDupPairAndCoord in enumerate(currListOfDupPairs):
                 print( '  Row {} contains naked pair {} at cols {}.'.\
@@ -10,11 +10,11 @@ def printRowDupsLst(rowDups):
     return
 #############################################################################
 
-def printColDupsLst(colDups):
-    if colDups == [[],[],[],[],[],[],[],[],[]]:
+def printColNakedPairsLst(colNakedPairsLst):
+    if colNakedPairsLst == [[],[],[],[],[],[],[],[],[]]:
         print( '  No col naked pairs found') 
         return
-    for cIdx,currListOfDupPairs in enumerate(colDups):
+    for cIdx,currListOfDupPairs in enumerate(colNakedPairsLst):
         if currListOfDupPairs != []:
             for idxOfCurrDupPair,currDupPairAndCoord in enumerate(currListOfDupPairs):
                 print( '  Col {} contains naked pair {} at rows {}.'.\
@@ -22,11 +22,11 @@ def printColDupsLst(colDups):
     return
 #############################################################################
 
-def printSqrDupsLst(sqrDups):
-    if sqrDups == [[],[],[],[],[],[],[],[],[]]:
+def printSqrNakedPairsLst(sqrNakedPairsLst):
+    if sqrNakedPairsLst == [[],[],[],[],[],[],[],[],[]]:
         print( '  No sqr naked pairs found') 
         return
-    for sIdx,currListOfDupPairs in enumerate(sqrDups):
+    for sIdx,currListOfDupPairs in enumerate(sqrNakedPairsLst):
         if currListOfDupPairs != []:
             for currDupPair in currListOfDupPairs:
                 print( '  Sqr {} contains naked pair {}.'.\
