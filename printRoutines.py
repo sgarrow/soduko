@@ -1,3 +1,6 @@
+import pprint        as pp
+#############################################################################
+
 def printRowNakedPairsLst(rowNakedPairsLst):
     if rowNakedPairsLst == [[],[],[],[],[],[],[],[],[]]:
         print( '  No row naked pairs found') 
@@ -32,6 +35,13 @@ def printSqrNakedPairsLst(sqrNakedPairsLst):
                 print( '  Sqr {} contains naked pair {}.'.\
                     format(sIdx,currDupPair))
     return
+#############################################################################
+
+def printSqrNakedTripletsDict(sqrNakedTripleDict):
+    if sqrNakedTripleDict == {0:[],1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[]}:
+        print( '  No sqr naked triplets found') 
+    else:
+        print(sqrNakedTripleDict)
 #############################################################################
 
 def prettyPrint3DArray(array):

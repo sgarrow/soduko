@@ -60,7 +60,7 @@ puzEv2 = [ [1, 0, 6, 0, 0, 0, 0, 3, 0],
            [0, 8, 0, 0, 5, 4, 1, 0, 0], 
            [2, 0, 0, 0, 0, 0, 0, 0, 8] ]
 
-#evil3  
+#evil3                 #6
 puzEv3 = [ [1, 0, 0, 0, 0, 0, 0, 0, 0], 
            [0, 0, 0, 0, 0, 8, 6, 0, 3], 
            [0, 4, 0, 0, 5, 0, 0, 1, 0], 
@@ -70,6 +70,18 @@ puzEv3 = [ [1, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 2], 
            [4, 0, 0, 0, 7, 5, 0, 0, 0], 
            [2, 0, 3, 0, 4, 0, 0, 8, 5] ]
+
+
+#evil3a 41 zerow        #6
+puzEv3a = [ [1, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 9, 8, 6, 4, 3],
+            [3, 4, 0, 0, 5, 0, 0, 1, 0],
+            [8, 5, 1, 3, 2, 6, 0, 0, 4],
+            [9, 3, 0, 5, 1, 0, 8, 2, 6],
+            [0, 0, 0, 0, 8, 0, 0, 0, 1],
+            [0, 0, 0, 8, 0, 0, 4, 0, 2],
+            [4, 0, 0, 2, 7, 5, 0, 0, 9],
+            [2, 0, 3, 0, 4, 0, 0, 8, 5] ]
 
 #hardest ever                              # 0's = 60
 puzWtf = [ [8, 0, 0, 0, 0, 0, 0, 0, 0], 
@@ -87,35 +99,38 @@ puzWtf = [ [8, 0, 0, 0, 0, 0, 0, 0, 0],
 
 puzzlesDict = {
 
-    'puzzleEsy' : { 'puzzle' : puzEsy, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
-    'puzzleMed' : { 'puzzle' : puzMed, 'solution' : [], 'start0s' : 0, 'end0s' : 0, 
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
-    'puzzleHrd' : { 'puzzle' : puzHrd, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
-    'puzzleExp' : { 'puzzle' : puzExp, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
-    'puzzleEvl' : { 'puzzle' : puzEvl, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
-    'puzzleEv2' : { 'puzzle' : puzEv2, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
-    'puzzleWtf' : { 'puzzle' : puzWtf, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-
-    'puzzleEv3' : { 'puzzle' : puzEv3, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #'puzzleEsy' : { 'puzzle' : puzEsy, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
+    #'puzzleMed' : { 'puzzle' : puzMed, 'solution' : [], 'start0s' : 0, 'end0s' : 0, 
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
+    #'puzzleHrd' : { 'puzzle' : puzHrd, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
+    #'puzzleExp' : { 'puzzle' : puzExp, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
+    #'puzzleEvl' : { 'puzzle' : puzEvl, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
+    #'puzzleEv2' : { 'puzzle' : puzEv2, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
+    #'puzzleWtf' : { 'puzzle' : puzWtf, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
+    #'puzzleEv3' : { 'puzzle' : puzEv3, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    'puzzleEv3a': { 'puzzle' : puzEv3a,'solution' : [], 'start0s' : 0, 'end0s' : 0,
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
     }
