@@ -112,14 +112,14 @@ def pruneNakedTriples(canidates):
 
     print('  Finding naked triplets in rows')
     rowNakedTripleDict = buildRowNakedTripleDict(canidates)
-    pr.prettyPrint3DArray(canidates)
+    #pr.prettyPrint3DArray(canidates)
     pp.pprint(rowNakedTripleDict)
     for rIdx,row in enumerate(canidates): # rIdx will be index into dict as well as the canidates row number
         for cIdx,el in enumerate(row):
             try:
                 intersection = set.intersection(set(el), set(rowNakedTripleDict[rIdx][0])) # [0] means assuming only 1 naked triplet exists in theis square
                 valsOtherThanTriplet = set(el) - intersection
-                print('IIIIIIII', rIdx, cIdx, intersection, valsOtherThanTriplet)
+                #print('IIIIIIII', rIdx, cIdx, intersection, valsOtherThanTriplet)
                 if len(valsOtherThanTriplet) > 0:
                     for valToRemove in rowNakedTripleDict[rIdx][0]:
                         try:
@@ -132,38 +132,9 @@ def pruneNakedTriples(canidates):
                 pass
     print()
 
-    pr.prettyPrint3DArray(canidates)
+    #pr.prettyPrint3DArray(canidates)
     print('  numPruned = {}.\n'.format(numPruned))
     print()
-
-
-    # If you have a naked triple on a row then in the three cols where those 
-    # triples are: remove sll the triple values.
-
-    print('##########################################################################################')
-    print('\n\nDEBUG START\n')
-
-    pr.prettyPrint3DArray(canidates)
-    pp.pprint(rowNakedTripleDict)
-    for rIdx,row in enumerate(canidates): # rIdx will be index into dict as well as the canidates row number
-        for cIdx,el in enumerate(row):
-            try:
-                intersection = set.intersection(set(el), set(rowNakedTripleDict[rIdx][0])) # [0] means assuming only 1 naked triplet exists in theis square
-            except:
-                pass
-            else: # there was no exception
-                print('IIIIIIII', rIdx, cIdx, intersection )
-                for val in list(intersection):
-                    #canidates[rIdx][cIdx].remove(val)
-                    print('   Removed {} from {},{}'.format(val,rIdx,cIdx))
-                    numPruned += 1
-
-
-    pr.prettyPrint3DArray(canidates)
-    print('\nDEBUG END\n\n')
-    print('##########################################################################################')
-
-
     ####################################################################
 
     print('  Finding naked triplets in cols')

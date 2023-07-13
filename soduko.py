@@ -4,6 +4,7 @@ import printRoutines as pr
 import initRoutines  as ir
 import fillRoutines  as fr
 import nakedPairs    as np
+import hiddenPairs   as hp
 import nakedTriples  as nt
 #############################################################################
 
@@ -85,9 +86,11 @@ if __name__ == '__main__':
 
                     numPruned1 = 1
                     numPruned2 = 1
+                    numPruned3 = 1
                     while numPruned1 or numPruned2:
                        numPruned1, canidates = np.pruneNakedPairs(canidates)
                        numPruned2, canidates = nt.pruneNakedTriples(canidates)
+                       #numPruned3, canidates = nt.pruneHiddenPairs(canidates)
 
                     numFilled, solution = dicOfFuncs[k]['func']( solution, canidates )
                     dicOfFuncs[k]['calls']   += 1
@@ -108,7 +111,10 @@ if __name__ == '__main__':
         print('**********************************')
     # end for loop on all puzzles
 
-    #pr.printResults(puzzlesDict, 'all')
+    pr.printResults(puzzlesDict, 'all')
     pr.printResults(puzzlesDict, 'summary')
+
+    pr.prettyPrint3DArray(canidates)
+    hp.buildRowHiddenPairLst(canidates)
     pr.prettyPrint3DArray(canidates)
 
