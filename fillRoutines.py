@@ -24,11 +24,13 @@ def fillCellsVia_1_Canidate(solution, canidates):
     for rIdx,row in enumerate(solution):
         for cIdx,el in enumerate(row):
             if canidates[rIdx][cIdx] != 0 and len(canidates[rIdx][cIdx]) == 1:
-                print('  Placing {} at {},{}'.\
-                    format(canidates[rIdx][cIdx][0], rIdx,cIdx ))
-                solution[rIdx][cIdx] = canidates[rIdx][cIdx][0]
-                numFilled += 1
-    print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
+                if solution[rIdx][cIdx] == 0:
+                    print('  Placing {} at {},{}'.\
+                        format(canidates[rIdx][cIdx][0], rIdx,cIdx ))
+                    solution[rIdx][cIdx] = canidates[rIdx][cIdx][0]
+                    numFilled += 1
+    if numFilled != 0:
+        print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
     return numFilled,solution
 #############################################################################
 
@@ -47,10 +49,12 @@ def fillCellsViaRowHistAnal(solution, canidates):
             subListContainingThatVal = \
                 [ x for x in row if x != 0 and valOfBinHeight1 in x]
             idxOfSubLst =  row.index(subListContainingThatVal[0])
-            print('  Placing {} at {},{}'.format(valOfBinHeight1,r,idxOfSubLst))
-            solution[r][idxOfSubLst] = valOfBinHeight1
-            numFilled += 1
-    print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
+            if solution[r][idxOfSubLst] == 0:
+                print('  Placing {} at {},{}'.format(valOfBinHeight1,r,idxOfSubLst))
+                solution[r][idxOfSubLst] = valOfBinHeight1
+                numFilled += 1
+    if numFilled != 0:
+        print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
     return numFilled,solution
 #############################################################################
 
@@ -70,10 +74,12 @@ def fillCellsViaColHistAnal(solution, canidates):
             subListContainingThatVal = \
                 [ x for x in col if x != 0 and valOfBinHeight1 in x]
             idxOfSubLst =  col.index(subListContainingThatVal[0])
-            print('  Placing {} at {},{}'.format(valOfBinHeight1,idxOfSubLst,c))
-            solution[idxOfSubLst][c] = valOfBinHeight1
-            numFilled += 1
-    print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
+            if solution[idxOfSubLst][c] == 0:
+                print('  Placing {} at {},{}'.format(valOfBinHeight1,idxOfSubLst,c))
+                solution[idxOfSubLst][c] = valOfBinHeight1
+                numFilled += 1
+    if numFilled != 0:
+        print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
     return numFilled,solution
 #############################################################################
 
@@ -101,10 +107,12 @@ def fillCellsViaSqrHistAnal(solution, canidates):
             r = rowsInSq[(idxOfSubLst // 3)]
             c = colsInSq[(idxOfSubLst %  3)]
 
-            print('  Placing {} at {},{}'.format(valOfBinHeight1, r, c ))
-            solution[r][c] = valOfBinHeight1
-            numFilled += 1
-    print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
+            if solution[r][c] == 0:
+                print('  Placing {} at {},{}'.format(valOfBinHeight1, r, c ))
+                solution[r][c] = valOfBinHeight1
+                numFilled += 1
+    if numFilled != 0:
+        print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
     return numFilled,solution
 #############################################################################
 

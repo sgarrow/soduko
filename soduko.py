@@ -60,6 +60,34 @@ def updatePuzzlesDictCntrs(puzzlesDict,k,  dicOfFuncs):
     return puzzlesDict
 #############################################################################
 
+def pruneCanidates(canidates):
+    numPruned1 = 0
+    numPruned2 = 1
+    numPruned3 = 1
+    while numPruned1 or numPruned2 or numPruned3:
+       #numPruned1, canidates = np.pruneNakedPairs(canidates)
+       numPruned2, canidates = nt.pruneNakedTriples(canidates)
+       numPruned3, canidates = hp.pruneHiddenPairs(canidates)
+    return numPruned1+numPruned2+numPruned3, canidates
+#############################################################################
+
+def fillSolution(solution, canidates, dicOfFuncs ):
+    totalNumFilled = 0
+
+    while(1):
+        numFilledThisPass = 0
+        for k in dicOfFuncs:
+            numFilled, solution = dicOfFuncs[k]['func']( solution, canidates )
+            totalNumFilled    += numFilled
+            numFilledThisPass += numFilled
+            dicOfFuncs[k]['calls']   += 1
+            dicOfFuncs[k]['replace'] += numFilled
+        if numFilledThisPass == 0:
+            break
+
+    return totalNumFilled, solution, dicOfFuncs
+#############################################################################
+
 if __name__ == '__main__':
     from puzzles import puzzlesDict
 
@@ -76,28 +104,18 @@ if __name__ == '__main__':
         dicOfFuncs = ir.initDicOfFuncsCntrs(dicOfFuncs)
         while (1):
             numZerosBeforeAllFill = sum(x.count(0) for x in solution)
-            for k in dicOfFuncs:
+            if sum(x.count(0) for x in solution)==0: break
+            numFilled = 1
+            while (numFilled):
+
                 if sum(x.count(0) for x in solution)==0: break
-                numFilled = 1
-                while (numFilled):
-                    if sum(x.count(0) for x in solution)==0: break
-                    canidates = ir.initCanidates()
-                    canidates = updateCanidatesList(solution, canidates)
 
-                    numPruned1 = 1
-                    numPruned2 = 1
-                    numPruned3 = 1
-                    while numPruned1 or numPruned2:
-                       numPruned1, canidates = np.pruneNakedPairs(canidates)
-                       numPruned2, canidates = nt.pruneNakedTriples(canidates)
-                       #numPruned3, canidates = nt.pruneHiddenPairs(canidates)
+                canidates = ir.initCanidates()
+                canidates = updateCanidatesList(solution, canidates )
 
-                    numFilled, solution = dicOfFuncs[k]['func']( solution, canidates )
-                    dicOfFuncs[k]['calls']   += 1
-                    dicOfFuncs[k]['replace'] += numFilled
-                    if  numFilled == 0: break
-                # end while loop on a single fill function
-            # end for loop on all fill functions
+                numPruned, canidates = pruneCanidates(canidates)
+                numFilled, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs )
+                 
             numZerosAfterAllFill = sum(x.count(0) for x in solution)
             if  numZerosAfterAllFill == numZerosBeforeAllFill or \
                 numZerosAfterAllFill == 0: 
@@ -114,7 +132,21 @@ if __name__ == '__main__':
     pr.printResults(puzzlesDict, 'all')
     pr.printResults(puzzlesDict, 'summary')
 
-    pr.prettyPrint3DArray(canidates)
-    hp.buildRowHiddenPairLst(canidates)
-    pr.prettyPrint3DArray(canidates)
-
+    #for key in puzzlesDict:
+    #    print()
+    #    print(key)
+    #    ans = puzzlesDict[key]['solution']
+    #    pp.pprint(ans)
+    #
+    #    print('row sums = ', end = '')
+    #    for row in ans:
+    #        print(sum(row), ' ', end = '')
+    #    print()
+    #
+    #    Xpos = [[row[i] for row in ans] for i in range(len(ans[0]))]
+    #    print('col sums = ', end = '')
+    #    for row in Xpos:
+    #        print(sum(row), ' ', end = '')
+    #    print()
+    #
+    #

@@ -37,11 +37,14 @@ def printSqrNakedPairsLst(sqrNakedPairsLst):
     return
 #############################################################################
 
-def printSqrNakedTripletsDict(sqrNakedTripleDict):
-    if sqrNakedTripleDict == {0:[],1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[]}:
-        print( '  No sqr naked triplets found') 
-    else:
-        print(sqrNakedTripleDict)
+def printRowHiddenPairsDict(rhpd):
+    if rhpd == {}:
+        print( '   No row hidden pairs found') 
+        return
+    for k,v in rhpd.items():
+        print('   Row {} has hidden pair {} in cols {}'.\
+            format(rhpd[k]['row'], rhpd[k]['vals'], rhpd[k]['cols']))
+    return
 #############################################################################
 
 def prettyPrint3DArray(array):
