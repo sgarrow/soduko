@@ -1,6 +1,17 @@
 import pprint        as pp
 import fillRoutines  as fr
 import printRoutines as pr
+#############################################################################
+
+def printRowHiddenPairsDict(rhpd):
+    if rhpd == {}:
+        print( '   No row hidden pairs found') 
+        return
+    for k,v in rhpd.items():
+        print('   Row {} has hidden pair {} in cols {}'.\
+            format(rhpd[k]['row'], rhpd[k]['vals'], rhpd[k]['cols']))
+    return
+#############################################################################
 
 def buildRowHiddenPairDict(canidates):
 
@@ -24,7 +35,7 @@ def buildRowHiddenPairDict(canidates):
     #pp.pprint(lstOfDict)
 
     itemNum = 0
-    nakedOrHiddenPairsDict = {}
+    hiddenPairsDict = {}
     for rIdx,aDict in enumerate(lstOfDict):
         aDictValues = list(aDict.values()) # values are the cols
         #print(  'aDict.values()', aDict.values())
@@ -32,26 +43,26 @@ def buildRowHiddenPairDict(canidates):
             theCount = aDictValues.count(val)
             if theCount == 2:
                 keysOfThisVal = [ k for k,v in aDict.items() if v == val ] # keys are the vals
-                nakedOrHiddenPairsDict[itemNum] = { 'row' : rIdx, 'cols' : val, 'vals' : keysOfThisVal }
+                hiddenPairsDict[itemNum] = { 'row' : rIdx, 'cols' : val, 'vals' : keysOfThisVal }
                 itemNum += 1
-    #print('\nnakedOrHiddenPairsDict')
-    #pp.pprint(nakedOrHiddenPairsDict)
+    #print('\nhiddenPairsDict')
+    #pp.pprint(hiddenPairsDict)
 
     itemNum = 0
-    nakedOrHiddenPairsDict2 = {}
-    for key,value in nakedOrHiddenPairsDict.items():
-        if value not in nakedOrHiddenPairsDict2.values():
-            nakedOrHiddenPairsDict2[itemNum] = value
+    hiddenPairsDict2 = {}
+    for key,value in hiddenPairsDict.items():
+        if value not in hiddenPairsDict2.values():
+            hiddenPairsDict2[itemNum] = value
             itemNum += 1
-    #print('\nnakedOrHiddenPairsDict2')
-    #pp.pprint(nakedOrHiddenPairsDict2)
+    #print('\nhiddenPairsDict2')
+    #pp.pprint(hiddenPairsDict2)
 
-    return(nakedOrHiddenPairsDict2)
+    return(hiddenPairsDict2)
 #############################################################################
 
 def pruneHiddenPairs(canidates):
 
-    print('\nPruning hidden pairs')
+    print('\nPrunng hidden pairs ************************************ Start')
     #pr.prettyPrint3DArray(canidates)
     numPruned = 0
 
@@ -59,7 +70,7 @@ def pruneHiddenPairs(canidates):
     # Make a dict containing info on hidden pairs in each row.
     print('  Finding hidden pairs in rows')
     rhpd = buildRowHiddenPairDict(canidates)
-    pr.printRowHiddenPairsDict(rhpd)
+    printRowHiddenPairsDict(rhpd)
 
     for k,v in rhpd.items():
         rIdx     = rhpd[k]['row']
@@ -73,7 +84,7 @@ def pruneHiddenPairs(canidates):
                         canidates[rIdx][cIdx].remove(ii)
                         print('    Removed {} from ({},{})'.format(ii, rIdx,cIdx))
                         numPruned += 1
-    print()
+    print('Pruning hidden pairs ************************************* End')
 
     return numPruned, canidates
 

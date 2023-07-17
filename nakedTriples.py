@@ -77,7 +77,7 @@ def buildColNakedTripleDict(canidates):
 
 def pruneNakedTriples(canidates):
 
-    print('\nPruning naked triplets - Start - *****************************')
+    print('\nPruning naked triplets ********************************* Start')
     #pr.prettyPrint3DArray(canidates)
     numPruned = 0
     ####################################################################
@@ -166,7 +166,7 @@ def pruneNakedTriples(canidates):
         #pr.prettyPrint3DArray(canidates)
         print('  numPruned = {}.\n'.format(numPruned))
     ####################################################################
-    print('Pruning naked triplets - End   - *****************************')
+    print('Pruning naked triplets *********************************** End')
     return(numPruned, canidates)
 #############################################################################
 

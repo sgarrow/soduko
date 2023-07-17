@@ -19,23 +19,23 @@ def genHistogram(inLst):
 #############################################################################
 
 def fillCellsVia_1_Canidate(solution, canidates):
-    print('\nFilling solution cells that have only 1 item in canidate list.')
+    print('  Filling solution cells that have only 1 canidate')
     numFilled = 0
     for rIdx,row in enumerate(solution):
         for cIdx,el in enumerate(row):
             if canidates[rIdx][cIdx] != 0 and len(canidates[rIdx][cIdx]) == 1:
                 if solution[rIdx][cIdx] == 0:
-                    print('  Placing {} at {},{}'.\
+                    print('    Placing {} at {},{}'.\
                         format(canidates[rIdx][cIdx][0], rIdx,cIdx ))
                     solution[rIdx][cIdx] = canidates[rIdx][cIdx][0]
                     numFilled += 1
     if numFilled != 0:
-        print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
+        print('    NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
     return numFilled,solution
 #############################################################################
 
 def fillCellsViaRowHistAnal(solution, canidates):
-    print('\nFilling solution cells thru Row Hist Analysis.')
+    print('  Filling solution cells thru Row Hist Analysis.')
     numFilled = 0
 
     for r,row in enumerate(canidates):
@@ -50,16 +50,16 @@ def fillCellsViaRowHistAnal(solution, canidates):
                 [ x for x in row if x != 0 and valOfBinHeight1 in x]
             idxOfSubLst =  row.index(subListContainingThatVal[0])
             if solution[r][idxOfSubLst] == 0:
-                print('  Placing {} at {},{}'.format(valOfBinHeight1,r,idxOfSubLst))
+                print('    Placing {} at {},{}'.format(valOfBinHeight1,r,idxOfSubLst))
                 solution[r][idxOfSubLst] = valOfBinHeight1
                 numFilled += 1
     if numFilled != 0:
-        print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
+        print('    NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
     return numFilled,solution
 #############################################################################
 
 def fillCellsViaColHistAnal(solution, canidates):
-    print('\nFilling solution cells thru Col Hist Analysis.')
+    print('  Filling solution cells thru Col Hist Analysis.')
     numFilled = 0
     Xpos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
 
@@ -75,16 +75,16 @@ def fillCellsViaColHistAnal(solution, canidates):
                 [ x for x in col if x != 0 and valOfBinHeight1 in x]
             idxOfSubLst =  col.index(subListContainingThatVal[0])
             if solution[idxOfSubLst][c] == 0:
-                print('  Placing {} at {},{}'.format(valOfBinHeight1,idxOfSubLst,c))
+                print('    Placing {} at {},{}'.format(valOfBinHeight1,idxOfSubLst,c))
                 solution[idxOfSubLst][c] = valOfBinHeight1
                 numFilled += 1
     if numFilled != 0:
-        print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
+        print('    NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
     return numFilled,solution
 #############################################################################
 
 def fillCellsViaSqrHistAnal(solution, canidates):
-    print('\nFilling solution cells thru Square Hist Analysis')
+    print('  Filling solution cells thru Square Hist Analysis')
     numFilled = 0
     squareNums = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]] 
 
@@ -108,11 +108,11 @@ def fillCellsViaSqrHistAnal(solution, canidates):
             c = colsInSq[(idxOfSubLst %  3)]
 
             if solution[r][c] == 0:
-                print('  Placing {} at {},{}'.format(valOfBinHeight1, r, c ))
+                print('    Placing {} at {},{}'.format(valOfBinHeight1, r, c ))
                 solution[r][c] = valOfBinHeight1
                 numFilled += 1
     if numFilled != 0:
-        print('  NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
+        print('    NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
     return numFilled,solution
 #############################################################################
 

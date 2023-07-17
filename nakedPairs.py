@@ -2,6 +2,35 @@ import pprint        as pp
 import printRoutines as pr
 #############################################################################
 
+def printNakedPairsLst(nakedPairsLst, Row_or_Col):
+    if Row_or_Col == 'Row':
+        Col_or_Row = 'Col'
+    else:
+        Col_or_Row = 'Row'
+
+    if nakedPairsLst == [[],[],[],[],[],[],[],[],[]]:
+        print( '  No {} naked pairs found'.format(Row_or_Col)) 
+        return
+    for idx,currListOfDupPairs in enumerate(nakedPairsLst):
+        if currListOfDupPairs != []:
+            for idxOfCurrDupPair,currDupPairAndCoord in enumerate(currListOfDupPairs):
+                print( '  {} {} contains naked pair {} at {} {}.'.\
+                    format(Row_or_Col, idx,currDupPairAndCoord[0], Col_or_Row, currDupPairAndCoord[1]))
+    return
+#############################################################################
+
+def printSqrNakedPairsLst(sqrNakedPairsLst):
+    if sqrNakedPairsLst == [[],[],[],[],[],[],[],[],[]]:
+        print( '  No sqr naked pairs found') 
+        return
+    for sIdx,currListOfDupPairs in enumerate(sqrNakedPairsLst):
+        if currListOfDupPairs != []:
+            for currDupPair in currListOfDupPairs:
+                print( '  Sqr {} contains naked pair {}.'.\
+                    format(sIdx,currDupPair))
+    return
+#############################################################################
+
 def findRowsColsInSquare(rIdx, cIdx):
     if rIdx % 3 == 0: rOffsets = [ 1, 2]
     if rIdx % 3 == 1: rOffsets = [-1, 1]
@@ -89,7 +118,7 @@ def buildSqrNakedPairLst(canidates):
 
 def pruneNakedPairs(canidates):
 
-    print('\nPruning naked pairs')
+    print('\nPruning naked pairs ************************************ Start')
     #pr.prettyPrint3DArray(canidates)
     numPruned = 0
 
@@ -97,7 +126,7 @@ def pruneNakedPairs(canidates):
     # Make a list containing info on naked pairs in each row and col.
     print('  Finding naked canidate pairs in rows')
     rowNakedPairsLst = buildRowNakedPairLst(canidates)
-    pr.printRowNakedPairsLst(rowNakedPairsLst)
+    printNakedPairsLst(rowNakedPairsLst, 'Row')
     print()
     if rowNakedPairsLst != [[],[],[],[],[],[],[],[],[]]:
         print('  Pruning naked pairs in rows based on row naked pairs')
@@ -129,7 +158,7 @@ def pruneNakedPairs(canidates):
     
                         if inSameSquare:
     
-                            print( '  Removing {} and {} from all cells in square containing cells [{},{}] and [{},{}]. '.\
+                            print( '  Removing {} & {} from all cells in sqr containing cells [{},{}] & [{},{}]'.\
                                 format(currDupPairAndCoord[0][0], currDupPairAndCoord[0][1],
                                        rIdx, currDupPairAndCoord[1][0], rIdx, currDupPairAndCoord[1][1] ) )
     
@@ -153,7 +182,7 @@ def pruneNakedPairs(canidates):
 
     print('  Finding naked canidate pairs in cols')
     colNakedPairsLst = buildColNakedPairLst(canidates)
-    pr.printColNakedPairsLst(colNakedPairsLst)
+    printNakedPairsLst(colNakedPairsLst, 'Col' )
     print()
     if rowNakedPairsLst != [[],[],[],[],[],[],[],[],[]]:
         print('  Pruning naked pairs in cols based on col naked pairs')
@@ -185,7 +214,7 @@ def pruneNakedPairs(canidates):
     
                         if inSameSquare:
     
-                            print( '  Removing {} and {} from all cells in square containing cells [{},{}] and [{},{}]. '.\
+                            print( '  Removing {} & {} from all cells in sqr containing cells [{},{}] & [{},{}]'.\
                                 format(currDupPairAndCoord[0][0], currDupPairAndCoord[0][1],
                                        currDupPairAndCoord[1][0], cIdx, currDupPairAndCoord[1][1], cIdx ) )
     
@@ -209,7 +238,7 @@ def pruneNakedPairs(canidates):
 
     print('  Finding naked canidate pairs in squares')
     sqrNakedPairsLst = buildSqrNakedPairLst(canidates)
-    pr.printSqrNakedPairsLst(sqrNakedPairsLst)
+    printSqrNakedPairsLst(sqrNakedPairsLst)
     print()
     #pr.prettyPrint3DArray(canidates)
     if sqrNakedPairsLst != [[],[],[],[],[],[],[],[],[]]:
@@ -234,6 +263,7 @@ def pruneNakedPairs(canidates):
 
     #pr.prettyPrint3DArray(canidates)
     print('  numPruned = {}'.format(numPruned))
+    print('Pruning naked pairs ************************************** End')
     return(numPruned, canidates)
 #############################################################################
 
