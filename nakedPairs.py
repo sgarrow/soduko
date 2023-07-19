@@ -136,7 +136,7 @@ def pruneNakedPairs(canidates):
                     for ii in range(2):                           # 1st item is the pair, 2nd item is the cols its in.
                         print( '  Removing {} from all cols in row {} except for cols {} and {}'.
                             format(currDupPairAndCoord[0][ii], rIdx, currDupPairAndCoord[1][0],currDupPairAndCoord[1][1] ))
-                        for jj in range(9):                       # Remove the value from all the cols except
+                        for jj in range(1,10):                    # Remove the value from all the cols except
                             if jj not in currDupPairAndCoord[1]:  # don't remove it from the cols where the dup itself lives.
                                 try:                              # Can't remove it if it's not there.
                                     canidates[rIdx][jj].remove(currDupPairAndCoord[0][ii])
@@ -192,7 +192,7 @@ def pruneNakedPairs(canidates):
                     for ii in range(2):                           # 1st item is the pair, 2nd item is the cols its in.
                         print( '  Removing {} from all rows in col {} except for rows {} and {}'.
                             format(currDupPairAndCoord[0][ii], cIdx, currDupPairAndCoord[1][0],currDupPairAndCoord[1][1] ))
-                        for jj in range(9):                       # Remove the value from all the cols except
+                        for jj in range(1,10):                    # Remove the value from all the cols except
                             if jj not in currDupPairAndCoord[1]:  # don't remove it from the cols where the dup itself lives.
                                 try:                              # Can't remove it if it's not there.
                                     canidates[jj][cIdx].remove(currDupPairAndCoord[0][ii])
