@@ -28,8 +28,8 @@ def printSqrHiddenPairsDict(shpd):
         print( '   No sqr hidden pairs found') 
         return
     for k,v in shpd.items():
-        print('   Col {} has hidden pair {} in rows {}'.\
-            format(shpd[k]['col'], shpd[k]['vals'], shpd[k]['rows']))
+        print('   Sqr {} has hidden pair {} at indeces {}'.\
+            format(shpd[k]['sqr'], shpd[k]['vals'], shpd[k]['idx']))
     return
 #############################################################################
 
@@ -166,14 +166,14 @@ def buildSqrHiddenPairDict(canidates):
 
     itemNum = 0
     hiddenPairsDict = {}
-    for rIdx,aDict in enumerate(lstOfDict):
+    for sIdx,aDict in enumerate(lstOfDict):
         aDictValues = list(aDict.values()) # values are the index in the square 1-9
         #print(  'aDict.values()', aDict.values())
         for val in aDictValues:
             theCount = aDictValues.count(val)
             if theCount == 2:
                 keysOfThisVal = [ k for k,v in aDict.items() if v == val ] # keys are the vals
-                hiddenPairsDict[itemNum] = { 'row' : rIdx, 'cols' : val, 'vals' : keysOfThisVal }
+                hiddenPairsDict[itemNum] = { 'sqr' : sIdx, 'idx' : val, 'vals' : keysOfThisVal }
                 itemNum += 1
     print('\nhiddenPairsDict')
     pp.pprint(hiddenPairsDict)
@@ -186,11 +186,9 @@ def buildSqrHiddenPairDict(canidates):
             itemNum += 1
     print('\nhiddenPairsDict2 sqr')
     pp.pprint(hiddenPairsDict2)
-    exit()
 
     #pr.prettyPrint3DArray(canidates)
-    return
-    #return(hiddenPairsDict2)
+    return(hiddenPairsDict2)
 #############################################################################
 
 def pruneHiddenPairs(canidates):
@@ -241,29 +239,35 @@ def pruneHiddenPairs(canidates):
     ####################################################################
     # Make a dict containing info on hidden pairs in each square.
     print('  Finding hidden pairs in squares $$$$$$$$$$$$$$$$$$$')
-
     shpd = buildSqrHiddenPairDict(canidates)
-    print('\nprintSqrHiddenPairsDict')
-    printSqrHiddenPairsDict(chpd)
-    print()
-    exit()
+    printSqrHiddenPairsDict(shpd)
     #pr.prettyPrint3DArray(canidates)
-    #for k,v in chpd.items():
-    #    cIdx     = chpd[k]['col']
-    #    rows     = chpd[k]['rows']
-    #    vals2Rmv = chpd[k]['vals'] 
-    #
-    #    for rIdx in rows:
-    #        if canidates[rIdx][cIdx] != 0:
-    #            for ii in range(1,10):
-    #                if ii in canidates[rIdx][cIdx] and ii not in vals2Rmv:
-    #                    canidates[rIdx][cIdx].remove(ii)
-    #                    print('    Removed {} from ({},{})'.format(ii, rIdx,cIdx))
-    #                    numPruned += 1
+    
+    for k,v in shpd.items():
+        sIdx     = shpd[k][ 'sqr'  ]   
+        idxs     = shpd[k][ 'idx'  ]
+        vals2Rmv = shpd[k][ 'vals' ] 
+    
+    
+        for idx in idxs:
+    
+            row              = ( idx // 3 ) + ( (sIdx // 3) * 3 )
+            ofst1stCellInRow = ( row  * 9 ) + ( (sIdx %  3) * 3 )
+            offsetInto_9x9   = ofst1stCellInRow + idx %  3
+            col = offsetInto_9x9  % 9
+            #print('sIdx, idx,   row, col = {:2d}, {:2d},   {:2d}, {:2d}'.format( sIdx, idx, row, col  ) )
+    
+            if canidates[row][col] != 0:
+                for ii in range(1,10):
+                    if ii in canidates[row][col] and ii not in vals2Rmv:
+                        canidates[row][col].remove(ii)
+                        print('    Removed {} from ({},{}) (sqr {})'.format(ii, row,col, sIdx))
+                        numPruned += 1
+
+    ####################################################################
 
     print('Pruning hidden pairs ************************************* End')
     #pr.prettyPrint3DArray(canidates)
-
     return numPruned, canidates
 
     

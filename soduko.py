@@ -131,7 +131,7 @@ if __name__ == '__main__':
         print('**********************************')
     # end for loop on all puzzles
 
-    pr.printResults(puzzlesDict, 'all')
+    #pr.printResults(puzzlesDict, 'all')
     pr.printResults(puzzlesDict, 'summary')
 
     #for key in puzzlesDict:
