@@ -247,8 +247,6 @@ def pruneHiddenPairs(canidates):
         sIdx     = shpd[k][ 'sqr'  ]   
         idxs     = shpd[k][ 'idx'  ]
         vals2Rmv = shpd[k][ 'vals' ] 
-    
-    
         for idx in idxs:
     
             row              = ( idx // 3 ) + ( (sIdx // 3) * 3 )
@@ -269,6 +267,3 @@ def pruneHiddenPairs(canidates):
     print('Pruning hidden pairs ************************************* End')
     #pr.prettyPrint3DArray(canidates)
     return numPruned, canidates
-
-    
-

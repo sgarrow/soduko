@@ -62,12 +62,12 @@ def updatePuzzlesDictCntrs(puzzlesDict,k,  dicOfFuncs):
 
 def pruneCanidates(canidates):
     numPruned1 = 1
-    numPruned2 = 1
-    numPruned3 = 1
+    numPruned2 = 0
+    numPruned3 = 0
     while numPruned1 or numPruned2 or numPruned3:
        numPruned1, canidates = np.pruneNakedPairs(canidates)
-       numPruned2, canidates = nt.pruneNakedTriples(canidates)
-       numPruned3, canidates = hp.pruneHiddenPairs(canidates)
+       #numPruned2, canidates = nt.pruneNakedTriples(canidates)
+       #numPruned3, canidates = hp.pruneHiddenPairs(canidates)
     return numPruned1+numPruned2+numPruned3, canidates
 #############################################################################
 
@@ -75,16 +75,13 @@ def fillSolution(solution, canidates, dicOfFuncs ):
     totalNumFilled = 0
 
     print('\nFilling in solution cells ****************************** Start')
-    while(1):
-        numFilledThisPass = 0
-        for k in dicOfFuncs:
-            numFilled, solution = dicOfFuncs[k]['func']( solution, canidates )
-            totalNumFilled    += numFilled
-            numFilledThisPass += numFilled
-            dicOfFuncs[k]['calls']   += 1
-            dicOfFuncs[k]['replace'] += numFilled
-        if numFilledThisPass == 0:
-            break
+    numFilledThisPass = 0
+    for k in dicOfFuncs:
+        numFilled, solution = dicOfFuncs[k]['func']( solution, canidates )
+        totalNumFilled    += numFilled
+        numFilledThisPass += numFilled
+        dicOfFuncs[k]['calls']   += 1
+        dicOfFuncs[k]['replace'] += numFilled
     print('Filling in solution cells ******************************** End')
 
     return totalNumFilled, solution, dicOfFuncs
