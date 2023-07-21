@@ -63,11 +63,11 @@ def updatePuzzlesDictCntrs(puzzlesDict,k,  dicOfFuncs):
 def pruneCanidates(canidates):
     numPruned1 = 1
     numPruned2 = 1
-    numPruned3 = 0
+    numPruned3 = 1
     while numPruned1 or numPruned2 or numPruned3:
        numPruned1, canidates = np.pruneNakedPairs(canidates)
        numPruned2, canidates = nt.pruneNakedTriples(canidates)
-       #numPruned3, canidates = hp.pruneHiddenPairs(canidates)
+       numPruned3, canidates = hp.pruneHiddenPairs(canidates)
     return numPruned1+numPruned2+numPruned3, canidates
 #############################################################################
 
