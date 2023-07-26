@@ -111,13 +111,14 @@ puzzlesDict = {
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
     
-    'puzzleWtf' : { 'puzzle' : puzWtf, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
+    #'puzzleWtf' : { 'puzzle' : puzWtf, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    #
     'puzzleEv3' : { 'puzzle' : puzEv3, 'solution' : [], 'start0s' : 0, 'end0s' : 0,
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    
     }
 
 if __name__ == '__main__':

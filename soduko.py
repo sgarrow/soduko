@@ -61,6 +61,8 @@ def updatePuzzlesDictCntrs(puzzlesDict,k,  dicOfFuncs):
 #############################################################################
 
 def pruneCanidates(canidates):
+    #hp.buildRowHiddenTripDict(canidates)
+    #exit()
     numPruned1 = 1
     numPruned2 = 1
     numPruned3 = 1
@@ -75,14 +77,13 @@ def fillSolution(solution, canidates, dicOfFuncs ):
     totalNumFilled = 0
 
     print('\nFilling in solution cells ****************************** Start')
-    numFilledThisPass = 0
     for k in dicOfFuncs:
         numFilled, solution = dicOfFuncs[k]['func']( solution, canidates )
-        totalNumFilled    += numFilled
-        numFilledThisPass += numFilled
+        totalNumFilled  += numFilled
         dicOfFuncs[k]['calls']   += 1
         dicOfFuncs[k]['replace'] += numFilled
-    print('Filling in solution cells ******************************** End')
+    print('Filling in solution cells ** ( total filled = {:2d} ) ******* End'.
+        format(totalNumFilled))
 
     return totalNumFilled, solution, dicOfFuncs
 #############################################################################

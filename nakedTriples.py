@@ -1,4 +1,5 @@
 import pprint as pp
+import printRoutines as pr
 from itertools import combinations
 #############################################################################
 
@@ -90,8 +91,11 @@ def pruneNakedTriplesRows(canidates):
                     intersection = \
                     set.intersection(set(el),  # [0] means assuming only 1 naked
                     set(rowNkdTripD[rIdx][0])) # triplet exists in this sqr  
-                    valsOtherThanTriplet = set(el) - intersection                       
-                    #print('rIdx, cIdx, intersection, valsOtherThanTriplet)             
+                    valsOtherThanTriplet = set(el) - intersection
+
+                    #print('rIdx, cIdx, intersection, valsOtherThanTriplet'.\
+                    #    format(rIdx, cIdx, intersection, valsOtherThanTriplet))
+
                     if len(valsOtherThanTriplet) > 0:
                         for valToRemove in rowNkdTripD[rIdx][0]:
                             try:
@@ -123,8 +127,12 @@ def pruneNakedTriplesCols(canidates):
                     set.intersection(set(el),  # [0] means assuming only 1 naked
                     set(colNkdTripD[cIdx][0])) # triplet exists in theis square  
                     valsOtherThanTriplet = set(el) - intersection
-                    #print('rIdx, cIdx, intersection, valsOtherThanTriplet)
+
+                    #print('rIdx, cIdx, intersection, valsOtherThanTriplet \t {} \t {} \t {} \t {} '.\
+                    #    format(rIdx, cIdx, intersection, valsOtherThanTriplet))
+
                     if len(valsOtherThanTriplet) > 0:
+                        print()
                         for valToRemove in colNkdTripD[cIdx][0]:
                             try:
                                 canidates[rIdx][cIdx].remove(valToRemove)
@@ -136,7 +144,6 @@ def pruneNakedTriplesCols(canidates):
                 except:
                     pass
     
-        #pr.prettyPrint3DArray(canidates)
         print('  numPruned = {}.\n'.format(numPruned))
     return(numPruned, canidates)
 #############################################################################
@@ -181,15 +188,13 @@ def pruneNakedTriplesSqrs(canidates):
 
 def pruneNakedTriples(canidates):
     print('\nPruning naked triplets ********************************* Start')
-    #pr.prettyPrint3DArray(canidates)
     numPruned = 0
-
     numPrunedRows, canidates = pruneNakedTriplesRows(canidates)
     numPrunedCols, canidates = pruneNakedTriplesCols(canidates)
     numPrunedSqrs, canidates = pruneNakedTriplesSqrs(canidates)
-
     numPruned =  numPrunedRows + numPrunedCols + numPrunedSqrs
-    print('Pruning naked triplets *********************************** End')
+    print('Pruning naked triplets ** ( total pruned = {:2d} ) ********** End'.
+        format(numPruned))
     return(numPruned, canidates)
 #############################################################################
 

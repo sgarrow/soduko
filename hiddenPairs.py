@@ -33,52 +33,45 @@ def printSqrHiddenPairsDict(shpd):
     return
 #############################################################################
 
-def buildRowHiddenPairDict(canidates):
+def buildRowHiddenPairDict(canidates):  # Finds hidden and naked pairs also finds naked triplets when N=3.
 
     #pr.prettyPrint3DArray(canidates)
-    binsHeightTwoThisRow = []
-    binsHeightTwoAllRows = []
+    N = 2
+    binsHeight_N_ThisRow = []
+    binsHeight_N_AllRows = []
     for rIdx,row in enumerate(canidates):
         flatRow = fr.flatten(row)
         rowHist = fr.genHistogram(flatRow)
-        binsHeightTwoThisRow = [ x[0] for x in rowHist if x[1] == 2 and x[0] != 0 ]
-        binsHeightTwoAllRows.append(binsHeightTwoThisRow)
-    #print('\nvalues that appear exactly twice on a given row')
-    #pp.pprint(binsHeightTwoAllRows)
+        binsHeight_N_ThisRow = [ x[0] for x in rowHist if 1 < x[1] < N+1 and x[0] != 0 ]
+        binsHeight_N_AllRows.append(binsHeight_N_ThisRow)
+    #print('\nvalues that appear exactly {} times on a given row'.format(N))
+    #pp.pprint(binsHeight_N_AllRows)
 
-    lstOfDict = []
-    for rIdx,binHeight2Row in enumerate(binsHeightTwoAllRows):
+    lstOf_N_Dict = []
+    for rIdx,binHeight_N_Row in enumerate(binsHeight_N_AllRows):
         myDict = {}
-        for val in binHeight2Row:
+        for val in binHeight_N_Row:
             myDict[val] = [cIdx for cIdx, x in enumerate(canidates[rIdx]) if x != 0 and val in canidates[rIdx][cIdx]]
-        lstOfDict.append(myDict)
-    #print('\nvalueThatApearsExactlyTwice : theColsWhereTheyAppear (on a given row)')
-    #pp.pprint(lstOfDict)
+        lstOf_N_Dict.append(myDict)
+    #print('\nvalueThatApearsExactlyN : theColsWhereTheyAppear (on a given row)')
+    #pp.pprint(lstOf_N_Dict)
 
     itemNum = 0
-    hiddenPairsDict = {}
-    for rIdx,aDict in enumerate(lstOfDict):
+    hidden_N_Dict = {}
+    for rIdx,aDict in enumerate(lstOf_N_Dict):
         aDictValues = list(aDict.values()) # values are the cols
-        #print(  'aDict.values()', aDict.values())
+        #print(  '  aDict.values() ', aDict.values())
         for val in aDictValues:
             theCount = aDictValues.count(val)
-            if theCount == 2:
+            if theCount == N:
                 keysOfThisVal = [ k for k,v in aDict.items() if v == val ] # keys are the vals
-                hiddenPairsDict[itemNum] = { 'row' : rIdx, 'cols' : val, 'vals' : keysOfThisVal }
-                itemNum += 1
-    #print('\nhiddenPairsDict')
-    #pp.pprint(hiddenPairsDict)
-
-    itemNum = 0
-    hiddenPairsDict2 = {}
-    for key,value in hiddenPairsDict.items():
-        if value not in hiddenPairsDict2.values():
-            hiddenPairsDict2[itemNum] = value
-            itemNum += 1
-    #print('\nhiddenPairsDict2 rows')
-    #pp.pprint(hiddenPairsDict2)
-    #exit()
-    return(hiddenPairsDict2)
+                if { 'row' : rIdx, 'cols' : val, 'vals' : keysOfThisVal } not in hidden_N_Dict.values():
+                    hidden_N_Dict[itemNum] = { 'row' : rIdx, 'cols' : val, 'vals' : keysOfThisVal }
+                    itemNum += 1
+    #print('\nhidden_N_Dict')
+    #pp.pprint(hidden_N_Dict)
+    #print()
+    return(hidden_N_Dict)
 #############################################################################
 
 def buildColHiddenPairDict(canidates):
@@ -129,7 +122,7 @@ def buildColHiddenPairDict(canidates):
 #############################################################################
 def buildSqrHiddenPairDict(canidates):
 
-    pr.prettyPrint3DArray(canidates)
+    #pr.prettyPrint3DArray(canidates)
     squareCoords = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]] 
     binsHeightTwoAllSqrs = []
     canidatesAllSqr = []
@@ -147,12 +140,12 @@ def buildSqrHiddenPairDict(canidates):
 
         canidatesAllSqr.append(canidatesSqr)
 
-    print()
-    print('\n canidatesAllSqr')
-    pp.pprint(canidatesAllSqr)
-    print()
-    print('\nbinsHeightTwoAllSqrs: values that appear exactly twice in a given square')
-    pp.pprint(binsHeightTwoAllSqrs)
+    #print()
+    #print('\n canidatesAllSqr')
+    #pp.pprint(canidatesAllSqr)
+    #print()
+    #print('\nbinsHeightTwoAllSqrs: values that appear exactly twice in a given square')
+    #pp.pprint(binsHeightTwoAllSqrs)
 
 
     lstOfDict = []
@@ -161,8 +154,8 @@ def buildSqrHiddenPairDict(canidates):
         for val in binHeight2Sqr:
             myDict[val] = [idx for idx,x in enumerate(canidatesAllSqr[sIdx]) if x != 0 and val in canidatesAllSqr[sIdx][idx] ]
         lstOfDict.append(myDict)
-    print('\nvalueThatApearsExactlyTwice : theIndexWhereTheyAppear (on a given square)')
-    pp.pprint(lstOfDict)
+    #print('\nvalueThatApearsExactlyTwice : theIndexWhereTheyAppear (on a given square)')
+    #pp.pprint(lstOfDict)
 
     itemNum = 0
     hiddenPairsDict = {}
@@ -175,8 +168,8 @@ def buildSqrHiddenPairDict(canidates):
                 keysOfThisVal = [ k for k,v in aDict.items() if v == val ] # keys are the vals
                 hiddenPairsDict[itemNum] = { 'sqr' : sIdx, 'idx' : val, 'vals' : keysOfThisVal }
                 itemNum += 1
-    print('\nhiddenPairsDict')
-    pp.pprint(hiddenPairsDict)
+    #print('\nhiddenPairsDict')
+    #pp.pprint(hiddenPairsDict)
 
     itemNum = 0
     hiddenPairsDict2 = {}
@@ -184,8 +177,8 @@ def buildSqrHiddenPairDict(canidates):
         if value not in hiddenPairsDict2.values():
             hiddenPairsDict2[itemNum] = value
             itemNum += 1
-    print('\nhiddenPairsDict2 sqr')
-    pp.pprint(hiddenPairsDict2)
+    #print('\nhiddenPairsDict2 sqr')
+    #pp.pprint(hiddenPairsDict2)
 
     #pr.prettyPrint3DArray(canidates)
     return(hiddenPairsDict2)
@@ -235,10 +228,10 @@ def pruneHiddenPairs(canidates):
                         canidates[rIdx][cIdx].remove(ii)
                         print('    Removed {} from ({},{})'.format(ii, rIdx,cIdx))
                         numPruned += 1
-
+    
     ####################################################################
     # Make a dict containing info on hidden pairs in each square.
-    print('  Finding hidden pairs in squares $$$$$$$$$$$$$$$$$$$')
+    print('  Finding hidden pairs in squares')
     shpd = buildSqrHiddenPairDict(canidates)
     printSqrHiddenPairsDict(shpd)
     #pr.prettyPrint3DArray(canidates)
@@ -261,9 +254,10 @@ def pruneHiddenPairs(canidates):
                         canidates[row][col].remove(ii)
                         print('    Removed {} from ({},{}) (sqr {})'.format(ii, row,col, sIdx))
                         numPruned += 1
+    
+    ###################################################################
 
-    ####################################################################
-
-    print('Pruning hidden pairs ************************************* End')
+    print('Pruning hidden pairs ** ( total pruned = {:2d} ) ********* End'.
+        format(numPruned))
     #pr.prettyPrint3DArray(canidates)
     return numPruned, canidates

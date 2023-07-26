@@ -125,7 +125,7 @@ def pruneNakedPairsRows(canidates):
     print()
     if rowNakedPairsLst == [[],[],[],[],[],[],[],[],[]]:
         return(numPruned, canidates)
-    print('  Pruning naked pairs in rows based on row naked pairs')
+    print('  Pruning row naked pairs')
     for rIdx,currListOfDupPairs in enumerate(rowNakedPairsLst):
         if currListOfDupPairs != []:
             for idxOfCurrDupPair,currDupPairAndCoord in enumerate(currListOfDupPairs):
@@ -156,7 +156,7 @@ def pruneNakedPairsCols(canidates):
     print()
     if colNakedPairsLst == [[],[],[],[],[],[],[],[],[]]:
         return(numPruned, canidates)
-    print('  Pruning naked pairs in cols based on col naked pairs')
+    print('  Pruning col naked pairs')
     for cIdx,currListOfDupPairs in enumerate(colNakedPairsLst):
         if currListOfDupPairs != []:
             for currDupPairAndCoord in currListOfDupPairs:
@@ -187,7 +187,7 @@ def pruneNakedPairsSqrs(canidates):
     print()
     if sqrNakedPairsLst == [[],[],[],[],[],[],[],[],[]]:
         return(numPruned, canidates)
-    print('  Pruning naked pairs in squares based on square naked pairs')
+    print('  Pruning square naked pairs')
     squareCoords = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]] 
     
     for ii,squareCoord in enumerate(squareCoords):
