@@ -61,8 +61,6 @@ def updatePuzzlesDictCntrs(puzzlesDict,k,  dicOfFuncs):
 #############################################################################
 
 def pruneCanidates(canidates):
-    #hp.buildRowHiddenTripDict(canidates)
-    #exit()
     numPruned1 = 1
     numPruned2 = 1
     numPruned3 = 1
