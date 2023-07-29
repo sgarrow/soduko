@@ -6,6 +6,7 @@ import fillRoutines  as fr
 import nakedPairs    as np
 import hiddenPairs   as hp
 import nakedTriples  as nt
+import hiddenTriples as ht
 #############################################################################
 
 def updateCanidatesList(solution,canidates):
@@ -64,11 +65,13 @@ def pruneCanidates(canidates):
     numPruned1 = 1
     numPruned2 = 1
     numPruned3 = 1
-    while numPruned1 or numPruned2 or numPruned3:
+    numPruned4 = 0
+    while numPruned1 or numPruned2 or numPruned3 or numPruned4:
        numPruned1, canidates = np.pruneNakedPairs(canidates)
        numPruned2, canidates = nt.pruneNakedTriples(canidates)
        numPruned3, canidates = hp.pruneHiddenPairs(canidates)
-    return numPruned1+numPruned2+numPruned3, canidates
+       #numPruned4, canidates = ht.pruneHiddenTriplesRows(canidates)
+    return numPruned1+numPruned2+numPruned3+numPruned4, canidates
 #############################################################################
 
 def fillSolution(solution, canidates, dicOfFuncs ):
