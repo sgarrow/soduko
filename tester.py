@@ -14,8 +14,8 @@ def pruneHiddenTriplesRows(canidates):
     itemNum = 0
     for idx, rowWithZeros in enumerate(canidates):
         row         = [x if x != 0 else [0] for x in rowWithZeros]
-        comb        = list(combinations(row, 3))  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3) = 84.
-        combLst     = [ list(el) for el in comb ]
+        combSet     = list(combinations(row, 3))  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3) = 84.
+        combLst     = [ list(el) for el in combSet ]
         combIdxs    = list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(row), 3))
         combIdxsLst = [ list(el) for el in combIdxs ]
         #pp.pprint (combLst)
@@ -32,41 +32,60 @@ def pruneHiddenTriplesRows(canidates):
             union  = set.union( inter1, inter2, inter3, inter4 )
             interLen = [ len(inter1),len(inter2),len(inter3),len(inter4) ]
             unionLen = len(union)
+            unionLst = list(union)
             numZeroLen = interLen.count(0)
             numOneLen  = interLen.count(1)
     
-            print( '{}{}'.format(str(comb).ljust(40),comIdx) )
+            #print( '{}{}'.format(str(comb).ljust(40),comIdx) )
             #print( 'intersections        = ', inter1,inter2,inter3,inter4 )
             #print( 'lenIntersections     = ', interLen )
             #print( 'unionOfIntersections = ', union )
-            print( 'lenUnion  numZeroLengthInter  numOneLengthInter  = {} {} {}'.format(unionLen, numZeroLen, numOneLen))
+            #print( 'lenUnion  numZeroLengthInter  numOneLengthInter  = {} {} {}'.format(unionLen, numZeroLen, numOneLen))
 
-            potential = False  # 1. Determined empirically.
-            if [ unionLen, numZeroLen, numOneLen ] == [ 3,0,0 ]: potential = True # Potential hidden triplet type - 3/3/3 or 3/3/2.
-            if [ unionLen, numZeroLen, numOneLen ] == [ 3,0,2 ]: potential = True # Potential hidden triplet type - 3/2/2.
-            if [ unionLen, numZeroLen, numOneLen ] == [ 3,1,3 ]: potential = True # Potential hidden triplet type - 2/2/2. 
+            empiricallyPotential     = False # 1. Determined empirically.
+            valsCorrectNumOccurances = True  # 2. Defn ... appear allowable number of times (<3).
+            valsCorrectPlacement     = True  # 3. Defn ... appear only in the 3 cols of the comb in question. 
+
+            if [ unionLen, numZeroLen, numOneLen ] == [ 3,0,0 ]: empiricallyPotential = True # Potential hidden triplet type - 3/3/3 or 3/3/2.
+            if [ unionLen, numZeroLen, numOneLen ] == [ 3,0,2 ]: empiricallyPotential = True # Potential hidden triplet type - 3/2/2.
+            if [ unionLen, numZeroLen, numOneLen ] == [ 3,1,3 ]: empiricallyPotential = True # Potential hidden triplet type - 2/2/2. 
 
-            if potential:      # 2. Make sure the values only appear three times.
-                unionLst = list(union)
-                for el in unionLst:
-                    isHiddenTrip = True
-                    flatRow = fr.flatten(row)
-                    if flatRow.count(el) > 3:
-                        isHiddenTrip = False
-                        break
+            for el in unionLst:
+                flatRow = fr.flatten(row)
+                if flatRow.count(el) > 3:
+                    valsCorrectNumOccurances = False
+                    break
 
-                #if potential:  # 2. Make sure the the 3 values only appear in the 3 cols of the comb in question
+            # cols each element in this combinations set intersetsion/union the union appears
+            allIdxs = []
+            for elInUnion in unionLst:
+                idxs = [ idx for idx,el in enumerate(row) if elInUnion in el]
+                allIdxs.append(idxs)
+            #print(allIdxs)
+            # Now make sure they only appear in the right places.
+            for idxs in allIdxs:
+                for currIdx in idxs:
+                    if currIdx not in comIdx:
+                        valsCorrectPlacement = False
+                        break
+                    if valsCorrectPlacement == False:
+                        break
 
+
+            #print(empiricallyPotential, valsCorrectNumOccurances, valsCorrectPlacement)
+            isHiddenTrip = False
+            if empiricallyPotential and valsCorrectNumOccurances and valsCorrectPlacement:
+                isHiddenTrip = True
     
-                if isHiddenTrip:
-                    #print('row {} has hidden triple {} in cols {}'.format(idx,union, comIdx))
-                    myD = {'row': idx, 'tripVals': list(union), 'tripIdxs': comIdx}
-                    hiddenTrpiD[itemNum] = myD
-                    itemNum += 1
+            if isHiddenTrip:
+                print(' row {} has hidden triple {} in cols {}'.format(idx,union, comIdx))
+                myD = {'row': idx, 'tripVals': unionLst, 'tripIdxs': comIdx}
+                hiddenTrpiD[itemNum] = myD
+                itemNum += 1
 
     print()
     pp.pprint(hiddenTrpiD)
-
+    
     print()
     pr.prettyPrint3DArray(canidates)
     print()
@@ -83,7 +102,7 @@ def pruneHiddenTriplesRows(canidates):
             canidates[dEntry['row']][idx] = temp
         print()
     print()
-    #print('numPruned = {}'.format(numPruned))
+    print('numPruned = {}'.format(numPruned))
 
 
     print()
@@ -95,12 +114,12 @@ def pruneHiddenTriplesRows(canidates):
 if __name__ == '__main__':
     canidates = \
     [
-        #[  [1,2,3,4], [1,2,3,5], [1,2,3,6], [7,8],  [8,9], [9,7] ],
-        #[  [1,2,3,4], [1,2,3,5], [1,2,7],   [7],    [8],   [9]   ],
-        #[  [1,2,3,4], [1,2,5],   [2,3,8],   [7],    [8],   [9]   ],
-        #[  [1,2,4],   [1,3,5],   [2,3,9],   [7],    [8],   [9]   ],
-        # 
-        #     *                      *        *
-        [  [1, 6, 8], [6, 8],    [1, 3],    [3, 6], 0,     0     ]
+        [  [1,2,3,4], [1,2,3,5], [1,2,3,6], [7,8],  [8,9], [9,7] ],
+        [  [1,2,3,4], [1,2,3,5], [1,2,7],   [7],    [8],   [9]   ],
+        [  [1,2,3,4], [1,2,5],   [2,3,8],   [7],    [8],   [9]   ],
+        [  [1,2,4],   [1,3,5],   [2,3,9],   [7],    [8],   [9]   ],
+         
+        #     *        6             *        *    Not a triple.
+        [  [1, 6, 8], [4, 8],    [1, 3],    [3, 6], 0,     0     ]
      ]
     numPruned4, canidates = pruneHiddenTriplesRows(canidates)

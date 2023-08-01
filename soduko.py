@@ -65,12 +65,12 @@ def pruneCanidates(canidates):
     numPruned1 = 1
     numPruned2 = 1
     numPruned3 = 1
-    numPruned4 = 0
+    numPruned4 = 1
     while numPruned1 or numPruned2 or numPruned3 or numPruned4:
        numPruned1, canidates = np.pruneNakedPairs(canidates)
        numPruned2, canidates = nt.pruneNakedTriples(canidates)
        numPruned3, canidates = hp.pruneHiddenPairs(canidates)
-       #numPruned4, canidates = ht.pruneHiddenTriplesRows(canidates)
+       numPruned4, canidates = ht.pruneHiddenTriplesRows(canidates)
     return numPruned1+numPruned2+numPruned3+numPruned4, canidates
 #############################################################################
 
