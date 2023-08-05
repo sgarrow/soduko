@@ -70,6 +70,12 @@ def pruneCanidates(canidates):
         totNumPruned  += loopNumPruned
     print('Total Pruning hidden triples ** ( total pruned =  {} ) ******* End.'.format(totNumPruned))
 
+    totNumPruned  = 0
+    loopNumPruned = 1
+    while loopNumPruned:
+        loopNumPruned, canidates = ht.pruneHiddenTriplesRowOrCols(canidates, 'col')
+        totNumPruned  += loopNumPruned
+    print('Total Pruning hidden triples cols ** ( total pruned =  {} ) ** End.'.format(totNumPruned))
 
     numPruned1 = 1
     numPruned2 = 1

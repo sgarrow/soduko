@@ -163,11 +163,21 @@ if __name__ == '__main__':
     #    [ [9,7],     0,0,0,0,0,0,0,0 ],
     # ]
 
+    pr.prettyPrint3DArray(canidates)
+
 
     totNumPruned  = 0
     loopNumPruned = 1
     while loopNumPruned:
         loopNumPruned, canidates = pruneHiddenTriplesRowOrCols(canidates, 'row')
         totNumPruned  += loopNumPruned
-    print('Total Pruning hidden triples ** ( total pruned =  {} ) ******* End.'.format(totNumPruned))
-    #numPruned4, canidates = pruneHiddenTriplesRowOrCols(canidates, 'col')
+    print('Total Pruning hidden triples rows ** ( total pruned =  {} ) ** End.'.format(totNumPruned))
+    totNumPruned  = 0
+    loopNumPruned = 1
+    while loopNumPruned:
+        loopNumPruned, canidates = pruneHiddenTriplesRowOrCols(canidates, 'col')
+        totNumPruned  += loopNumPruned
+    print('Total Pruning hidden triples cols ** ( total pruned =  {} ) ** End.'.format(totNumPruned))
+
+    pr.prettyPrint3DArray(canidates)
+
