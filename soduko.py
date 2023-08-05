@@ -62,16 +62,23 @@ def updatePuzzlesDictCntrs(puzzlesDict,k,  dicOfFuncs):
 #############################################################################
 
 def pruneCanidates(canidates):
+
+    totNumPruned  = 0
+    loopNumPruned = 1
+    while loopNumPruned:
+        loopNumPruned, canidates = ht.pruneHiddenTriplesRowOrCols(canidates, 'row')
+        totNumPruned  += loopNumPruned
+    print('Total Pruning hidden triples ** ( total pruned =  {} ) ******* End.'.format(totNumPruned))
+
+
     numPruned1 = 1
     numPruned2 = 1
     numPruned3 = 1
-    numPruned4 = 1
-    while numPruned1 or numPruned2 or numPruned3 or numPruned4:
+    while numPruned1 or numPruned2 or numPruned3:
        numPruned1, canidates = np.pruneNakedPairs(canidates)
        numPruned2, canidates = nt.pruneNakedTriples(canidates)
        numPruned3, canidates = hp.pruneHiddenPairs(canidates)
-       numPruned4, canidates = ht.pruneHiddenTriplesRows(canidates)
-    return numPruned1+numPruned2+numPruned3+numPruned4, canidates
+    return numPruned1+numPruned2+numPruned3, canidates
 #############################################################################
 
 def fillSolution(solution, canidates, dicOfFuncs ):
@@ -130,7 +137,7 @@ if __name__ == '__main__':
         print('**********************************')
     # end for loop on all puzzles
 
-    #pr.printResults(puzzlesDict, 'all')
+    pr.printResults(puzzlesDict, 'all')
     pr.printResults(puzzlesDict, 'summary')
 
     #for key in puzzlesDict:
