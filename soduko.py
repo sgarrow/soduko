@@ -68,14 +68,17 @@ def pruneCanidates(canidates):
     while loopNumPruned:
         loopNumPruned, canidates = ht.pruneHiddenTriplesRowOrCols(canidates, 'row')
         totNumPruned  += loopNumPruned
-    print('Total Pruning hidden triples ** ( total pruned =  {} ) ******* End.'.format(totNumPruned))
+    print('Total Pruning hidden triples ** ( total pruned =  {} ) ************************ End.'.format(totNumPruned))
 
     totNumPruned  = 0
     loopNumPruned = 1
     while loopNumPruned:
         loopNumPruned, canidates = ht.pruneHiddenTriplesRowOrCols(canidates, 'col')
         totNumPruned  += loopNumPruned
-    print('Total Pruning hidden triples cols ** ( total pruned =  {} ) ** End.'.format(totNumPruned))
+    print('Total Pruning hidden triples cols ** ( total pruned =  {} ) ******************* End.'.format(totNumPruned))
+
+    if totNumPruned> 10:
+        input()
 
     numPruned1 = 1
     numPruned2 = 1
