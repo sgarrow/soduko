@@ -1,4 +1,5 @@
 def prettyPrint3DArray(array):
+    print()
     for row in array:
         str1 = ' '.join(str(e).ljust(21) for e in row)
         print('  ',str1)

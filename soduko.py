@@ -63,22 +63,19 @@ def updatePuzzlesDictCntrs(puzzlesDict,k,  dicOfFuncs):
 
 def pruneCanidates(canidates):
 
-    totNumPruned  = 0
-    loopNumPruned = 1
-    while loopNumPruned:
-        loopNumPruned, canidates = ht.pruneHiddenTriplesRowOrCols(canidates, 'row')
-        totNumPruned  += loopNumPruned
-    print('Total Pruning hidden triples ** ( total pruned =  {} ) ************************ End.'.format(totNumPruned))
+    house = ['row','col','sqr']
+    #house = []
+    for h in house:
+        print('Pruning hidden triples in {} ************************************************ Start.'.format(h))
+        totNumPruned  = 0
+        loopNumPruned = 1
+        while loopNumPruned:
+            loopNumPruned, canidates = ht.pruneHiddenTriples(canidates, h)
+            totNumPruned  += loopNumPruned
+        print('Pruning hidden triples in {} ** ( total pruned =  {:2} ) ************************ End.'.format(h, totNumPruned))
 
-    totNumPruned  = 0
-    loopNumPruned = 1
-    while loopNumPruned:
-        loopNumPruned, canidates = ht.pruneHiddenTriplesRowOrCols(canidates, 'col')
-        totNumPruned  += loopNumPruned
-    print('Total Pruning hidden triples cols ** ( total pruned =  {} ) ******************* End.'.format(totNumPruned))
-
-    if totNumPruned> 10:
-        input()
+    #if totNumPruned> 15:
+    #    input()
 
     numPruned1 = 1
     numPruned2 = 1

@@ -3,91 +3,97 @@ import printRoutines as pr
 import pprint as pp
 import fillRoutines  as fr
 
-def pruneHiddenTriplesRowOrCols(canidates, processRowsOrCols):
+def mapSrqsToRows(canidates): # In canidates rows are rows
+    sqrsToRows = []
+    squareNums = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]] 
+
+    for squareNum in squareNums:
+        rowsInSq = [ x+squareNum[0]*3 for x in [0,1,2] ]
+        colsInSq = [ x+squareNum[1]*3 for x in [0,1,2] ]
+        coordsInSq   = [ [r,c] for r in rowsInSq for c in colsInSq ]
+        candatesSq   = [ canidates[x[0]][x[1]] for x in coordsInSq ] 
+        sqrsToRows.append(candatesSq)
+    return sqrsToRows
+#############################################################################
+
+def mapRowsToSqrs(canidates): # In canidates rows are squares
+    rowsToSqrs = []
+    squareNums = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]] 
+    rowsToSqrs = [ [None]*9 for i in range(9) ]
+
+    for ii,squareNum in enumerate(squareNums):
+        currRowToMap = canidates[ii]
+        rowsInSq = [ x+squareNum[0]*3 for x in [0,1,2] ]
+        colsInSq = [ x+squareNum[1]*3 for x in [0,1,2] ]
+    
+        for ii,r in enumerate(rowsInSq):
+            for jj,c in enumerate(colsInSq):
+                rowsToSqrs[r][c] = currRowToMap[ii*3+jj]
+    return rowsToSqrs
+#############################################################################
+
+def mapRowsToCols(canidates):
+    Xpos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
+    return Xpos
+#############################################################################
+
+def mapColsToRows(canidates):
+    Xpos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
+    return Xpos
+#############################################################################
+
+def pruneHiddenTriples(canidates, house):
 
     import copy
-
-    Xpos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
-
-    if processRowsOrCols == 'row': Xcanidates = copy.deepcopy(canidates)
-    else:                          Xcanidates = copy.deepcopy(Xpos)
-
-    print('Pruning hidden triples ********************************* Start.')
-    print('  Finding hidden triples in {}s.'.format(processRowsOrCols))
+    if   house == 'row':  Xcanidates = copy.deepcopy(canidates)
+    elif house == 'col':  Xcanidates = mapColsToRows(canidates) 
+    elif house == 'sqr':  Xcanidates = mapSrqsToRows(canidates)
 
     numPruned = 0
-    for idx, rowOrColWithZeros in enumerate(Xcanidates):
-        rowOrCol     = [set(x) if x != 0 else set([0]) for x in rowOrColWithZeros]
-        combSet      = combinations(rowOrCol, 3)  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3) = 84.
-        combIdxs     = list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rowOrCol), 3))
-        #[ print(el) for el in combSet ]
-        #pp.pprint (combIdxs)
-        #print(rowOrCol)
-        #exit()
+    for idx, rowOrColOrSqrWithZeros in enumerate(Xcanidates):
+        rowOrColOrSqr = [set(x) if x != 0 else set([0]) for x in rowOrColOrSqrWithZeros]
+        combSet       = combinations(rowOrColOrSqr, 3)  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3) = 84.
+        combIdxs      = list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rowOrColOrSqr), 3))
 
         for comb,comIdx in zip(combSet,combIdxs):
 
-            #[ print(el) for el in comb ]
-            #print()
-            if any( el == {0} for el in comb):
-                #print('skipping')
-                continue
-            else:
-                pass
-                #print('processing')
+            if any( el == {0} for el in comb): continue
+            else:                              pass
 
             T   = comIdx
-            Tc  = [ x for x in range(0,len(rowOrCol)) if x not in T ]
+            Tc  = [ x for x in range(0,len(rowOrColOrSqr)) if x not in T ]
             H   = set.union( comb[0], comb[1], comb[2] )
-            G   = set(fr.flatten([ rowOrCol[ii] for ii in Tc if rowOrCol[ii] != [0]]))
+            G   = set(fr.flatten([ rowOrColOrSqr[ii] for ii in Tc if rowOrColOrSqr[ii] != [0]]))
             HmG = list(H - G)
-            NEW_hIsNaked  = (len(H) == 3)
-            NEW_hIsHidden = (len(H) > 3) and (len(HmG) == 3)
+            hIsNaked  = (len(H) == 3)
+            hIsHidden = (len(H) > 3) and (len(HmG) == 3)
     
             #print( '{}{}'.format(str(comb).ljust(40),comIdx) )
             #print('idx, T, Tcomp     = ', idx, T, Tc   )
             #print('idx, H, G         = ', idx, H, G   )
             #print('idx, Hmg   = ', idx, HmG )
-            #print('idx ************* NEW_hIsNaked',  idx, NEW_hIsNaked  )
-            #print('idx ************* NEW_hIsHidden', idx, NEW_hIsHidden )
 
-            if NEW_hIsHidden:
-                if processRowsOrCols == 'row':
-                    print(' row {:2} has hidden triple {} in cols {}'.format(idx, HmG, comIdx))
-                    myD = {'row': idx, 'tripVals': HmG, 'tripIdxs': comIdx}
-                else:
-                    print(' col {} has hidden triple {} in rows {}'.format(idx, HmG, comIdx))
-                    myD = {'col': idx, 'tripVals': HmG, 'tripIdxs': comIdx}
+            if hIsHidden:
+                #pr.prettyPrint3DArray(Xcanidates)
+                print(' {} {:2} has hidden triple {} at index {}'.format(house, idx, HmG, comIdx))
+                myD = {'row': idx, 'tripVals': HmG, 'tripIdxs': comIdx }
 
-                #print()
-                #pr.prettyPrint3DArray(canidates)
-                #print()
-    
                 for tripIdx in myD['tripIdxs']:
-                    if processRowsOrCols == 'row':
-                        temp = [ x for x in canidates[myD['row']][tripIdx] if x in myD['tripVals'] ]
-                        inter5 = set.intersection( set(canidates[myD['row']][tripIdx]), set(temp) )
-                        diff = set(canidates[myD['row']][tripIdx]) - inter5
-                        if len(diff) != 0:
-                            numPruned += len(diff)
-                            print( '   Removed {} from row {} cols {}'.format(diff, myD['row'], myD['tripIdxs']) )
-                        canidates[myD['row']][tripIdx] = temp
-                    else:
-                        temp = [ x for x in canidates[tripIdx][myD['col']] if x in myD['tripVals'] ]
-                        inter5 = set.intersection( set(canidates[tripIdx][myD['col']]), set(temp) )
-                        diff = set(canidates[tripIdx][myD['col']]) - inter5
-                        if len(diff) != 0:
-                            numPruned += len(diff)
-                            print( '   Removed {} from col {} rows {}'.format(diff, myD['col'], myD['tripIdxs']) )
-                        canidates[tripIdx][myD['col']] = temp
-    
-                #print()
-                #pr.prettyPrint3DArray(canidates)
-                #print()
+                    temp  = [ x for x in Xcanidates[myD['row']][tripIdx] if x in myD['tripVals'] ]
+                    inter = set.intersection( set(Xcanidates[myD['row']][tripIdx]), set(temp) )
+                    diff  = set(Xcanidates[myD['row']][tripIdx]) - inter
+                    if len(diff) != 0:
+                        numPruned += len(diff)
+                        print( '   Removed {} from {} {} index {}'.format(diff, house, myD['row'], myD['tripIdxs']) )
+                    Xcanidates[myD['row']][tripIdx] = temp
+                #pr.prettyPrint3DArray(Xcanidates)
 
                 break
 
-    print()
-    print('Pruning hidden triples ** ( total pruned =  {} ) ******* End.'.format(numPruned))
+    if   house == 'row':  canidates = copy.deepcopy(Xcanidates)
+    elif house == 'col':  canidates = mapRowsToCols(Xcanidates) 
+    elif house == 'sqr':  canidates = mapRowsToSqrs(Xcanidates)
+    #pr.prettyPrint3DArray(canidates)
+
     return(numPruned, canidates)
 
