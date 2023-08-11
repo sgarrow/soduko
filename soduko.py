@@ -3,7 +3,7 @@ import pprint        as pp
 import printRoutines as pr
 import initRoutines  as ir
 import fillRoutines  as fr
-import hiddenTriples as ht
+import nakedAndHiddenTuples as nht
 #############################################################################
 
 def findRowsColsInSquare(rIdx, cIdx):
@@ -90,7 +90,7 @@ def pruneCanidates(canidates):
                     loopNumPruned = 0
                     callNumPruned = 1
                     while callNumPruned:
-                        callNumPruned, canidates = ht.pruneHiddenTriples(canidates, h, hn, N)
+                        callNumPruned, canidates = nht.pruneHiddenTriples(canidates, h, hn, N)
                         loopNumPruned += callNumPruned
                         totNumPruned  += callNumPruned
                         if callNumPruned != 0:

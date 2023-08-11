@@ -1,4 +1,4 @@
 git add *
-git commit * --no-verify -m "remove more un-needed file."
+git commit * --no-verify -m "renamed files."
 git push -u origin main
 
