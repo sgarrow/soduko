@@ -41,7 +41,7 @@ def mapColsToRows(canidates):
     return Xpos
 #############################################################################
 
-def pruneHiddenTriples(canidates, house, hiddenOrNaked):
+def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
 
     #pr.prettyPrint3DArray(canidates)
     import copy
@@ -52,8 +52,15 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked):
     numPruned = 0
     for idx, rowOrColOrSqrWithZeros in enumerate(Xcanidates):
         rowOrColOrSqr = [set(x) if x != 0 else set([0]) for x in rowOrColOrSqrWithZeros]
-        combSet       = combinations(rowOrColOrSqr, 3)  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3) = 84.
-        combIdxs      = list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rowOrColOrSqr), 3))
+        combSet       = combinations(rowOrColOrSqr, N)  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3) = 84.
+        if N == 2:
+            combIdxs = list((i,j) for ((i,_),(j,_)) in combinations(enumerate(rowOrColOrSqr), N))
+        elif N == 3:
+            combIdxs = list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rowOrColOrSqr), N))
+        elif N == 4:
+            combIdxs = list((i,j,k,l) for ((i,_),(j,_),(k,_),(l,_)) in combinations(enumerate(rowOrColOrSqr), N))
+        elif N == 5:
+            combIdxs = list((i,j,k,l,m) for ((i,_),(j,_),(k,_),(l,_),(m,_)) in combinations(enumerate(rowOrColOrSqr), N))
 
         for comb,comIdx in zip(combSet,combIdxs):
             #print('************', idx)
@@ -71,10 +78,10 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked):
             hIsNaked  = False
             hIsHidden = False
 
-            if len(H) == 3:
+            if len(H) == N:
                 hIsNaked = True
 
-            if (len(H) > 3) and (len(HmG) == 3):
+            if (len(H) > N) and (len(HmG) == N):
                 hIsHidden = True
                 for c in comb:
                     inter = set.intersection(set(HmG), c)
@@ -90,7 +97,7 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked):
                 
             if hIsHidden and hiddenOrNaked == 'hidden':
                 #pr.prettyPrint3DArray(Xcanidates)
-                print(' {} {} has hidden triple {} at index {}'.format(house, idx, HmG, comIdx))
+                print(' {} {} has hidden {}-tuple {} at index {}'.format(house, idx, N, HmG, comIdx))
                 myD = {'row': idx, 'tripVals': HmG, 'tripIdxs': comIdx }
 
                 for tripIdx in myD['tripIdxs']:
@@ -108,7 +115,7 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked):
 
             if hIsNaked and hiddenOrNaked == 'naked':
                 #pr.prettyPrint3DArray(Xcanidates)
-                print(' {} {:2} has naked triple {} at index {}'.format(house, idx, H, comIdx))
+                print(' {} {} has naked {}-tuple {} at index {}'.format(house, idx, N, H, comIdx))
                 myD   = {'row': idx, 'tripVals': H, 'tripIdxs': comIdx }
 
                 temp  = [ list(x) if kk in myD['tripIdxs'] else list(x-myD['tripVals']) for kk,x in enumerate(rowOrColOrSqr) ]

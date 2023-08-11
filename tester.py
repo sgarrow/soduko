@@ -41,9 +41,9 @@ def mapColsToRows(canidates):
     return Xpos
 #############################################################################
 
-def pruneHiddenTriples(canidates, house, hiddenOrNaked):
+def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
 
-    #pr.prettyPrint3DArray(canidates)
+    pr.prettyPrint3DArray(canidates)
     import copy
     if   house == 'row':  Xcanidates = copy.deepcopy(canidates)
     elif house == 'col':  Xcanidates = mapColsToRows(canidates) 
@@ -52,8 +52,11 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked):
     numPruned = 0
     for idx, rowOrColOrSqrWithZeros in enumerate(Xcanidates):
         rowOrColOrSqr = [set(x) if x != 0 else set([0]) for x in rowOrColOrSqrWithZeros]
-        combSet       = combinations(rowOrColOrSqr, 3)  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3) = 84.
-        combIdxs      = list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rowOrColOrSqr), 3))
+        combSet       = combinations(rowOrColOrSqr, N)  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3) = 84.
+        if N == 2:
+            combIdxs = list((i,j) for ((i,_),(j,_)) in combinations(enumerate(rowOrColOrSqr), N))
+        elif N == 3:
+            combIdxs = list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rowOrColOrSqr), N))
 
         for comb,comIdx in zip(combSet,combIdxs):
             #print('************', idx)
@@ -71,10 +74,10 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked):
             hIsNaked  = False
             hIsHidden = False
 
-            if len(H) == 3:
+            if len(H) == N:
                 hIsNaked = True
 
-            if (len(H) > 3) and (len(HmG) == 3):
+            if (len(H) > N) and (len(HmG) == N):
                 hIsHidden = True
                 for c in comb:
                     inter = set.intersection(set(HmG), c)
@@ -90,7 +93,7 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked):
                 
             if hIsHidden and hiddenOrNaked == 'hidden':
                 #pr.prettyPrint3DArray(Xcanidates)
-                print(' {} {} has hidden triple {} at index {}'.format(house, idx, HmG, comIdx))
+                print(' {} {} has hidden {}-tuple {} at index {}'.format(house, idx, N, HmG, comIdx))
                 myD = {'row': idx, 'tripVals': HmG, 'tripIdxs': comIdx }
 
                 for tripIdx in myD['tripIdxs']:
@@ -108,7 +111,7 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked):
 
             if hIsNaked and hiddenOrNaked == 'naked':
                 #pr.prettyPrint3DArray(Xcanidates)
-                print(' {} {:2} has naked triple {} at index {}'.format(house, idx, H, comIdx))
+                print(' {} {} has naked {}-tuple {} at index {}'.format(house, idx, N, H, comIdx))
                 myD   = {'row': idx, 'tripVals': H, 'tripIdxs': comIdx }
 
                 temp  = [ list(x) if kk in myD['tripIdxs'] else list(x-myD['tripVals']) for kk,x in enumerate(rowOrColOrSqr) ]
@@ -129,24 +132,36 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked):
     if   house == 'row':  canidates = copy.deepcopy(Xcanidates)
     elif house == 'col':  canidates = mapRowsToCols(Xcanidates) 
     elif house == 'sqr':  canidates = mapRowsToSqrs(Xcanidates)
-    #pr.prettyPrint3DArray(canidates)
+    pr.prettyPrint3DArray(canidates)
 
     return(numPruned, canidates)
 
 if __name__ == '__main__':
     canidates = \
-    [  #   x        ***    x   x      ***                *****
-        [ [1,4,9], [1,8], [1,5,8,9], [3,8], [4,5], [7], [1,3,8], [6], [2] ], #  0. 3/3/3
-        [ [1,2,3],          [1,2,3],       [1,2,3],   [7,3],       [8,1,2],   [9],     0,0,0 ], #  0. 3/3/3
-        [ [1,2,3],          [1,2,3],       [1,2],     [7],       [8],   [9],     0,0,0 ], #  1. 3/3/2
-        [ [1,2,3],          [1,2],         [1,3],     [7],       [8],   [9],     0,0,0 ], #  2. 3/2/2
-        [ [1,2],            [1,3],         [2,3],     [7],       [8],   [9],     0,0,0 ], #  3. 2/2/2
-        
-        [ [1,2,3,4],        [1,2,3],       [1,2,3],   [7,4],     [8],   [9],     0,0,0 ], #  4. 3+/3/3
-        [ [1,2,3,4],        [1,2,3,5],     [1,2,3],   [7,4,5],   [8],   [9],     0,0,0 ], #  5. 3+/3+/3
-        [ [1,2,3,4],        [1,2,3,5],     [1,2,3,6], [7,4,5,6], [8],   [9],     0,0,0 ], #  6. 3+/3+/3+
-        
-        [ [1,2,3,4],        [1,2,3],       [1,2],     [7,4],     [8],   [9],     0,0,0 ], #  7. 3+/3/2
+    [
+        [ [1,2,3],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+
+
+        #   x        ***    x   x      ***                *****
+        #[ [1,4,9], [1,8], [1,5,8,9], [3,8], [4,5], [7], [1,3,8], [6], [2] ], #  0. 3/3/3
+        #[ [1,2,3],          [1,2,3],       [1,2,3],   [7,3],       [8,1,2],   [9],     0,0,0 ], #  0. 3/3/3
+        #[ [1,2,3],          [1,2,3],       [1,2],     [7],       [8],   [9],     0,0,0 ], #  1. 3/3/2
+        #[ [1,2,3],          [1,2],         [1,3],     [7],       [8],   [9],     0,0,0 ], #  2. 3/2/2
+        #[ [1,2],            [1,3],         [2,3],     [7],       [8],   [9],     0,0,0 ], #  3. 2/2/2
+        #
+        #[ [1,2,3,4],        [1,2,3],       [1,2,3],   [7,4],     [8],   [9],     0,0,0 ], #  4. 3+/3/3
+        #[ [1,2,3,4],        [1,2,3,5],     [1,2,3],   [7,4,5],   [8],   [9],     0,0,0 ], #  5. 3+/3+/3
+        #[ [1,2,3,4],        [1,2,3,5],     [1,2,3,6], [7,4,5,6], [8],   [9],     0,0,0 ], #  6. 3+/3+/3+
+        #
+        #[ [1,2,3,4],        [1,2,3],       [1,2],     [7,4],     [8],   [9],     0,0,0 ], #  7. 3+/3/2
         #[ [1,2,3,4],        [1,2,3,5],     [1,2],     [7,4,5],   [8],   [9],     0,0,0 ], #  8. 3+/3+/2
         #[ [1,2,3,4],        [1,2,3,5],     [1,2],     [7,4,5,6], [8],   [9],     0,0,0 ], #  9. 3+/3+/2+
         #[ [1,2,3],          [1,2,3],       [1,2,4],   [7,4],     [8],   [9],     0,0,0 ], # 10. 3/3/2+
@@ -189,8 +204,8 @@ if __name__ == '__main__':
         totNumPruned  = 0
         loopNumPruned = 1
         while loopNumPruned:
-            #loopNumPruned, canidates = pruneHiddenTriples(canidates, h, 'hidden')
-            loopNumPruned, canidates = pruneHiddenTriples(canidates, h, 'naked')
+            loopNumPruned, canidates = pruneHiddenTriples(canidates, h, 'hidden', 2)
+            #loopNumPruned, canidates = pruneHiddenTriples(canidates, h, 'naked', 2)
             totNumPruned  += loopNumPruned
         print('Pruning hidden triples in {} ** ( total pruned =  {:2} ) ************************ End.'.format(h, totNumPruned))
 

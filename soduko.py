@@ -3,10 +3,19 @@ import pprint        as pp
 import printRoutines as pr
 import initRoutines  as ir
 import fillRoutines  as fr
-import nakedPairs    as np
-import hiddenPairs   as hp
-import nakedTriples  as nt
 import hiddenTriples as ht
+#############################################################################
+
+def findRowsColsInSquare(rIdx, cIdx):
+    if rIdx % 3 == 0: rOffsets = [ 1, 2]
+    if rIdx % 3 == 1: rOffsets = [-1, 1]
+    if rIdx % 3 == 2: rOffsets = [-1,-2] 
+    if cIdx % 3 == 0: cOffsets = [ 1, 2]
+    if cIdx % 3 == 1: cOffsets = [-1, 1] 
+    if cIdx % 3 == 2: cOffsets = [-1,-2] 
+    rowsInSquare = [ rIdx+rOffsets[0], rIdx+rOffsets[1] ]
+    colsInSquare = [ cIdx+cOffsets[0], cIdx+cOffsets[1] ]
+    return rowsInSquare, colsInSquare
 #############################################################################
 
 def updateCanidatesList(solution,canidates):
@@ -31,7 +40,7 @@ def updateCanidatesList(solution,canidates):
                     if col.count(ii) == 0: inCol = False
 
                     inSquare = False
-                    rowsInSquare, colsInSquare = np.findRowsColsInSquare(rIdx, cIdx)
+                    rowsInSquare, colsInSquare = findRowsColsInSquare(rIdx, cIdx)
 
                     for ris in rowsInSquare:
                         for cis in colsInSquare:
@@ -63,35 +72,41 @@ def updatePuzzlesDictCntrs(puzzlesDict,k,  dicOfFuncs):
 
 def pruneCanidates(canidates):
 
-    house = ['row','col','sqr']
-    #house = []
+    hiddenOrNaked   = [ 'hidden', 'naked' ]
+    house           = [ 'row','col','sqr' ]
+    tupSize         = [5,4,3,2]
+    totNumPruned = 0
 
-    for h in house:
-        print('Pruning hidden triples in {} ************************************************ Start.'.format(h))
-        totNumPruned_HT  = 0
-        loopNumPruned = 1
-        while loopNumPruned:
-            loopNumPruned, canidates = ht.pruneHiddenTriples(canidates, h, 'hidden')
-            totNumPruned_HT  += loopNumPruned
-        print('Pruning hidden triples in {} ** ( total pruned =  {:2} ) ************************ End.'.format(h, totNumPruned_HT))
+    prunnedAtLeastOne = True
+    while prunnedAtLeastOne:
+        prunnedAtLeastOne = False
+        for hn in ['hidden', 'naked']:
+            for N in tupSize:
+                for h in house:
+    
+                    print('Pruning {:6} {}-tuples in {}s ************************************************ Start.'.\
+                        format(hn,N,h))
+    
+                    loopNumPruned = 0
+                    callNumPruned = 1
+                    while callNumPruned:
+                        callNumPruned, canidates = ht.pruneHiddenTriples(canidates, h, hn, N)
+                        loopNumPruned += callNumPruned
+                        totNumPruned  += callNumPruned
+                        if callNumPruned != 0:
+                            prunnedAtLeastOne = True
+    
+                    print('Prunned {} {} {}-tuples in {}s ************************************************ End.\n'.\
+                        format(loopNumPruned, hn,N,h))
+    
+        print('********************************************************************************')                     
+        print('********************************************************************************\n')                     
 
-    for h in house:
-        print('Pruning naked  triples in {} ************************************************ Start.'.format(h))
-        totNumPruned_NT  = 0
-        loopNumPruned = 1
-        while loopNumPruned:
-            loopNumPruned, canidates = ht.pruneHiddenTriples(canidates, h, 'naked')
-            totNumPruned_NT  += loopNumPruned
-        print('Pruning naked  triples in {} ** ( total pruned =  {:2} ) ************************ End.'.format(h, totNumPruned_NT))
+    print('********************************************************************************')                     
+    print('Total Prunned {} ***************************************************************'.format(totNumPruned))
+    print('********************************************************************************\n')                   
 
-    numPruned1 = 1
-    numPruned2 = 0
-    numPruned3 = 1
-    while numPruned1 or numPruned2 or numPruned3:
-       numPruned1, canidates = np.pruneNakedPairs(canidates)
-       #numPruned2, canidates = nt.pruneNakedTriples(canidates)
-       numPruned3, canidates = hp.pruneHiddenPairs(canidates)
-    return numPruned1+numPruned3+totNumPruned_HT+totNumPruned_NT, canidates
+    return totNumPruned, canidates
 #############################################################################
 
 def fillSolution(solution, canidates, dicOfFuncs ):
@@ -171,5 +186,5 @@ if __name__ == '__main__':
     #    print()
     #
     #
-    #pr.prettyPrint3DArray(canidates)
+    pr.prettyPrint3DArray(canidates)
 
