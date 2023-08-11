@@ -74,7 +74,7 @@ def pruneCanidates(canidates):
 
     hiddenOrNaked   = [ 'hidden', 'naked' ]
     house           = [ 'row','col','sqr' ]
-    tupSize         = [5,4,3,2]
+    tupSize         = [4,3,2]
     totNumPruned = 0
 
     prunnedAtLeastOne = True
@@ -84,8 +84,7 @@ def pruneCanidates(canidates):
             for N in tupSize:
                 for h in house:
     
-                    print('Pruning {:6} {}-tuples in {}s ************************************************ Start.'.\
-                        format(hn,N,h))
+                    print('Pruning {:6} {}-tuples in {}s'.format(hn,N,h))
     
                     loopNumPruned = 0
                     callNumPruned = 1
@@ -96,10 +95,9 @@ def pruneCanidates(canidates):
                         if callNumPruned != 0:
                             prunnedAtLeastOne = True
     
-                    print('Prunned {} {} {}-tuples in {}s ************************************************ End.\n'.\
-                        format(loopNumPruned, hn,N,h))
+                    if loopNumPruned:
+                        print('Prunned {} {} {}-tuples in {}s\n'.format(loopNumPruned, hn,N,h))
     
-        print('********************************************************************************')                     
         print('********************************************************************************\n')                     
 
     print('********************************************************************************')                     
