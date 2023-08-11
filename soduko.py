@@ -65,26 +65,33 @@ def pruneCanidates(canidates):
 
     house = ['row','col','sqr']
     #house = []
+
     for h in house:
         print('Pruning hidden triples in {} ************************************************ Start.'.format(h))
-        totNumPruned  = 0
+        totNumPruned_HT  = 0
         loopNumPruned = 1
         while loopNumPruned:
-            loopNumPruned, canidates = ht.pruneHiddenTriples(canidates, h)
-            totNumPruned  += loopNumPruned
-        print('Pruning hidden triples in {} ** ( total pruned =  {:2} ) ************************ End.'.format(h, totNumPruned))
+            loopNumPruned, canidates = ht.pruneHiddenTriples(canidates, h, 'hidden')
+            totNumPruned_HT  += loopNumPruned
+        print('Pruning hidden triples in {} ** ( total pruned =  {:2} ) ************************ End.'.format(h, totNumPruned_HT))
 
-    #if totNumPruned> 15:
-    #    input()
+    for h in house:
+        print('Pruning naked  triples in {} ************************************************ Start.'.format(h))
+        totNumPruned_NT  = 0
+        loopNumPruned = 1
+        while loopNumPruned:
+            loopNumPruned, canidates = ht.pruneHiddenTriples(canidates, h, 'naked')
+            totNumPruned_NT  += loopNumPruned
+        print('Pruning naked  triples in {} ** ( total pruned =  {:2} ) ************************ End.'.format(h, totNumPruned_NT))
 
     numPruned1 = 1
-    numPruned2 = 1
+    numPruned2 = 0
     numPruned3 = 1
     while numPruned1 or numPruned2 or numPruned3:
        numPruned1, canidates = np.pruneNakedPairs(canidates)
-       numPruned2, canidates = nt.pruneNakedTriples(canidates)
+       #numPruned2, canidates = nt.pruneNakedTriples(canidates)
        numPruned3, canidates = hp.pruneHiddenPairs(canidates)
-    return numPruned1+numPruned2+numPruned3, canidates
+    return numPruned1+numPruned3+totNumPruned_HT+totNumPruned_NT, canidates
 #############################################################################
 
 def fillSolution(solution, canidates, dicOfFuncs ):
