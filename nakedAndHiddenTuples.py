@@ -126,7 +126,6 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
                     diff  = el - inter
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        #print( '   Removed {} from ({},{})'.format(       diff, myD['row'], tripIdx) )
                         print( '   Removed {} from ({},{})'.format(diff,  myD['row'], kk) )
 
                 Xcanidates[myD['row']] = temp2

@@ -1,4 +1,4 @@
 git add *
-git commit * --no-verify -m "beautify console IO."
+git commit * --no-verify -m "more beautify console IO."
 git push -u origin main
 
