@@ -4,6 +4,7 @@ import printRoutines as pr
 import initRoutines  as ir
 import fillRoutines  as fr
 import nakedAndHiddenTuples as nht
+import xWing as xw
 #############################################################################
 
 def findRowsColsInSquare(rIdx, cIdx):
@@ -71,6 +72,15 @@ def updatePuzzlesDictCntrs(puzzlesDict,k,  dicOfFuncs):
 #############################################################################
 
 def pruneCanidates(canidates):
+
+    h = 'row'
+    print('Pruning X-Wings in {}s'.format(h))
+    loopNumPruned = 0
+    callNumPruned, canidates = xw.pruneXwings(canidates, h)
+    loopNumPruned += callNumPruned
+    print('Prunned {} X-Wings in {}s\n'.format(loopNumPruned,h))
+
+
 
     hiddenOrNaked   = [ 'hidden', 'naked' ]
     house           = [ 'row','col','sqr' ]
@@ -182,7 +192,4 @@ if __name__ == '__main__':
     #    for row in Xpos:
     #        print(sum(row), ' ', end = '')
     #    print()
-    #
-    #
-    pr.prettyPrint3DArray(canidates)
-
+    ##
