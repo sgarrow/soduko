@@ -41,7 +41,7 @@ def mapColsToRows(canidates):
     return Xpos
 #############################################################################
 
-def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
+def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, N):
 
     #pr.prettyPrint3DArray(canidates)
     import copy
@@ -97,7 +97,7 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
                 
             if hIsHidden and hiddenOrNaked == 'hidden':
                 #pr.prettyPrint3DArray(Xcanidates)
-                print(' {} {} has hidden {}-tuple {} at index {}'.format(house, idx, N, HmG, comIdx))
+                #print(' {} {} has hidden {}-tuple {} at index {}'.format(house, idx, N, HmG, comIdx))
                 myD = {'row': idx, 'tripVals': HmG, 'tripIdxs': comIdx }
 
                 for tripIdx in myD['tripIdxs']:
@@ -107,7 +107,7 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
                     diff  = set(rowOrColOrSqr[tripIdx]) - inter
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        print( '   Removed {} from ({},{})'.format(diff, myD['row'], tripIdx) )
+                        #print( '   Removed {} from ({},{})'.format(diff, myD['row'], tripIdx) )
 
                     Xcanidates[myD['row']][tripIdx] = temp
                 #pr.prettyPrint3DArray(Xcanidates)
@@ -115,7 +115,7 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
 
             if hIsNaked and hiddenOrNaked == 'naked':
                 #pr.prettyPrint3DArray(Xcanidates)
-                print(' {} {} has naked {}-tuple {} at index {}'.format(house, idx, N, H, comIdx))
+                #print(' {} {} has naked {}-tuple {} at index {}'.format(house, idx, N, H, comIdx))
                 myD   = {'row': idx, 'tripVals': H, 'tripIdxs': comIdx }
 
                 temp  = [ list(x) if kk in myD['tripIdxs'] else list(x-myD['tripVals']) for kk,x in enumerate(rowOrColOrSqr) ]
@@ -126,7 +126,7 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
                     diff  = el - inter
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        print( '   Removed {} from ({},{})'.format(diff,  myD['row'], kk) )
+                        #print( '   Removed {} from ({},{})'.format(diff,  myD['row'], kk) )
 
                 Xcanidates[myD['row']] = temp2
                 #pr.prettyPrint3DArray(Xcanidates)

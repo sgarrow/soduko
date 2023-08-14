@@ -22,11 +22,13 @@ def printResults(puzzlesDict, prnType):
                 print( puzzlesDict[key]['puzzle'  ][ii], '  ',  
                        puzzlesDict[key]['solution'][ii]  )
 
-        print( '\n starting, ending zeros                      = {:2d}, {:2d}.'.\
-            format(puzzlesDict[key]['start0s'], puzzlesDict[key]['end0s']))
+        print( '\n Starting: filled-in + not-filled-in = {:2d} + {:2d} = {:2d}.'.\
+            format( 81-puzzlesDict[key]['start0s'],  puzzlesDict[key]['start0s'],
+                    81-puzzlesDict[key]['start0s'] + puzzlesDict[key]['start0s'] ))
 
-        print( ' starting, ending non-zeros                  = {:2d}, {:2d}.'.\
-            format(81-puzzlesDict[key]['start0s'], 81-puzzlesDict[key]['end0s']))
+        print( ' Ending:   filled-in + not-filled-in = {:2d} + {:2d} = {:2d}.\n'.\
+            format( 81-puzzlesDict[key]['end0s'],  puzzlesDict[key]['end0s'],
+                    81-puzzlesDict[key]['end0s'] + puzzlesDict[key]['end0s'] ))
 
         print( ' fillCellsVia_1_Canidate calls,replacements  = {:2d}, {:2d}.'.\
             format(puzzlesDict[key]['oC'], puzzlesDict[key]['oR']))

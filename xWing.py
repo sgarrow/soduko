@@ -3,12 +3,21 @@ import pprint as pp
 import fillRoutines  as fr
 from itertools import combinations
 
+def mapRowsToCols(canidates):
+    Xpos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
+    return Xpos
+#############################################################################
+
+def mapColsToRows(canidates):
+    Xpos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
+    return Xpos
+#############################################################################
+
 def pruneXwings(canidates, house):
     #pr.prettyPrint3DArray(canidates)
     import copy
     if   house == 'row':  Xcanidates = copy.deepcopy(canidates)
     elif house == 'col':  Xcanidates = mapColsToRows(canidates) 
-    elif house == 'sqr':  Xcanidates = mapSrqsToRows(canidates)
 
     numPruned = 0
 
@@ -40,7 +49,7 @@ def pruneXwings(canidates, house):
                           'B_cols':   c[0]['B_cols'],
                           'C_val' :   c[0]['C_val']  }
             k += 1
-    pp.pprint(xWingD)
+    #pp.pprint(xWingD)
     
     #pr.prettyPrint3DArray(Xcanidates)
     for xw in xWingD.values():
@@ -48,14 +57,14 @@ def pruneXwings(canidates, house):
             for cIdx in xw['B_cols']:
                 if rIdx not in xw['A_rows'] and Xcanidates[rIdx][cIdx] != 0 and xw['C_val'] in Xcanidates[rIdx][cIdx]:
                     Xcanidates[rIdx][cIdx].remove(xw['C_val'])
-                    print('remove {} from ({},{})'.format(xw['C_val'], rIdx, cIdx))
+                    #print('remove {} from ({},{})'.format(xw['C_val'], rIdx, cIdx))
                     numPruned += 1
     #pr.prettyPrint3DArray(Xcanidates)
 
 
     if   house == 'row':  canidates = copy.deepcopy(Xcanidates)
     elif house == 'col':  canidates = mapRowsToCols(Xcanidates) 
-    elif house == 'sqr':  canidates = mapRowsToSqrs(Xcanidates)
+    #print(house)
 
     return(numPruned, canidates)
 
