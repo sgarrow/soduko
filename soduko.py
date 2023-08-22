@@ -91,8 +91,9 @@ def pruneCanidates(canidates):
                     prunnedAtLeastOne = True
 
             if loopNumPruned:
-                print('Prunned {:2} canidates RE: X-Wings in {}s'.format(loopNumPruned, h))
-        print('********************************************************************************\n')                     
+                print('Prunned {:2} canidates RE: X-Wings in {}s'.\
+                    format(loopNumPruned, h))
+        print(62*'*','\n')                     
 
 
     hiddenOrNaked    = [ 'hidden', 'naked' ]
@@ -119,17 +120,17 @@ def pruneCanidates(canidates):
                             prunnedAtLeastOne = True
     
                     if loopNumPruned:
-                        print('Prunned {:2} canidates RE: {:6} {}-tuples in {}s'.format(loopNumPruned, hn,N,h))
-        print('********************************************************************************\n')                     
+                        print('Prunned {:2} canidates RE: {:6} {}-tuples in {}s'.\
+                            format(loopNumPruned, hn,N,h))
+        print(62*'*','\n')                     
 
-    print('********************************************************************************')                     
-    print('Total Prunned NHT {} ***********************************************************'.format(totNumPruned_NHT))
-    print('********************************************************************************\n')                   
-
-    print('********************************************************************************')                     
-    print('Total Prunned XW  {} ***********************************************************'.format(totNumPruned_XW))
-    print('********************************************************************************\n')                   
-    input()
+    print(62*'*','\n')                     
+    print('Total Prunned NHT {:2} *****************************************'.\
+        format(totNumPruned_NHT))
+    print('Total Prunned XW  {:2} *****************************************'.\
+        format(totNumPruned_XW))
+    print(62*'*','\n')                     
+    #input()
     return totNumPruned_NHT, canidates
 #############################################################################
 

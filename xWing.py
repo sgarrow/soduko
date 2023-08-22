@@ -14,7 +14,7 @@ def mapColsToRows(canidates):
 #############################################################################
 
 def pruneXwings(canidates, house):
-    #pr.prettyPrint3DArray(canidates)
+    #pr.printCanidates(canidates)
     import copy
     if   house == 'row':  Xcanidates = copy.deepcopy(canidates)
     elif house == 'col':  Xcanidates = mapColsToRows(canidates) 
@@ -51,16 +51,15 @@ def pruneXwings(canidates, house):
             k += 1
     #pp.pprint(xWingD)
     
-    #pr.prettyPrint3DArray(Xcanidates)
     for xw in xWingD.values():
         for rIdx,row in enumerate(Xcanidates):
             for cIdx in xw['B_cols']:
                 if rIdx not in xw['A_rows'] and Xcanidates[rIdx][cIdx] != 0 and xw['C_val'] in Xcanidates[rIdx][cIdx]:
+                    #pr.printCanidates(Xcanidates)
                     Xcanidates[rIdx][cIdx].remove(xw['C_val'])
                     #print('remove {} from ({},{})'.format(xw['C_val'], rIdx, cIdx))
+                    #pr.printCanidates(Xcanidates)
                     numPruned += 1
-    #pr.prettyPrint3DArray(Xcanidates)
-
 
     if   house == 'row':  canidates = copy.deepcopy(Xcanidates)
     elif house == 'col':  canidates = mapRowsToCols(Xcanidates) 

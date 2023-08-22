@@ -1,4 +1,4 @@
 git add *
-git commit * --no-verify -m "xwings cols, ver 1."
+git commit * --no-verify -m "beautify console IO."
 git push -u origin main
 

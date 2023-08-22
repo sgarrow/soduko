@@ -1,3 +1,24 @@
+def printCanidates(canidates):
+    for rIdx,row in enumerate(canidates):     # for each row
+        print('++------+------+------++------+------+------++------+------+------++')
+        for ii in range(3):   # print 3 lines.
+            thingsToPrint = list(range( ii*3+1, ii*3+4 )) # 1,2,3; 4,5,6; 7,8,9
+            #print(thingsToPrint)
+            print('|',end = '')
+            for cIdx,cell in enumerate(row):
+                for num in thingsToPrint:
+                    if (num-1)%3 == 0: print('|',end = '')
+                    if cell != 0 and num in cell:
+                        print('{:2}'.format(num), end = '')
+                    else:
+                        print('  ',end = '')
+                #if cIdx in [2,5]:  print('|',end = '') 
+                if (cIdx+1)%3 == 0:  print('|',end = '') 
+            print('|') # output 1st, 2nd or 3rd line of the row
+        if (rIdx+1)%3 ==0:
+            print('++------+------+------++------+------+------++------+------+------++')
+    return 0
+############################################################################
 def prettyPrint3DArray(array):
     print()
     for row in array:
@@ -42,7 +63,7 @@ def printResults(puzzlesDict, prnType):
         print( ' fillCellsViaSqrHistAnal calls,replacements  = {:2d}, {:2d}.'.\
             format(puzzlesDict[key]['sC'], puzzlesDict[key]['sR']))
 
-        print('***********************************************************')
+        print(62*'*','\n')                     
 
     return
 #############################################################################

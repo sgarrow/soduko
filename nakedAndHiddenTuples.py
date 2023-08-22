@@ -43,7 +43,7 @@ def mapColsToRows(canidates):
 
 def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, N):
 
-    #pr.prettyPrint3DArray(canidates)
+    #pr.printCanidates(canidates)
     import copy
     if   house == 'row':  Xcanidates = copy.deepcopy(canidates)
     elif house == 'col':  Xcanidates = mapColsToRows(canidates) 
@@ -96,7 +96,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, N):
             #print('    ',hIsNaked,hIsHidden)
                 
             if hIsHidden and hiddenOrNaked == 'hidden':
-                #pr.prettyPrint3DArray(Xcanidates)
+                #pr.printCanidates(Xcanidates)
                 #print(' {} {} has hidden {}-tuple {} at index {}'.format(house, idx, N, HmG, comIdx))
                 myD = {'row': idx, 'tripVals': HmG, 'tripIdxs': comIdx }
 
@@ -110,11 +110,11 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, N):
                         #print( '   Removed {} from ({},{})'.format(diff, myD['row'], tripIdx) )
 
                     Xcanidates[myD['row']][tripIdx] = temp
-                #pr.prettyPrint3DArray(Xcanidates)
+                #pr.printCanidates(Xcanidates)
                 break
 
             if hIsNaked and hiddenOrNaked == 'naked':
-                #pr.prettyPrint3DArray(Xcanidates)
+                #pr.printCanidates(Xcanidates)
                 #print(' {} {} has naked {}-tuple {} at index {}'.format(house, idx, N, H, comIdx))
                 myD   = {'row': idx, 'tripVals': H, 'tripIdxs': comIdx }
 
@@ -129,13 +129,13 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, N):
                         #print( '   Removed {} from ({},{})'.format(diff,  myD['row'], kk) )
 
                 Xcanidates[myD['row']] = temp2
-                #pr.prettyPrint3DArray(Xcanidates)
+                #pr.printCanidates(Xcanidates)
                 break
 
     if   house == 'row':  canidates = copy.deepcopy(Xcanidates)
     elif house == 'col':  canidates = mapRowsToCols(Xcanidates) 
     elif house == 'sqr':  canidates = mapRowsToSqrs(Xcanidates)
-    #pr.prettyPrint3DArray(canidates)
+    #pr.printCanidates(canidates)
 
     return(numPruned, canidates)
 

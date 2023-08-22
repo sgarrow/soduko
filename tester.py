@@ -43,7 +43,7 @@ def mapColsToRows(canidates):
 
 def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
 
-    pr.prettyPrint3DArray(canidates)
+    #pr.printCanidates(canidates)
     import copy
     if   house == 'row':  Xcanidates = copy.deepcopy(canidates)
     elif house == 'col':  Xcanidates = mapColsToRows(canidates) 
@@ -92,7 +92,7 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
             #print('    ',hIsNaked,hIsHidden)
                 
             if hIsHidden and hiddenOrNaked == 'hidden':
-                #pr.prettyPrint3DArray(Xcanidates)
+                #pr.printCanidates(Xcanidates)
                 print(' {} {} has hidden {}-tuple {} at index {}'.format(house, idx, N, HmG, comIdx))
                 myD = {'row': idx, 'tripVals': HmG, 'tripIdxs': comIdx }
 
@@ -106,11 +106,11 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
                         print( '   Removed {} from ({},{})'.format(diff, myD['row'], tripIdx) )
 
                     Xcanidates[myD['row']][tripIdx] = temp
-                #pr.prettyPrint3DArray(Xcanidates)
+                #pr.printCanidates(Xcanidates)
                 break
 
             if hIsNaked and hiddenOrNaked == 'naked':
-                #pr.prettyPrint3DArray(Xcanidates)
+                #pr.printCanidates(Xcanidates)
                 print(' {} {} has naked {}-tuple {} at index {}'.format(house, idx, N, H, comIdx))
                 myD   = {'row': idx, 'tripVals': H, 'tripIdxs': comIdx }
 
@@ -126,28 +126,69 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
                         print( '   Removed {} from ({},{})'.format(diff,  myD['row'], kk) )
 
                 Xcanidates[myD['row']] = temp2
-                #pr.prettyPrint3DArray(Xcanidates)
+                #pr.printCanidates(Xcanidates)
                 break
 
     if   house == 'row':  canidates = copy.deepcopy(Xcanidates)
     elif house == 'col':  canidates = mapRowsToCols(Xcanidates) 
     elif house == 'sqr':  canidates = mapRowsToSqrs(Xcanidates)
-    pr.prettyPrint3DArray(canidates)
+    #pr.printCanidates(canidates)
 
     return(numPruned, canidates)
+############################################################################
+
+def printCanidates(canidates):
+    for rIdx,row in enumerate(canidates):     # for each row
+        print('++------+------+------++------+------+------++------+------+------++')
+        for ii in range(3):   # print 3 lines.
+            thingsToPrint = list(range( ii*3+1, ii*3+4 )) # 1,2,3; 4,5,6; 7,8,9
+            #print(thingsToPrint)
+            print('|',end = '')
+            for cIdx,cell in enumerate(row):
+                for num in thingsToPrint:
+                    if (num-1)%3 == 0: print('|',end = '')
+                    if cell != 0 and num in cell:
+                        print('{:2}'.format(num), end = '')
+                    else:
+                        print('  ',end = '')
+                #if cIdx in [2,5]:  print('|',end = '') 
+                if (cIdx+1)%3 == 0:  print('|',end = '') 
+            print('|') # output 1st, 2nd or 3rd line of the row
+        if (rIdx+1)%3 ==0:
+            print('++------+------+------++------+------+------++------+------+------++')
+    return 0
+############################################################################
 
 if __name__ == '__main__':
     canidates = \
     [
-        [ [1,2,3],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
-        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
-        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
-        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
-        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
-        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
-        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
-        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
-        [ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        #[ [1,2,3,4,5,6,7,8,9], [1],[2],[3],[4],[5],[6],[7],[8] ],
+        [ [1,2,3,4,5,6,7,8,9], [1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],
+        [ [1,2,3,4,5,6,7,8,9], [1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],
+        [ [1,2,3,4,5,6,7,8,9], [1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],
+        [ [1,2,3,4,5,6,7,8,9], [1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],
+        [ [1,2,3,4,5,6,7,8,9], [1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],
+        [ [1,2,3,4,5,6,7,8,9], [1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],
+        [ [1,2,3,4,5,6,7,8,9], [1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],
+        [ [1,2,3,4,5,6,7,8,9], [1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],
+        [ 0, [        5,6,7,8  ],[                9],[      4,5,6,     ],[  2,  4,  6,  8, ],[    3,4,5,       ],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]],
+        #[ [1,2,3,4,5,6,7,8,9], [8],[7],[6],[5],[4],[3],[2],[1] ],
+        #[ [1,2,3,4,5,6,7,8,9], [8],[7],[6],[5],[4],[3],[2],[1] ],
+        #[ [1,2,3,4,5,6,7,8,9], [8],[7],[6],[5],[4],[3],[2],[1] ],
+        #[ [1,2,3,4,5,6,7,8,9], [8],[7],[6],[5],[4],[3],[2],[1] ],
+        #[ [1,2,3,4,5,6,7,8,9], [8],[7],[6],[5],[4],[3],[2],[1] ],
+        #[ [1,2,3,4,5,6,7,8,9], [8],[7],[6],[5],[4],[3],[2],[1] ],
+        #[ [1,2,3,4,5,6,7,8,9], [8],[7],[6],[5],[4],[3],[2],[1] ],
+        #[ [1,2,3,4,5,6,7,8,9], [8],[7],[6],[5],[4],[3],[2],[1] ],
+        #[ [1,2,3],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        #[ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        #[ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        #[ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        #[ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        #[ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        #[ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        #[ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
+        #[ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
 
 
         #   x        ***    x   x      ***                *****
@@ -197,15 +238,16 @@ if __name__ == '__main__':
         #
     ]
 
-    house = ['row']
-    #house = ['row','col','sqr']
-    for h in house:
-        print('Pruning hidden triples in {} ************************************************ Start.'.format(h))
-        totNumPruned  = 0
-        loopNumPruned = 1
-        while loopNumPruned:
-            loopNumPruned, canidates = pruneHiddenTriples(canidates, h, 'hidden', 2)
-            #loopNumPruned, canidates = pruneHiddenTriples(canidates, h, 'naked', 2)
-            totNumPruned  += loopNumPruned
-        print('Pruning hidden triples in {} ** ( total pruned =  {:2} ) ************************ End.'.format(h, totNumPruned))
+    printCanidates(canidates)
+    #house = ['row']
+    ##house = ['row','col','sqr']
+    #for h in house:
+    #    print('Pruning hidden triples in {} ************************************************ Start.'.format(h))
+    #    totNumPruned  = 0
+    #    loopNumPruned = 1
+    #    while loopNumPruned:
+    #        loopNumPruned, canidates = pruneHiddenTriples(canidates, h, 'hidden', 2)
+    #        #loopNumPruned, canidates = pruneHiddenTriples(canidates, h, 'naked', 2)
+    #        totNumPruned  += loopNumPruned
+    #    print('Pruning hidden triples in {} ** ( total pruned =  {:2} ) ************************ End.'.format(h, totNumPruned))
 
