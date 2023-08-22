@@ -26,11 +26,12 @@ def fillCellsVia_1_Canidate(solution, canidates):
             if canidates[rIdx][cIdx] != 0 and len(canidates[rIdx][cIdx]) == 1:
                 if solution[rIdx][cIdx] == 0:
                     print('    Placing {} at {},{}'.\
-                        format(canidates[rIdx][cIdx][0], rIdx,cIdx ))
+                        format(canidates[rIdx][cIdx][0], rIdx,cIdx ), end='')
                     solution[rIdx][cIdx] = canidates[rIdx][cIdx][0]
                     numFilled += 1
+                    if numFilled%3 == 0: print()
     if numFilled != 0:
-        print('    NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
+        print('\n    NumZeros = {}.'.format(sum(x.count(0) for x in solution) ))
     return numFilled,solution
 #############################################################################
 

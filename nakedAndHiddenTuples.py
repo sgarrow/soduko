@@ -2,52 +2,15 @@ import fillRoutines  as fr
 from itertools import combinations
 import pprint as pp
 import printRoutines as pr
-
-def mapSrqsToRows(canidates): # In canidates rows are rows
-    sqrsToRows = []
-    squareNums = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]] 
-    for squareNum in squareNums:
-        rowsInSq = [ x+squareNum[0]*3 for x in [0,1,2] ]
-        colsInSq = [ x+squareNum[1]*3 for x in [0,1,2] ]
-        coordsInSq   = [ [r,c] for r in rowsInSq for c in colsInSq ]
-        candatesSq   = [ canidates[x[0]][x[1]] for x in coordsInSq ] 
-        sqrsToRows.append(candatesSq)
-    return sqrsToRows
-#############################################################################
-
-def mapRowsToSqrs(canidates): # In canidates rows are squares
-    rowsToSqrs = []
-    squareNums = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]] 
-    rowsToSqrs = [ [None]*9 for i in range(9) ]
-
-    for ii,squareNum in enumerate(squareNums):
-        currRowToMap = canidates[ii]
-        rowsInSq = [ x+squareNum[0]*3 for x in [0,1,2] ]
-        colsInSq = [ x+squareNum[1]*3 for x in [0,1,2] ]
-    
-        for ii,r in enumerate(rowsInSq):
-            for jj,c in enumerate(colsInSq):
-                rowsToSqrs[r][c] = currRowToMap[ii*3+jj]
-    return rowsToSqrs
-#############################################################################
-
-def mapRowsToCols(canidates):
-    Xpos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
-    return Xpos
-#############################################################################
-
-def mapColsToRows(canidates):
-    Xpos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
-    return Xpos
-#############################################################################
+import mapping as mp
 
 def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, N):
 
     #pr.printCanidates(canidates)
     import copy
     if   house == 'row':  Xcanidates = copy.deepcopy(canidates)
-    elif house == 'col':  Xcanidates = mapColsToRows(canidates) 
-    elif house == 'sqr':  Xcanidates = mapSrqsToRows(canidates)
+    elif house == 'col':  Xcanidates = mp.mapColsToRows(canidates) 
+    elif house == 'sqr':  Xcanidates = mp.mapSrqsToRows(canidates)
 
     numPruned = 0
     for idx, rowOrColOrSqrWithZeros in enumerate(Xcanidates):
@@ -63,7 +26,6 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, N):
             combIdxs = list((i,j,k,l,m) for ((i,_),(j,_),(k,_),(l,_),(m,_)) in combinations(enumerate(rowOrColOrSqr), N))
 
         for comb,comIdx in zip(combSet,combIdxs):
-            #print('************', idx)
             if any(el == {0} for el in comb):    continue
             else:                                pass
             if any(len(el) == 1 for el in comb): continue
@@ -133,8 +95,8 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, N):
                 break
 
     if   house == 'row':  canidates = copy.deepcopy(Xcanidates)
-    elif house == 'col':  canidates = mapRowsToCols(Xcanidates) 
-    elif house == 'sqr':  canidates = mapRowsToSqrs(Xcanidates)
+    elif house == 'col':  canidates = mp.mapRowsToCols(Xcanidates) 
+    elif house == 'sqr':  canidates = mp.mapRowsToSqrs(Xcanidates)
     #pr.printCanidates(canidates)
 
     return(numPruned, canidates)

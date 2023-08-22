@@ -125,10 +125,8 @@ def pruneCanidates(canidates):
         print(62*'*','\n')                     
 
     print(62*'*','\n')                     
-    print('Total Prunned NHT {:2} *****************************************'.\
-        format(totNumPruned_NHT))
-    print('Total Prunned XW  {:2} *****************************************'.\
-        format(totNumPruned_XW))
+    print('Total Prunned NHT {:2} {}'.format(totNumPruned_NHT, 41*'*'))
+    print('Total Prunned XW  {:2} {}'.format(totNumPruned_XW,  41*'*'))
     print(62*'*','\n')                     
     #input()
     return totNumPruned_NHT, canidates
@@ -137,14 +135,13 @@ def pruneCanidates(canidates):
 def fillSolution(solution, canidates, dicOfFuncs ):
     totalNumFilled = 0
 
-    print('\nFilling in solution cells ****************************** Start')
+    print('\nFilling in solution cells {} Start'.format(30*'*'))
     for k in dicOfFuncs:
         numFilled, solution = dicOfFuncs[k]['func']( solution, canidates )
         totalNumFilled  += numFilled
         dicOfFuncs[k]['calls']   += 1
         dicOfFuncs[k]['replace'] += numFilled
-    print('Filling in solution cells ** ( total filled = {:2d} ) ******* End'.
-        format(totalNumFilled))
+    print('Filling in solution cells  * ( total filled = {:2d} ) {} End'.format(totalNumFilled, 7*'*'))
 
     return totalNumFilled, solution, dicOfFuncs
 #############################################################################
@@ -187,7 +184,7 @@ if __name__ == '__main__':
         puzzlesDict[key]['end0s'] = numZerosAfterAllFill
         puzzlesDict = updatePuzzlesDictCntrs(puzzlesDict,key, dicOfFuncs)
         puzzlesDict[key]['solution'] = solution
-        print('**********************************')
+        print('{}'.format(62*'#'))
     # end for loop on all puzzles
 
     pr.printResults(puzzlesDict, 'all')

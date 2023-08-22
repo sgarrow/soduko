@@ -59,7 +59,6 @@ def pruneHiddenTriples(canidates, house, hiddenOrNaked, N):
             combIdxs = list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rowOrColOrSqr), N))
 
         for comb,comIdx in zip(combSet,combIdxs):
-            #print('************', idx)
             if any(el == {0} for el in comb):    continue
             else:                                pass
             if any(len(el) == 1 for el in comb): continue
@@ -191,7 +190,7 @@ if __name__ == '__main__':
         #[ [1,2],[1,2], [3],[4],[5],[6],[7],[8],[9] ],
 
 
-        #   x        ***    x   x      ***                *****
+        #   x        ___    x   x      ___                _____
         #[ [1,4,9], [1,8], [1,5,8,9], [3,8], [4,5], [7], [1,3,8], [6], [2] ], #  0. 3/3/3
         #[ [1,2,3],          [1,2,3],       [1,2,3],   [7,3],       [8,1,2],   [9],     0,0,0 ], #  0. 3/3/3
         #[ [1,2,3],          [1,2,3],       [1,2],     [7],       [8],   [9],     0,0,0 ], #  1. 3/3/2
@@ -242,12 +241,12 @@ if __name__ == '__main__':
     #house = ['row']
     ##house = ['row','col','sqr']
     #for h in house:
-    #    print('Pruning hidden triples in {} ************************************************ Start.'.format(h))
+    #    print('Pruning hidden triples in {} Start.'.format(h))
     #    totNumPruned  = 0
     #    loopNumPruned = 1
     #    while loopNumPruned:
     #        loopNumPruned, canidates = pruneHiddenTriples(canidates, h, 'hidden', 2)
     #        #loopNumPruned, canidates = pruneHiddenTriples(canidates, h, 'naked', 2)
     #        totNumPruned  += loopNumPruned
-    #    print('Pruning hidden triples in {} ** ( total pruned =  {:2} ) ************************ End.'.format(h, totNumPruned))
+    #    print('Pruning hidden triples in {} * ( total pruned =  {:2} ) * End.'.format(h, totNumPruned))
 

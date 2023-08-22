@@ -2,22 +2,13 @@ import printRoutines as pr
 import pprint as pp
 import fillRoutines  as fr
 from itertools import combinations
-
-def mapRowsToCols(canidates):
-    Xpos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
-    return Xpos
-#############################################################################
-
-def mapColsToRows(canidates):
-    Xpos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
-    return Xpos
-#############################################################################
+import mapping as mp
 
 def pruneXwings(canidates, house):
     #pr.printCanidates(canidates)
     import copy
     if   house == 'row':  Xcanidates = copy.deepcopy(canidates)
-    elif house == 'col':  Xcanidates = mapColsToRows(canidates) 
+    elif house == 'col':  Xcanidates = mp.mapColsToRows(canidates) 
 
     numPruned = 0
 
@@ -62,7 +53,7 @@ def pruneXwings(canidates, house):
                     numPruned += 1
 
     if   house == 'row':  canidates = copy.deepcopy(Xcanidates)
-    elif house == 'col':  canidates = mapRowsToCols(Xcanidates) 
+    elif house == 'col':  canidates = mp.mapRowsToCols(Xcanidates) 
     #print(house)
 
     return(numPruned, canidates)
