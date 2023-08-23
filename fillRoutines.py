@@ -19,7 +19,7 @@ def genHistogram(inLst):
 #############################################################################
 
 def fillCellsVia_1_Canidate(solution, canidates):
-    print('  Filling solution cells that have only 1 canidate')
+    print('\n  Filling solution cells that have only 1 canidate')
     numFilled = 0
     for rIdx,row in enumerate(solution):
         for cIdx,el in enumerate(row):
@@ -36,7 +36,7 @@ def fillCellsVia_1_Canidate(solution, canidates):
 #############################################################################
 
 def fillCellsViaRowHistAnal(solution, canidates):
-    print('  Filling solution cells thru Row Hist Analysis')
+    print('\n  Filling solution cells thru Row Hist Analysis')
     numFilled = 0
 
     for r,row in enumerate(canidates):
@@ -60,7 +60,7 @@ def fillCellsViaRowHistAnal(solution, canidates):
 #############################################################################
 
 def fillCellsViaColHistAnal(solution, canidates):
-    print('  Filling solution cells thru Col Hist Analysis')
+    print('\n  Filling solution cells thru Col Hist Analysis')
     numFilled = 0
     Xpos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
 
@@ -85,7 +85,7 @@ def fillCellsViaColHistAnal(solution, canidates):
 #############################################################################
 
 def fillCellsViaSqrHistAnal(solution, canidates):
-    print('  Filling solution cells thru Sqr Hist Analysis')
+    print('\n  Filling solution cells thru Sqr Hist Analysis')
     numFilled = 0
     squareNums = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]] 
 

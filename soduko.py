@@ -71,77 +71,87 @@ def updatePuzzlesDictCntrs(puzzlesDict,k,  dicOfFuncs):
     return puzzlesDict
 #############################################################################
 
+def prune_NHT(canidates):
+    hiddenOrNaked = [ 'hidden', 'naked' ]
+    house         = [ 'row','col','sqr' ]
+    tupSize       = [4,3,2]
+    totNumPruned  = 0
+
+    for hn in hiddenOrNaked:
+        for N in tupSize:
+            for h in house:
+                #print('Pruning {:6} {}-tuples in {}s'.format(hn,N,h))
+                numPruned, canidates = nht.pruneNakedAndHiddenTuples(canidates, h, hn, N)
+                totNumPruned += numPruned
+    
+                if numPruned:
+                    print('    Prunned {:2} canidates RE: {:6} {}-tuples in {}s'.\
+                        format(numPruned, hn,N,h))
+
+    return totNumPruned, canidates
+#############################################################################
+
+def prune_XW(canidates):
+    totNumPruned = 0
+    house = [ 'row','col' ]
+    for h in house:
+        numPruned, canidates = xw.pruneXwings(canidates, h)
+        totNumPruned += numPruned
+
+        if numPruned:
+            print('    Prunned {:2} canidates RE: X-Wings in {}s'.\
+                format(numPruned, h))
+
+    return totNumPruned, canidates
+#############################################################################
+
 def pruneCanidates(canidates):
 
-    house = [ 'row','col' ]
-    totNumPruned_XW = 0
-
-    prunnedAtLeastOne = True
-    while prunnedAtLeastOne:
-        prunnedAtLeastOne = False
-        for h in house:
-    
-            loopNumPruned = 0
-            callNumPruned = 1
-            while callNumPruned:
-                callNumPruned, canidates = xw.pruneXwings(canidates, h)
-                loopNumPruned += callNumPruned
-                totNumPruned_XW  += callNumPruned
-                if callNumPruned != 0:
-                    prunnedAtLeastOne = True
-
-            if loopNumPruned:
-                print('Prunned {:2} canidates RE: X-Wings in {}s'.\
-                    format(loopNumPruned, h))
-        print(62*'*','\n')                     
-
-
-    hiddenOrNaked    = [ 'hidden', 'naked' ]
-    house            = [ 'row','col','sqr' ]
-    tupSize          = [4,3,2]
+    print('\nPruning  canidates list')
+    totNumPruned_XW  = 0
     totNumPruned_NHT = 0
+    passNum_XW       = 0
+    passNum_NHT      = 0
 
-    prunnedAtLeastOne = True
-    while prunnedAtLeastOne:
-        prunnedAtLeastOne = False
-        for hn in ['hidden', 'naked']:
-            for N in tupSize:
-                for h in house:
+    prunedAtLeastOne = True
+    while prunedAtLeastOne:
+        prunedAtLeastOne = False
+        numPruned = 1
+        while numPruned:
+            print('  prune_XW  pass {}'.format(passNum_XW))
+            numPruned, canidates = prune_XW(canidates)
+            totNumPruned_XW += numPruned
+            print('  prune_XW  prunned {}\n'.format(numPruned))
+            passNum_XW += 1
+            if numPruned > 0: prunedAtLeastOne = True 
     
-                    #print('Pruning {:6} {}-tuples in {}s'.format(hn,N,h))
+        numPruned = 1
+        while numPruned:
+            print('  prune_NHT pass {}'.format(passNum_NHT))
+            numPruned, canidates = prune_NHT(canidates)
+            totNumPruned_NHT += numPruned
+            print('  prune_NHT  prunned {}\n'.format(numPruned))
+            passNum_NHT += 1
+            if numPruned > 0: prunedAtLeastOne = True 
+        print(31*'*')                     
     
-                    loopNumPruned = 0
-                    callNumPruned = 1
-                    while callNumPruned:
-                        callNumPruned, canidates = nht.pruneNakedAndHiddenTuples(canidates, h, hn, N)
-                        loopNumPruned += callNumPruned
-                        totNumPruned_NHT  += callNumPruned
-                        if callNumPruned != 0:
-                            prunnedAtLeastOne = True
-    
-                    if loopNumPruned:
-                        print('Prunned {:2} canidates RE: {:6} {}-tuples in {}s'.\
-                            format(loopNumPruned, hn,N,h))
-        print(62*'*','\n')                     
-
-    print(62*'*','\n')                     
-    print('Total Prunned NHT {:2} {}'.format(totNumPruned_NHT, 41*'*'))
-    print('Total Prunned XW  {:2} {}'.format(totNumPruned_XW,  41*'*'))
-    print(62*'*','\n')                     
-    #input()
-    return totNumPruned_NHT, canidates
+    print('  Total Prunned NHT {:2} {}'.format(totNumPruned_NHT, 39*'*'))
+    print('  Total Prunned XW  {:2} {}'.format(totNumPruned_XW,  39*'*'))
+    print(62*'*')                     
+    return totNumPruned_XW + totNumPruned_NHT, canidates
 #############################################################################
 
 def fillSolution(solution, canidates, dicOfFuncs ):
     totalNumFilled = 0
 
-    print('\nFilling in solution cells {} Start'.format(30*'*'))
+    print('\nFilling in solution cells')
     for k in dicOfFuncs:
         numFilled, solution = dicOfFuncs[k]['func']( solution, canidates )
         totalNumFilled  += numFilled
         dicOfFuncs[k]['calls']   += 1
         dicOfFuncs[k]['replace'] += numFilled
-    print('Filling in solution cells  * ( total filled = {:2d} ) {} End'.format(totalNumFilled, 7*'*'))
+    print('\n  Total filled {:2d} {}'.format(totalNumFilled, 44*'*'))
+    print(62*'*')                     
 
     return totalNumFilled, solution, dicOfFuncs
 #############################################################################
@@ -156,7 +166,7 @@ if __name__ == '__main__':
         'sqr': { 'func': fr.fillCellsViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
 
     for key in puzzlesDict:
-        print(' Processing puzzle {}'.format(key))
+        print('Processing puzzle {}'.format(key))
         solution = [x[:] for x in puzzlesDict[key]['puzzle'] ]
         puzzlesDict[key]['start0s'] = sum(x.count(0) for x in solution)
         dicOfFuncs = ir.initDicOfFuncsCntrs(dicOfFuncs)

@@ -32,12 +32,11 @@ def printResults(puzzlesDict, prnType):
     print()
     for key in puzzlesDict:
 
-        print(' puzzle {}. {}. (numZeros = {})'.\
-            format( key, 'FAIL' if puzzlesDict[key]['end0s'] else 'PASS',
-                    puzzlesDict[key]['end0s'] ))
+        print(' puzzle {}. (numZeros = {}). {}.\n'.\
+            format( key, puzzlesDict[key]['end0s'],
+                'FAIL' if puzzlesDict[key]['end0s'] else 'PASS') )
 
         if prnType == 'all':
-            print()
             for ii in range(len(puzzlesDict[key]['puzzle'])):
                 print( '',puzzlesDict[key]['puzzle'  ][ii], '  ',  
                        puzzlesDict[key]['solution'][ii]  )
