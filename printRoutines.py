@@ -1,20 +1,34 @@
 def printCanidates(canidates):
+    print('   col 0  col 1  col 2   col 3  col 4  col 5   col 6  col 7  col 8  ')
     for rIdx,row in enumerate(canidates):     # for each row
         print('++------+------+------++------+------+------++------+------+------++')
+        numPrintedThisRow = False
         for ii in range(3):   # print 3 lines.
+
+            numPrintedThisLine = False
+            lineToPrn = ''
             thingsToPrint = list(range( ii*3+1, ii*3+4 )) # 1,2,3; 4,5,6; 7,8,9
             #print(thingsToPrint)
-            print('|',end = '')
+            lineToPrn += '|'
             for cIdx,cell in enumerate(row):
                 for num in thingsToPrint:
-                    if (num-1)%3 == 0: print('|',end = '')
+                    if (num-1)%3 == 0: 
+                        lineToPrn += '|'
                     if cell != 0 and num in cell:
-                        print('{:2}'.format(num), end = '')
+                        lineToPrn += '{:2}'.format(num)
+                        numPrintedThisLine = True
+                        numPrintedThisRow  = True
                     else:
-                        print('  ',end = '')
-                #if cIdx in [2,5]:  print('|',end = '') 
-                if (cIdx+1)%3 == 0:  print('|',end = '') 
-            print('|') # output 1st, 2nd or 3rd line of the row
+                        lineToPrn += '  '
+                if (cIdx+1)%3 == 0:  
+                    lineToPrn += '|'
+            lineToPrn += '| row {}'.format(rIdx)
+
+            if numPrintedThisLine:
+                print(lineToPrn)
+            if not numPrintedThisRow and ii == 2:
+                print(lineToPrn)
+
         if (rIdx+1)%3 ==0:
             print('++------+------+------++------+------+------++------+------+------++')
     return 0

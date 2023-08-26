@@ -36,3 +36,9 @@ def mapColsToRows(canidates):
     return Xpos
 #############################################################################
 
+def getRowColFromSqrOffset(s,o):
+    row              = ( o // 3 ) + ( (s // 3) * 3 )
+    ofst1stCellInRow = ( row  * 9 ) + ( (s %  3) * 3 )
+    offsetInto_9x9   = ofst1stCellInRow + o %  3
+    col = offsetInto_9x9  % 9
+    return row,col

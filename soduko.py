@@ -5,6 +5,7 @@ import initRoutines  as ir
 import fillRoutines  as fr
 import nakedAndHiddenTuples as nht
 import xWing as xw
+import pointingPairs as ppp
 #############################################################################
 
 def findRowsColsInSquare(rIdx, cIdx):
@@ -105,13 +106,28 @@ def prune_XW(canidates):
     return totNumPruned, canidates
 #############################################################################
 
+def prune_PP(canidates):
+    totNumPruned = 0
+    house = [ 'row','col' ]
+    numPruned, canidates = ppp.prunePointingPairs(canidates)
+    totNumPruned += numPruned
+
+    if numPruned:
+        print('    Prunned {:2} canidates RE: Pointing Pairs in rows'.\
+            format(numPruned))
+
+    return totNumPruned, canidates
+#############################################################################
+
 def pruneCanidates(canidates):
 
     print('\nPruning  canidates list')
     totNumPruned_XW  = 0
     totNumPruned_NHT = 0
+    totNumPruned_PP  = 0
     passNum_XW       = 0
     passNum_NHT      = 0
+    passNum_PP       = 0
 
     prunedAtLeastOne = True
     while prunedAtLeastOne:
@@ -133,11 +149,22 @@ def pruneCanidates(canidates):
             print('  prune_NHT  prunned {}\n'.format(numPruned))
             passNum_NHT += 1
             if numPruned > 0: prunedAtLeastOne = True 
+
+        numPruned = 1
+        while numPruned:
+            print('  prune_PP  pass {}'.format(passNum_PP ))
+            numPruned, canidates = prune_PP(canidates)
+            totNumPruned_PP += numPruned
+            print('  prune_PP  prunned {}\n'.format(numPruned))
+            passNum_PP += 1
+            if numPruned > 0: prunedAtLeastOne = True 
         print(31*'*')                     
     
     print('  Total Prunned NHT {:2} {}'.format(totNumPruned_NHT, 39*'*'))
     print('  Total Prunned XW  {:2} {}'.format(totNumPruned_XW,  39*'*'))
+    print('  Total Prunned PP  {:2} {}'.format(totNumPruned_PP,  39*'*'))
     print(62*'*')                     
+    return totNumPruned_XW + totNumPruned_NHT + totNumPruned_PP, canidates
     return totNumPruned_XW + totNumPruned_NHT, canidates
 #############################################################################
 
