@@ -3,9 +3,7 @@ import pprint        as pp
 import printRoutines as pr
 import initRoutines  as ir
 import fillRoutines  as fr
-import nakedAndHiddenTuples as nht
-import xWing as xw
-import pointingPairs as ppp
+import pruneRoutines as rr
 #############################################################################
 
 def findRowsColsInSquare(rIdx, cIdx):
@@ -82,7 +80,7 @@ def prune_NHT(canidates):
         for N in tupSize:
             for h in house:
                 #print('Pruning {:6} {}-tuples in {}s'.format(hn,N,h))
-                numPruned, canidates = nht.pruneNakedAndHiddenTuples(canidates, h, hn, N)
+                numPruned, canidates = rr.pruneNakedAndHiddenTuples(canidates, h, hn, N)
                 totNumPruned += numPruned
     
                 if numPruned:
@@ -96,7 +94,7 @@ def prune_XW(canidates):
     totNumPruned = 0
     house = [ 'row','col' ]
     for h in house:
-        numPruned, canidates = xw.pruneXwings(canidates, h)
+        numPruned, canidates = rr.pruneXwings(canidates, h)
         totNumPruned += numPruned
 
         if numPruned:
@@ -109,7 +107,7 @@ def prune_XW(canidates):
 def prune_PP(canidates):
     totNumPruned = 0
     house = [ 'row','col' ]
-    numPruned, canidates = ppp.prunePointingPairs(canidates)
+    numPruned, canidates = rr.prunePointingPairs(canidates)
     totNumPruned += numPruned
 
     if numPruned:
