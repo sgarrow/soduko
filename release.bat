@@ -1,4 +1,4 @@
 git add *
-git commit * --no-verify -m "combine prune files into one file."
+git commit * --no-verify -m "first pass clean up RE: pylint."
 git push -u origin main
 

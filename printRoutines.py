@@ -64,7 +64,7 @@ def printResults(puzzlesDict, prnType):
             format( 81-puzzlesDict[key]['end0s'],  puzzlesDict[key]['end0s'],
                     81-puzzlesDict[key]['end0s'] + puzzlesDict[key]['end0s'] ))
 
-        print( ' fillCellsVia_1_Canidate calls,replacements  = {:2d}, {:2d}.'.\
+        print( ' fillCellsViaOneCanidate calls,replacements  = {:2d}, {:2d}.'.\
             format(puzzlesDict[key]['oC'], puzzlesDict[key]['oR']))
 
         print( ' fillCellsViaRowHistAnal calls,replacements  = {:2d}, {:2d}.'.\

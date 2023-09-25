@@ -1,225 +1,234 @@
 # New comment for git2.
-import pprint        as pp
+'''DocStr'''
 import printRoutines as pr
 import initRoutines  as ir
 import fillRoutines  as fr
 import pruneRoutines as rr
+newline = '\n'
+stars39 = 39*'*'
+stars44 = 44*'*'
+pound62 = 62*'#'
 #############################################################################
 
 def findRowsColsInSquare(rIdx, cIdx):
-    if rIdx % 3 == 0: rOffsets = [ 1, 2]
-    if rIdx % 3 == 1: rOffsets = [-1, 1]
-    if rIdx % 3 == 2: rOffsets = [-1,-2] 
-    if cIdx % 3 == 0: cOffsets = [ 1, 2]
-    if cIdx % 3 == 1: cOffsets = [-1, 1] 
-    if cIdx % 3 == 2: cOffsets = [-1,-2] 
+    '''DocStr'''
+    if rIdx % 3 == 0:
+        rOffsets = [ 1, 2]
+    if rIdx % 3 == 1:
+        rOffsets = [-1, 1]
+    if rIdx % 3 == 2:
+        rOffsets = [-1,-2]
+    if cIdx % 3 == 0:
+        cOffsets = [ 1, 2]
+    if cIdx % 3 == 1:
+        cOffsets = [-1, 1]
+    if cIdx % 3 == 2:
+        cOffsets = [-1,-2]
     rowsInSquare = [ rIdx+rOffsets[0], rIdx+rOffsets[1] ]
     colsInSquare = [ cIdx+cOffsets[0], cIdx+cOffsets[1] ]
     return rowsInSquare, colsInSquare
 #############################################################################
 
-def updateCanidatesList(solution,canidates):
-    print('\nUpdating canidates list')
-    Xpos = [ [ row[i] for row in solution] for i in range(len(solution[0]))]
-    cols = [ x for x in Xpos ] 
+def updateCanidatesList(lclSolution,lclCanidates):
+    '''DocStr'''
+    print('\nUpdating Canidates list')
+    cols = [ [ row[i] for row in lclSolution] for i in range(len(lclSolution[0]))]
 
-    for rIdx,row in enumerate(solution):
-        for cIdx,el in enumerate(row):
-            prEn = False
+    for rIdx,row in enumerate(lclSolution):
+        for cIdx,elem in enumerate(row):
             col = cols[cIdx]
 
-            if el != 0:
-                canidates[rIdx][cIdx] = 0
-            else:
-                for ii in [1,2,3,4,5,6,7,8,9]:
+            if elem != 0:
+                lclCanidates[rIdx][cIdx] = 0
+                continue
+            for num in [1,2,3,4,5,6,7,8,9]:
 
-                    inRow = True
-                    if row.count(ii) == 0: inRow = False
+                inSquare = False
+                rowsInSquare, colsInSquare = findRowsColsInSquare(rIdx, cIdx)
 
-                    inCol = True
-                    if col.count(ii) == 0: inCol = False
-
-                    inSquare = False
-                    rowsInSquare, colsInSquare = findRowsColsInSquare(rIdx, cIdx)
-
-                    for ris in rowsInSquare:
-                        for cis in colsInSquare:
-                            if solution[ris][cis] == ii:
-                                inSquare = True
-                                break
-                        if inSquare:
+                for ris in rowsInSquare:
+                    for cis in colsInSquare:
+                        if lclSolution[ris][cis] == num:
+                            inSquare = True
                             break
+                    if inSquare:
+                        break
 
-                    #print('   inRow={}, inCol={}, inSquare={}'.format(inRow, inCol, inSquare))
-                    if( not inRow and not inCol and not inSquare):
-                        #print('   Adding {} as canidate for {},{}'.format(ii,rIdx,cIdx))
-                        if canidates[rIdx][cIdx] != 0: 
-                            canidates[rIdx][cIdx].append(ii)
-    return canidates
+                #print('   inSquare={}'.format(inSquare))
+                if( row.count(num) == 0 and col.count(num) == 0 and not inSquare):
+                    #print('   Adding {} as canidate for {},{}'.format(ii,rIdx,cIdx))
+                    if lclCanidates[rIdx][cIdx] != 0:
+                        lclCanidates[rIdx][cIdx].append(num)
+    return lclCanidates
 #############################################################################
 
-def updatePuzzlesDictCntrs(puzzlesDict,k,  dicOfFuncs):
-    puzzlesDict[k]['oC'] = dicOfFuncs['one']['calls'  ]
-    puzzlesDict[k]['oR'] = dicOfFuncs['one']['replace'] 
-    puzzlesDict[k]['rC'] = dicOfFuncs['row']['calls'  ] 
-    puzzlesDict[k]['rR'] = dicOfFuncs['row']['replace'] 
-    puzzlesDict[k]['cC'] = dicOfFuncs['col']['calls'  ] 
-    puzzlesDict[k]['cR'] = dicOfFuncs['col']['replace'] 
-    puzzlesDict[k]['sC'] = dicOfFuncs['sqr']['calls'  ] 
-    puzzlesDict[k]['sR'] = dicOfFuncs['sqr']['replace'] 
-    return puzzlesDict
+def updatePuzzlesDictCntrs(lclPuzzlesDict,k, lclDicOfFuncs):
+    '''DocStr'''
+    lclPuzzlesDict[k]['oC'] = lclDicOfFuncs['one']['calls'  ]
+    lclPuzzlesDict[k]['oR'] = lclDicOfFuncs['one']['replace']
+    lclPuzzlesDict[k]['rC'] = lclDicOfFuncs['row']['calls'  ]
+    lclPuzzlesDict[k]['rR'] = lclDicOfFuncs['row']['replace']
+    lclPuzzlesDict[k]['cC'] = lclDicOfFuncs['col']['calls'  ]
+    lclPuzzlesDict[k]['cR'] = lclDicOfFuncs['col']['replace']
+    lclPuzzlesDict[k]['sC'] = lclDicOfFuncs['sqr']['calls'  ]
+    lclPuzzlesDict[k]['sR'] = lclDicOfFuncs['sqr']['replace']
+    return lclPuzzlesDict
 #############################################################################
 
-def prune_NHT(canidates):
-    hiddenOrNaked = [ 'hidden', 'naked' ]
-    house         = [ 'row','col','sqr' ]
-    tupSize       = [4,3,2]
-    totNumPruned  = 0
+def pruneNht(lclCanidates):
+    '''DocStr'''
+    hiddenNakedLst = [ 'hidden', 'naked' ]
+    houseLst       = [ 'row','col','sqr' ]
+    tupSizeLst     = [4,3,2]
+    totNumPruned   = 0
 
-    for hn in hiddenOrNaked:
-        for N in tupSize:
-            for h in house:
+    for hideNkd in hiddenNakedLst:
+        for tupSize in tupSizeLst:
+            for house in houseLst:
                 #print('Pruning {:6} {}-tuples in {}s'.format(hn,N,h))
-                numPruned, canidates = rr.pruneNakedAndHiddenTuples(canidates, h, hn, N)
+                numPruned, lclCanidates = \
+                rr.pruneNakedAndHiddenTuples(lclCanidates, house, hideNkd, tupSize)
                 totNumPruned += numPruned
-    
-                if numPruned:
-                    print('    Prunned {:2} canidates RE: {:6} {}-tuples in {}s'.\
-                        format(numPruned, hn,N,h))
 
-    return totNumPruned, canidates
+                if numPruned:
+                    print(f'    Prunned {numPruned:2} RE: {hideNkd:6} {tupSize}-tuples in {house}s')
+
+    return totNumPruned, lclCanidates
 #############################################################################
 
-def prune_XW(canidates):
+def pruneXw(lclCanidates):
+    '''DocStr'''
     totNumPruned = 0
-    house = [ 'row','col' ]
-    for h in house:
-        numPruned, canidates = rr.pruneXwings(canidates, h)
+    houseLst = [ 'row','col' ]
+    for house in houseLst:
+        numPruned, lclCanidates = rr.pruneXwings(lclCanidates, house)
         totNumPruned += numPruned
 
         if numPruned:
-            print('    Prunned {:2} canidates RE: X-Wings in {}s'.\
-                format(numPruned, h))
+            print(f'    Prunned {numPruned:2} lclCanidates RE: X-Wings in {house}s')
 
-    return totNumPruned, canidates
+    return totNumPruned, lclCanidates
 #############################################################################
 
-def prune_PP(canidates):
+def prunePp(lclCanidates):
+    '''DocStr'''
     totNumPruned = 0
-    house = [ 'row','col' ]
-    numPruned, canidates = rr.prunePointingPairs(canidates)
+    numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates)
     totNumPruned += numPruned
 
     if numPruned:
-        print('    Prunned {:2} canidates RE: Pointing Pairs in rows'.\
-            format(numPruned))
+        print(f'    Prunned {numPruned:2} lclCanidates RE: Pointing Pairs in rows')
 
-    return totNumPruned, canidates
+    return totNumPruned, lclCanidates
 #############################################################################
 
-def pruneCanidates(canidates):
+def pruneCanidates(lclCanidates):
+    '''DocStr'''
 
-    print('\nPruning  canidates list')
-    totNumPruned_XW  = 0
-    totNumPruned_NHT = 0
-    totNumPruned_PP  = 0
-    passNum_XW       = 0
-    passNum_NHT      = 0
-    passNum_PP       = 0
+    print('\nPruning  lclCanidates list')
+    totNumPrunedXw  = 0
+    totNumPrunedNht = 0
+    totNumPrunedPp  = 0
+    passNumXw       = 0
+    passNumNht      = 0
+    passNumPp       = 0
 
     prunedAtLeastOne = True
     while prunedAtLeastOne:
         prunedAtLeastOne = False
         numPruned = 1
         while numPruned:
-            print('  prune_XW  pass {}'.format(passNum_XW))
-            numPruned, canidates = prune_XW(canidates)
-            totNumPruned_XW += numPruned
-            print('  prune_XW  prunned {}\n'.format(numPruned))
-            passNum_XW += 1
-            if numPruned > 0: prunedAtLeastOne = True 
-    
-        numPruned = 1
-        while numPruned:
-            print('  prune_NHT pass {}'.format(passNum_NHT))
-            numPruned, canidates = prune_NHT(canidates)
-            totNumPruned_NHT += numPruned
-            print('  prune_NHT  prunned {}\n'.format(numPruned))
-            passNum_NHT += 1
-            if numPruned > 0: prunedAtLeastOne = True 
+            print(f'  prune_XW  pass {passNumXw}')
+            numPruned, lclCanidates = pruneXw(lclCanidates)
+            totNumPrunedXw += numPruned
+            print(f'  prune_XW  prunned {numPruned}{newline}')
+            passNumXw += 1
+            if numPruned > 0:
+                prunedAtLeastOne = True
 
         numPruned = 1
         while numPruned:
-            print('  prune_PP  pass {}'.format(passNum_PP ))
-            numPruned, canidates = prune_PP(canidates)
-            totNumPruned_PP += numPruned
-            print('  prune_PP  prunned {}\n'.format(numPruned))
-            passNum_PP += 1
-            if numPruned > 0: prunedAtLeastOne = True 
-        print(31*'*')                     
-    
-    print('  Total Prunned NHT {:2} {}'.format(totNumPruned_NHT, 39*'*'))
-    print('  Total Prunned XW  {:2} {}'.format(totNumPruned_XW,  39*'*'))
-    print('  Total Prunned PP  {:2} {}'.format(totNumPruned_PP,  39*'*'))
-    print(62*'*')                     
-    return totNumPruned_XW + totNumPruned_NHT + totNumPruned_PP, canidates
-    return totNumPruned_XW + totNumPruned_NHT, canidates
+            print(f'  prune_NHT pass {passNumNht}')
+            numPruned, lclCanidates = pruneNht(lclCanidates)
+            totNumPrunedNht += numPruned
+            print(f'  prune_NHT  prunned {numPruned}{newline}')
+            passNumNht += 1
+            if numPruned > 0:
+                prunedAtLeastOne = True
+
+        numPruned = 1
+        while numPruned:
+            print(f'  prune_PP  pass {passNumPp}')
+            numPruned, lclCanidates = prunePp(lclCanidates)
+            totNumPrunedPp += numPruned
+            print(f'  prune_PP  prunned {numPruned}{newline}')
+            passNumPp += 1
+            if numPruned > 0:
+                prunedAtLeastOne = True
+        print(31*'*')
+
+    print(f'  Total Prunned NHT {totNumPrunedNht:2} {stars39}')
+    print(f'  Total Prunned XW  {totNumPrunedXw :2} {stars39}')
+    print(f'  Total Prunned PP  {totNumPrunedPp :2} {stars39}')
+    print(62*'*')
+    return totNumPrunedXw + totNumPrunedNht + totNumPrunedPp, lclCanidates
 #############################################################################
 
-def fillSolution(solution, canidates, dicOfFuncs ):
+def fillSolution(lclSolution, lclCanidates, lclDicOfFuncs ):
+    '''DocStr'''
     totalNumFilled = 0
 
     print('\nFilling in solution cells')
     for k in dicOfFuncs:
-        numFilled, solution = dicOfFuncs[k]['func']( solution, canidates )
+        numFilled, lclSolution = lclDicOfFuncs[k]['func']( lclSolution, lclCanidates )
         totalNumFilled  += numFilled
         dicOfFuncs[k]['calls']   += 1
         dicOfFuncs[k]['replace'] += numFilled
-    print('\n  Total filled {:2d} {}'.format(totalNumFilled, 44*'*'))
-    print(62*'*')                     
+    print(f'{newline}  Total filled {totalNumFilled:2d} {stars44}')
+    print(62*'*')
 
-    return totalNumFilled, solution, dicOfFuncs
+    return totalNumFilled, lclSolution, lclDicOfFuncs
 #############################################################################
 
 if __name__ == '__main__':
     from puzzles import puzzlesDict
 
     dicOfFuncs = {
-        'one': { 'func': fr.fillCellsVia_1_Canidate, 'calls': 0, 'replace': 0 },
-        'row': { 'func': fr.fillCellsViaRowHistAnal, 'calls': 0, 'replace': 0 },  
-        'col': { 'func': fr.fillCellsViaColHistAnal, 'calls': 0, 'replace': 0 },  
+        'one': { 'func': fr.fillCellsViaOneCanidate, 'calls': 0, 'replace': 0 },
+        'row': { 'func': fr.fillCellsViaRowHistAnal, 'calls': 0, 'replace': 0 },
+        'col': { 'func': fr.fillCellsViaColHistAnal, 'calls': 0, 'replace': 0 },
         'sqr': { 'func': fr.fillCellsViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
 
-    for key in puzzlesDict:
-        print('Processing puzzle {}'.format(key))
-        solution = [x[:] for x in puzzlesDict[key]['puzzle'] ]
-        puzzlesDict[key]['start0s'] = sum(x.count(0) for x in solution)
+    for key,val in puzzlesDict.items():
+        print(f'Processing puzzle {key}')
+        solution = [x[:] for x in val['puzzle'] ]
+        val['start0s'] = sum(x.count(0) for x in solution)
         dicOfFuncs = ir.initDicOfFuncsCntrs(dicOfFuncs)
-        while (1):
+        while True:
             numZerosBeforeAllFill = sum(x.count(0) for x in solution)
-            if sum(x.count(0) for x in solution)==0: break
-            numFilled = 1
-            while (numFilled):
+            if sum(x.count(0) for x in solution)==0:
+                break
+            numberFilled = 1
+            while numberFilled:
 
-                if sum(x.count(0) for x in solution)==0: break
+                if sum(x.count(0) for x in solution)==0:
+                    break
 
                 canidates = ir.initCanidates()
                 canidates = updateCanidatesList(solution, canidates )
 
-                numPruned, canidates = pruneCanidates(canidates)
-                numFilled, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs )
-                 
+                numberPruned, canidates = pruneCanidates(canidates)
+                numberFilled, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs )
+
             numZerosAfterAllFill = sum(x.count(0) for x in solution)
-            if  numZerosAfterAllFill == numZerosBeforeAllFill or \
-                numZerosAfterAllFill == 0: 
+            if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
                 break
-            else: 
-                numZerosBeforeAllFill = numZerosAfterAllFill
+            numZerosBeforeAllFill = numZerosAfterAllFill
         # end while loop for this puzzle
-        puzzlesDict[key]['end0s'] = numZerosAfterAllFill
+        val['end0s'] = numZerosAfterAllFill
         puzzlesDict = updatePuzzlesDictCntrs(puzzlesDict,key, dicOfFuncs)
-        puzzlesDict[key]['solution'] = solution
-        print('{}'.format(62*'#'))
+        val['solution'] = solution
+        print(f'{pound62}')
     # end for loop on all puzzles
 
     pr.printResults(puzzlesDict, 'all')

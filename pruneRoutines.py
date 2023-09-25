@@ -1,117 +1,121 @@
-import fillRoutines  as fr
+'''docstr'''
+import sys
+import copy
 from itertools import combinations
 import pprint as pp
-import printRoutines as pr
+import fillRoutines  as fr
 import mapping as mp
-
-def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, N):
-
+def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz):
+    '''docstr'''
     #pr.printCanidates(canidates)
-    import copy
-    if   house == 'row':  Xcanidates = copy.deepcopy(canidates)
-    elif house == 'col':  Xcanidates = mp.mapColsToRows(canidates) 
-    elif house == 'sqr':  Xcanidates = mp.mapSrqsToRows(canidates)
+
+    cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
+    xCanidates = cpyDic[house](canidates)
 
     numPruned = 0
-    for idx, rowOrColOrSqrWithZeros in enumerate(Xcanidates):
-        rowOrColOrSqr = [set(x) if x != 0 else set([0]) for x in rowOrColOrSqrWithZeros]
-        combSet       = combinations(rowOrColOrSqr, N)  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3) = 84.
-        if N == 2:
-            combIdxs = list((i,j) for ((i,_),(j,_)) in combinations(enumerate(rowOrColOrSqr), N))
-        elif N == 3:
-            combIdxs = list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rowOrColOrSqr), N))
-        elif N == 4:
-            combIdxs = list((i,j,k,l) for ((i,_),(j,_),(k,_),(l,_)) in combinations(enumerate(rowOrColOrSqr), N))
-        elif N == 5:
-            combIdxs = list((i,j,k,l,m) for ((i,_),(j,_),(k,_),(l,_),(m,_)) in combinations(enumerate(rowOrColOrSqr), N))
+    for idx, rowOrColOrSqrWithZeros in enumerate(xCanidates):
+        rOrCOrS = [set(x) if x != 0 else set([0]) for x in rowOrColOrSqrWithZeros]
+        combSet = combinations(rOrCOrS, tupSiz)  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3)=84.
+        if tupSiz == 2:
+            combIdxs = \
+            list((i,j) for ((i,_),(j,_)) in combinations(enumerate(rOrCOrS), tupSiz))
+        elif tupSiz == 3:
+            combIdxs = \
+            list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rOrCOrS), tupSiz))
+        elif tupSiz == 4:
+            combIdxs = \
+            list((i,j,k,l) for ((i,_),(j,_),(k,_),(l,_)) in \
+                combinations(enumerate(rOrCOrS), tupSiz))
+        elif tupSiz == 5:
+            combIdxs = \
+            list((i,j,k,l,m) for ((i,_),(j,_),(k,_),(l,_),(m,_)) in \
+                combinations(enumerate(rOrCOrS), tupSiz))
 
         for comb,comIdx in zip(combSet,combIdxs):
-            if any(el == {0} for el in comb):    continue
-            else:                                pass
-            if any(len(el) == 1 for el in comb): continue
-            else:                                pass
+            if any(el == {0} for el in comb) or any(len(el) == 1 for el in comb):
+                continue
 
-            T   = comIdx
-            Tc  = [ x for x in range(0,len(rowOrColOrSqr)) if x not in T ]
-            H  = set.union(*comb)
-            G   = set(fr.flatten([ rowOrColOrSqr[ii] for ii in Tc if rowOrColOrSqr[ii] != [0]]))
-            HmG = list(H - G)
+            comIdxC  = [ x for x in range(0,len(rOrCOrS)) if x not in comIdx ]
+            setH  = set.union(*comb)
+            setG   = set(fr.flatten([ rOrCOrS[ii] for ii in comIdxC if rOrCOrS[ii] != [0]]))
+            lstHmG = list(setH - setG)
 
-            hIsNaked  = False
+            hIsNaked = len(setH) == tupSiz
+
             hIsHidden = False
-
-            if len(H) == N:
-                hIsNaked = True
-
-            if (len(H) > N) and (len(HmG) == N):
+            if (len(setH) > tupSiz) and (len(lstHmG) == tupSiz):
                 hIsHidden = True
-                for c in comb:
-                    inter = set.intersection(set(HmG), c)
+                for aComb in comb:
+                    inter = set.intersection(set(lstHmG), aComb)
                     if len(inter) == 0:
                         hIsHidden = False
                         break
-    
-            #print( '    {}{}'.format(str(comb).ljust(40),comIdx) )
-            #print('    idx, T, Tcomp     = ', idx, T, Tc   )
+
+            #print( '    {}{}'.format(str(comb).ljust(40),comIdx) )
+            #print('    idx, comIdx, Tcomp     = ', idx, comIdx, comIdxC   )
             #print('    idx, H, G         = ', idx, H, G   )
             #print('    idx, Hmg   = ', idx, HmG )
             #print('    ',hIsNaked,hIsHidden)
-                
-            if hIsHidden and hiddenOrNaked == 'hidden':
-                #pr.printCanidates(Xcanidates)
-                #print(' {} {} has hidden {}-tuple {} at index {}'.format(house, idx, N, HmG, comIdx))
-                myD = {'row': idx, 'tripVals': HmG, 'tripIdxs': comIdx }
-
-                for tripIdx in myD['tripIdxs']:
-                    temp  = [ x for x in rowOrColOrSqr[tripIdx] if x in myD['tripVals'] ]
 
-                    inter = set.intersection( rowOrColOrSqr[tripIdx], set(temp) )
-                    diff  = set(rowOrColOrSqr[tripIdx]) - inter
+            if hIsHidden and hiddenOrNaked == 'hidden':
+                #pr.printCanidates(xCanidates)
+                #print(' {} {} has hidden {}-tuple {} at index {}'.\
+                # format(house,idx,tupSiz,HmG,comIdx))
+                myD = {'row': idx, 'tripVals': lstHmG, 'tripIdxs': comIdx }
+
+                for tripIdx in myD['tripIdxs']:
+                    temp  = [ x for x in rOrCOrS[tripIdx] if x in myD['tripVals'] ]
+
+                    inter = set.intersection( rOrCOrS[tripIdx], set(temp) )
+                    diff  = set(rOrCOrS[tripIdx]) - inter
                     if len(diff) != 0:
                         numPruned += len(diff)
                         #print( '   Removed {} from ({},{})'.format(diff, myD['row'], tripIdx) )
 
-                    Xcanidates[myD['row']][tripIdx] = temp
-                #pr.printCanidates(Xcanidates)
+                    xCanidates[myD['row']][tripIdx] = temp
+                #pr.printCanidates(xCanidates)
                 break
 
             if hIsNaked and hiddenOrNaked == 'naked':
-                #pr.printCanidates(Xcanidates)
-                #print(' {} {} has naked {}-tuple {} at index {}'.format(house, idx, N, H, comIdx))
-                myD   = {'row': idx, 'tripVals': H, 'tripIdxs': comIdx }
+                #pr.printCanidates(xCanidates)
+                #print(' {} {} has naked {}-tuple {} at index {}'.\
+                # format(house, idx, tupSiz, H, comIdx))
+                myD   = {'row': idx, 'tripVals': setH, 'tripIdxs': comIdx }
 
-                temp  = [ list(x) if kk in myD['tripIdxs'] else list(x-myD['tripVals']) for kk,x in enumerate(rowOrColOrSqr) ]
+                temp  = [ list(x) if kk in myD['tripIdxs'] else \
+                          list(x-myD['tripVals']) for kk,x in enumerate(rOrCOrS) ]
                 temp2 = [ x if x != [0] else 0 for x in temp]
 
-                for kk, el in enumerate(rowOrColOrSqr):
-                    inter = set.intersection( el, set(temp[kk]) )
-                    diff  = el - inter
+                for idx, elem in enumerate(rOrCOrS):
+                    inter = set.intersection( elem, set(temp[idx]) )
+                    diff  = elem - inter
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        #print( '   Removed {} from ({},{})'.format(diff,  myD['row'], kk) )
+                        #print( '   Removed {} from ({},{})'.format(diff,  myD['row'], idx) )
 
-                Xcanidates[myD['row']] = temp2
-                #pr.printCanidates(Xcanidates)
+                xCanidates[myD['row']] = temp2
+                #pr.printCanidates(xCanidates)
                 break
 
-    if   house == 'row':  canidates = copy.deepcopy(Xcanidates)
-    elif house == 'col':  canidates = mp.mapRowsToCols(Xcanidates) 
-    elif house == 'sqr':  canidates = mp.mapRowsToSqrs(Xcanidates)
+    cpyDic = {'row':copy.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
+    canidates = cpyDic[house](xCanidates)
+
     #pr.printCanidates(canidates)
 
     return(numPruned, canidates)
 ############################################################################
 
 def pruneXwings(canidates, house):
+    '''docstr'''
     #pr.printCanidates(canidates)
-    import copy
-    if   house == 'row':  Xcanidates = copy.deepcopy(canidates)
-    elif house == 'col':  Xcanidates = mp.mapColsToRows(canidates) 
+
+    cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
+    xCanidates = cpyDic[house](canidates)
 
     numPruned = 0
 
     allBinsHeightTwo = []
-    for row in Xcanidates:
+    for row in xCanidates:
         flatRow = fr.flatten(row)
         histRow = fr.genHistogram(flatRow)
         allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
@@ -121,7 +125,7 @@ def pruneXwings(canidates, house):
     myD = {}
     for idx,lstOfVals in enumerate(allBinsHeightTwo):
         for val in lstOfVals:
-            cols = [ c for c,lst in enumerate(Xcanidates[idx]) if lst != 0 and val in lst ]
+            cols = [ c for c,lst in enumerate(xCanidates[idx]) if lst != 0 and val in lst ]
             #print(' in row {}, {} appears exactly twice - cols {}'.format(idx, val, cols))
             myD[k] = { 'A_row':idx, 'B_cols':cols, 'C_val':val,  }
             k += 1
@@ -130,57 +134,59 @@ def pruneXwings(canidates, house):
     k = 0
     xWingD = {}
     combSet = combinations(myD.values(), 2)
-    for c in combSet:
-        #print(c)
-        if c[0]['C_val'] == c[1]['C_val'] and c[0]['B_cols'] == c[1]['B_cols']:
+    for comb in combSet:
+        #print(comb)
+        if comb[0]['C_val'] == comb[1]['C_val'] and comb[0]['B_cols'] == comb[1]['B_cols']:
 
-            xWingD[k] = { 'A_rows': [ c[0]['A_row'], c[1]['A_row'] ],
-                          'B_cols':   c[0]['B_cols'],
-                          'C_val' :   c[0]['C_val']  }
+            xWingD[k] = { 'A_rows': [ comb[0]['A_row'], comb[1]['A_row'] ],
+                          'B_cols':   comb[0]['B_cols'],
+                          'C_val' :   comb[0]['C_val']  }
             k += 1
     #pp.pprint(xWingD)
 
-    for xw in xWingD.values():
-        for rIdx,row in enumerate(Xcanidates):
-            for cIdx in xw['B_cols']:
-                if rIdx not in xw['A_rows'] and Xcanidates[rIdx][cIdx] != 0 and xw['C_val'] in Xcanidates[rIdx][cIdx]:
-                    #pr.printCanidates(Xcanidates)
-                    Xcanidates[rIdx][cIdx].remove(xw['C_val'])
+    for xWing in xWingD.values():
+        for rIdx,row in enumerate(xCanidates):
+            for cIdx in xWing['B_cols']:
+                if (rIdx not in xWing['A_rows'])  and \
+                    (row[cIdx] != 0) and \
+                    (xWing['C_val'] in row[cIdx]):
+                    #pr.printCanidates(xCanidates)
+                    xCanidates[rIdx][cIdx].remove(xWing['C_val'])
                     #print('remove {} from ({},{})'.format(xw['C_val'], rIdx, cIdx))
-                    #pr.printCanidates(Xcanidates)
+                    #pr.printCanidates(xCanidates)
                     numPruned += 1
 
-    if   house == 'row':  canidates = copy.deepcopy(Xcanidates)
-    elif house == 'col':  canidates = mp.mapRowsToCols(Xcanidates) 
-    #print(house)
+    cpyDic = {'row':copy.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
+    canidates = cpyDic[house](xCanidates)
 
     return(numPruned, canidates)
 ############################################################################
 
-# map sqrs to rows -> Xcanidates
-# 
-# find all numbers in rows of Xcanidates that appear exactly twice 
-# 
-# if the nums that appear exactly twice are in cols 
+# map sqrs to rows -> xCanidates
+#
+# find all numbers in rows of xCanidates that appear exactly twice
+#
+# if the nums that appear exactly twice are in cols
 # 0,1,2 or 3,4,5 of 6,7,8 then they are in the same row of canidates
 # and hence are a 'row' pointing pair.
-# 
-# if the nums that appear exactly twice are in cols 
+#
+# if the nums that appear exactly twice are in cols
 # 0,3,6 or 1,4,7 of 2,5,8 then they are in the same col of canidates
 # and hence are a 'col' pointing pair.
 #
 # process the pointing pairs in canidates.
 
 def prunePointingPairs(canidates):
-    Xcanidates = mp.mapSrqsToRows(canidates)
+    '''docstr'''
+    xCanidates = mp.mapSrqsToRows(canidates)
 
     #printCanidates(canidates)
-    #printCanidates(Xcanidates)
+    #printCanidates(xCanidates)
 
     numPruned = 0
 
     allBinsHeightTwo = []
-    for row in Xcanidates:
+    for row in xCanidates:
         flatRow = fr.flatten(row)
         histRow = fr.genHistogram(flatRow)
         allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
@@ -191,7 +197,7 @@ def prunePointingPairs(canidates):
     myD = {}
     for idx,lstOfVals in enumerate(allBinsHeightTwo):
         for val in lstOfVals:
-            cols = [ c for c,lst in enumerate(Xcanidates[idx]) if lst != 0 and val in lst ]
+            cols = [ c for c,lst in enumerate(xCanidates[idx]) if lst != 0 and val in lst ]
             #print(' in row {}, {} appears exactly twice - cols {}'.format(idx, val, cols))
             myD[k] = { 'A_sqr':idx, 'B_idxs':cols, 'C_val':val,  }
             k += 1
@@ -199,43 +205,39 @@ def prunePointingPairs(canidates):
 
     k = 0
     ppD = {}
-    for v in myD.values():
-        #print(v)
-        diff = v['B_idxs'][1] - v['B_idxs'][0]
-        sameRem = v['B_idxs'][1]//3 == v['B_idxs'][0]//3
+    for val in myD.values():
+        #print(val)
+        diff = val['B_idxs'][1] - val['B_idxs'][0]
+        sameRem = val['B_idxs'][1]//3 == val['B_idxs'][0]//3
         if diff < 3 and sameRem:
-            ppD[k] = v
+            ppD[k] = val
         k += 1
     #pp.pprint(ppD)
 
-
     k = 0
     ppD2 = {}
-    for v in ppD.values():
-        r0,c0 = mp.getRowColFromSqrOffset(v['A_sqr'],v['B_idxs'][0])
-        r1,c1 = mp.getRowColFromSqrOffset(v['A_sqr'],v['B_idxs'][1])
-        if r0 != r1:
+    for val in ppD.values():
+        row0,col0 = mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][0])
+        row1,col1 = mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][1])
+        if row0 != row1:
             print('SANITY CHECK')
-            exit()
+            sys.exit()
         print('    square {} has row pointing pair on row {} cols {},{} (val={})'.\
-            format(v['A_sqr'],r0,c0,c1,v['C_val']))
-        ppD2[k] = { 'aRow':r0, 'bCols':[c0,c1], 'cVal':v['C_val'] }
+            format(val['A_sqr'],row0,col0,col1,val['C_val']))
+        ppD2[k] = { 'aRow':row0, 'bCols':[col0,col1], 'cVal':val['C_val'] }
         k += 1
     pp.pprint(ppD2)
 
     rowsProcessed = []
-    for v in ppD2.values():
-        if v['aRow'] not in rowsProcessed:
-            cols = [ x for x in range(9) if x not in v['bCols'] ]
-            for c in cols:
-                if canidates[v['aRow']][c] != 0 and v['cVal'] in canidates[v['aRow']][c]:
-                    canidates[ v['aRow']][c].remove(v['cVal'])
-                    print('    removed {} from {},{}'.\
-                        format(v['cVal'], v['aRow'], c))
+    for val in ppD2.values():
+        if val['aRow'] not in rowsProcessed:
+            cols = [ x for x in range(9) if x not in val['bCols'] ]
+            for cIdx in cols:
+                if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
+                    canidates[ val['aRow']][cIdx].remove(val['cVal'])
+                    print('    removed {} from {},{}'.format(val['cVal'], val['aRow'], cIdx))
                     numPruned += 1
-
 
     #pr.printCanidates(canidates)
     return numPruned,canidates
 ############################################################################
-
