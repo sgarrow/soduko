@@ -1,30 +1,46 @@
-# New comment for git2.
+''' A suduko puzzle is a partailly filled 2D array of 9 rows and 9 cols.
+The puzzle can also be thought of a 9 3x3 sub-grids called squares.
+So, threre are 9 rows, 9 colums and 9 squares. Like this:
+
+    col0 col1 col2    col3 col4 col5   col6 col7 col8
+  ++----+----+----+  +----+----+----+  +----+----+----++
+  ||    |    |    |  |    |    |    |  |    |    |    || row0
+  ++----+----+----+  +----+----+----+  +----+----+----++
+  ||   square 0   |  |   square 1   |  |    |    |    || row1
+  ++----+----+----+  +----+----+----+  +----+----+----++
+  ||    |    |    |  |    |    |    |  |    |    |    || row2
+  ++----+----+----+  +----+----+----+  +----+----+----++
+
+  ++----+----+----+  +----+----+----+  +----+----+----++
+  ||    |    |    |  |    |    |    |  |    |    |    || row3
+  ++----+----+----+  +----+----+----+  +----+----+----++
+  ||    |    |    |  |    |    |    |  |    |    |    || row4
+  ++----+----+----+  +----+----+----+  +----+----+----++
+  ||    |    |    |  |    |    |    |  |    |    |    || row5
+  ++----+----+----+  +----+----+----+  +----+----+----++
+
+  ++----+----+----+  +----+----+----+  +----+----+----++
+  ||    |    |    |  |    |    |    |  |    |    |    || row6
+  ++----+----+----+  +----+----+----+  +----+----+----++
+  ||    |    |    |  |    |    |    |  |   square 8   || row7
+  ++----+----+----+  +----+----+----+  +----+----+----++
+  ||    |    |    |  |    |    |    |  |    |    |    || row8
+  ++----+----+----+  +----+----+----+  +----+----+----++
+
+Each of the 81 "cells" lives in 3 "houses", a row, a col and a square.
+A solved puzzle has a number 1-9 in each of the 81 cells such that each 
+number appears only once in each house.
+'''
+
 import printRoutines as pr
-import initRoutines  as ir
+import mapping       as mp
 import fillRoutines  as fr
 import pruneRoutines as rr
+
 NEWLINE = '\n'
 STARS39 = 39*'*'
 STARS44 = 44*'*'
 POUND62 = 62*'#'
-#############################################################################
-
-def findRowsColsInSquare(rIdx, cIdx):
-    if rIdx % 3 == 0:
-        rOffsets = [ 1, 2]
-    if rIdx % 3 == 1:
-        rOffsets = [-1, 1]
-    if rIdx % 3 == 2:
-        rOffsets = [-1,-2]
-    if cIdx % 3 == 0:
-        cOffsets = [ 1, 2]
-    if cIdx % 3 == 1:
-        cOffsets = [-1, 1]
-    if cIdx % 3 == 2:
-        cOffsets = [-1,-2]
-    rowsInSquare = [ rIdx+rOffsets[0], rIdx+rOffsets[1] ]
-    colsInSquare = [ cIdx+cOffsets[0], cIdx+cOffsets[1] ]
-    return rowsInSquare, colsInSquare
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -41,7 +57,7 @@ def updateCanidatesList(lclSolution,lclCanidates):
             for num in [1,2,3,4,5,6,7,8,9]:
 
                 inSquare = False
-                rowsInSquare, colsInSquare = findRowsColsInSquare(rIdx, cIdx)
+                rowsInSquare, colsInSquare = mp.findRowsColsInSquare(rIdx, cIdx)
 
                 for ris in rowsInSquare:
                     for cis in colsInSquare:
@@ -181,6 +197,13 @@ def fillSolution(lclSolution, lclCanidates, lclDicOfFuncs ):
     return totalNumFilled, lclSolution, lclDicOfFuncs
 #############################################################################
 
+def initDicOfFuncsCntrs(lclDicOfFuncs):
+    for k in dicOfFuncs:
+        lclDicOfFuncs[k]['calls'  ] = 0
+        lclDicOfFuncs[k]['replace'] = 0
+    return lclDicOfFuncs
+#############################################################################
+
 if __name__ == '__main__':
     from puzzles import puzzlesDict
 
@@ -194,7 +217,7 @@ if __name__ == '__main__':
         print(f'Processing puzzle {key}')
         solution = [x[:] for x in val['puzzle'] ]
         val['start0s'] = sum(x.count(0) for x in solution)
-        dicOfFuncs = ir.initDicOfFuncsCntrs(dicOfFuncs)
+        dicOfFuncs = initDicOfFuncsCntrs(dicOfFuncs)
         while True:
             numZerosBeforeAllFill = sum(x.count(0) for x in solution)
             if sum(x.count(0) for x in solution)==0:
@@ -205,7 +228,7 @@ if __name__ == '__main__':
                 if sum(x.count(0) for x in solution)==0:
                     break
 
-                canidates = ir.initCanidates()
+                canidates = [[ [] for ii in range(9)] for jj in range(9)]
                 canidates = updateCanidatesList(solution, canidates )
 
                 numberPruned, canidates = pruneCanidates(canidates)
@@ -224,21 +247,3 @@ if __name__ == '__main__':
 
     pr.printResults(puzzlesDict, 'all')
     pr.printResults(puzzlesDict, 'summary')
-
-    #for key in puzzlesDict:
-    #    print()
-    #    print(key)
-    #    ans = puzzlesDict[key]['solution']
-    #    pp.pprint(ans)
-    #
-    #    print('row sums = ', end = '')
-    #    for row in ans:
-    #        print(sum(row), ' ', end = '')
-    #    print()
-    #
-    #    Xpos = [[row[i] for row in ans] for i in range(len(ans[0]))]
-    #    print('col sums = ', end = '')
-    #    for row in Xpos:
-    #        print(sum(row), ' ', end = '')
-    #    print()
-    ##

@@ -16,3 +16,6 @@ git diff
 commit changes to existing file (add then commit):
 git add .\gitCheatSheet.txt
 git commit .\gitCheatSheet.txt -m "added new cheat"
+
+To remove a file locally and from the repository:
+ git rm -f myFile.py

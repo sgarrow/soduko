@@ -1,9 +1,9 @@
 import sys
 import copy
 from itertools import combinations
-import pprint as pp
-import fillRoutines  as fr
+import pprint  as pp
 import mapping as mp
+import fillRoutines  as fr
 
 def getComIdxs(rOrCOrS, tupSiz):
     if tupSiz == 2:
