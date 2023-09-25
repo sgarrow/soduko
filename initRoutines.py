@@ -17,5 +17,3 @@ def initDicOfFuncsCntrs(dicOfFuncs):
         dicOfFuncs[k]['replace'] = 0
     return dicOfFuncs
 #############################################################################
-
-

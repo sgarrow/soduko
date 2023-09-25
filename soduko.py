@@ -1,17 +1,15 @@
 # New comment for git2.
-'''DocStr'''
 import printRoutines as pr
 import initRoutines  as ir
 import fillRoutines  as fr
 import pruneRoutines as rr
-newline = '\n'
-stars39 = 39*'*'
-stars44 = 44*'*'
-pound62 = 62*'#'
+NEWLINE = '\n'
+STARS39 = 39*'*'
+STARS44 = 44*'*'
+POUND62 = 62*'#'
 #############################################################################
 
 def findRowsColsInSquare(rIdx, cIdx):
-    '''DocStr'''
     if rIdx % 3 == 0:
         rOffsets = [ 1, 2]
     if rIdx % 3 == 1:
@@ -30,7 +28,6 @@ def findRowsColsInSquare(rIdx, cIdx):
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
-    '''DocStr'''
     print('\nUpdating Canidates list')
     cols = [ [ row[i] for row in lclSolution] for i in range(len(lclSolution[0]))]
 
@@ -63,7 +60,6 @@ def updateCanidatesList(lclSolution,lclCanidates):
 #############################################################################
 
 def updatePuzzlesDictCntrs(lclPuzzlesDict,k, lclDicOfFuncs):
-    '''DocStr'''
     lclPuzzlesDict[k]['oC'] = lclDicOfFuncs['one']['calls'  ]
     lclPuzzlesDict[k]['oR'] = lclDicOfFuncs['one']['replace']
     lclPuzzlesDict[k]['rC'] = lclDicOfFuncs['row']['calls'  ]
@@ -76,7 +72,6 @@ def updatePuzzlesDictCntrs(lclPuzzlesDict,k, lclDicOfFuncs):
 #############################################################################
 
 def pruneNht(lclCanidates):
-    '''DocStr'''
     hiddenNakedLst = [ 'hidden', 'naked' ]
     houseLst       = [ 'row','col','sqr' ]
     tupSizeLst     = [4,3,2]
@@ -97,7 +92,6 @@ def pruneNht(lclCanidates):
 #############################################################################
 
 def pruneXw(lclCanidates):
-    '''DocStr'''
     totNumPruned = 0
     houseLst = [ 'row','col' ]
     for house in houseLst:
@@ -111,7 +105,6 @@ def pruneXw(lclCanidates):
 #############################################################################
 
 def prunePp(lclCanidates):
-    '''DocStr'''
     totNumPruned = 0
     numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates)
     totNumPruned += numPruned
@@ -123,7 +116,6 @@ def prunePp(lclCanidates):
 #############################################################################
 
 def pruneCanidates(lclCanidates):
-    '''DocStr'''
 
     print('\nPruning  lclCanidates list')
     totNumPrunedXw  = 0
@@ -141,7 +133,7 @@ def pruneCanidates(lclCanidates):
             print(f'  prune_XW  pass {passNumXw}')
             numPruned, lclCanidates = pruneXw(lclCanidates)
             totNumPrunedXw += numPruned
-            print(f'  prune_XW  prunned {numPruned}{newline}')
+            print(f'  prune_XW  prunned {numPruned}{NEWLINE}')
             passNumXw += 1
             if numPruned > 0:
                 prunedAtLeastOne = True
@@ -151,7 +143,7 @@ def pruneCanidates(lclCanidates):
             print(f'  prune_NHT pass {passNumNht}')
             numPruned, lclCanidates = pruneNht(lclCanidates)
             totNumPrunedNht += numPruned
-            print(f'  prune_NHT  prunned {numPruned}{newline}')
+            print(f'  prune_NHT  prunned {numPruned}{NEWLINE}')
             passNumNht += 1
             if numPruned > 0:
                 prunedAtLeastOne = True
@@ -161,21 +153,20 @@ def pruneCanidates(lclCanidates):
             print(f'  prune_PP  pass {passNumPp}')
             numPruned, lclCanidates = prunePp(lclCanidates)
             totNumPrunedPp += numPruned
-            print(f'  prune_PP  prunned {numPruned}{newline}')
+            print(f'  prune_PP  prunned {numPruned}{NEWLINE}')
             passNumPp += 1
             if numPruned > 0:
                 prunedAtLeastOne = True
         print(31*'*')
 
-    print(f'  Total Prunned NHT {totNumPrunedNht:2} {stars39}')
-    print(f'  Total Prunned XW  {totNumPrunedXw :2} {stars39}')
-    print(f'  Total Prunned PP  {totNumPrunedPp :2} {stars39}')
+    print(f'  Total Prunned NHT {totNumPrunedNht:2} {STARS39}')
+    print(f'  Total Prunned XW  {totNumPrunedXw :2} {STARS39}')
+    print(f'  Total Prunned PP  {totNumPrunedPp :2} {STARS39}')
     print(62*'*')
     return totNumPrunedXw + totNumPrunedNht + totNumPrunedPp, lclCanidates
 #############################################################################
 
 def fillSolution(lclSolution, lclCanidates, lclDicOfFuncs ):
-    '''DocStr'''
     totalNumFilled = 0
 
     print('\nFilling in solution cells')
@@ -184,7 +175,7 @@ def fillSolution(lclSolution, lclCanidates, lclDicOfFuncs ):
         totalNumFilled  += numFilled
         dicOfFuncs[k]['calls']   += 1
         dicOfFuncs[k]['replace'] += numFilled
-    print(f'{newline}  Total filled {totalNumFilled:2d} {stars44}')
+    print(f'{NEWLINE}  Total filled {totalNumFilled:2d} {STARS44}')
     print(62*'*')
 
     return totalNumFilled, lclSolution, lclDicOfFuncs
@@ -208,8 +199,8 @@ if __name__ == '__main__':
             numZerosBeforeAllFill = sum(x.count(0) for x in solution)
             if sum(x.count(0) for x in solution)==0:
                 break
-            numberFilled = 1
-            while numberFilled:
+            NUMBER_FILLED = 1
+            while NUMBER_FILLED:
 
                 if sum(x.count(0) for x in solution)==0:
                     break
@@ -218,7 +209,7 @@ if __name__ == '__main__':
                 canidates = updateCanidatesList(solution, canidates )
 
                 numberPruned, canidates = pruneCanidates(canidates)
-                numberFilled, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs )
+                NUMBER_FILLED, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs )
 
             numZerosAfterAllFill = sum(x.count(0) for x in solution)
             if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
@@ -228,7 +219,7 @@ if __name__ == '__main__':
         val['end0s'] = numZerosAfterAllFill
         puzzlesDict = updatePuzzlesDictCntrs(puzzlesDict,key, dicOfFuncs)
         val['solution'] = solution
-        print(f'{pound62}')
+        print(f'{POUND62}')
     # end for loop on all puzzles
 
     pr.printResults(puzzlesDict, 'all')

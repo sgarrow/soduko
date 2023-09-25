@@ -1,12 +1,28 @@
-'''docstr'''
 import sys
 import copy
 from itertools import combinations
 import pprint as pp
 import fillRoutines  as fr
 import mapping as mp
+
+def getComIdxs(rOrCOrS, tupSiz):
+    if tupSiz == 2:
+        combIdxs = \
+        list((i,j) for ((i,_),(j,_)) in combinations(enumerate(rOrCOrS), tupSiz))
+    elif tupSiz == 3:
+        combIdxs = \
+        list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rOrCOrS), tupSiz))
+    elif tupSiz == 4:
+        combIdxs = \
+        list((i,j,k,l) for ((i,_),(j,_),(k,_),(l,_)) in \
+            combinations(enumerate(rOrCOrS), tupSiz))
+    elif tupSiz == 5:
+        combIdxs = \
+        list((i,j,k,l,m) for ((i,_),(j,_),(k,_),(l,_),(m,_)) in \
+            combinations(enumerate(rOrCOrS), tupSiz))
+    return combIdxs
+############################################################################
 def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz):
-    '''docstr'''
     #pr.printCanidates(canidates)
 
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
@@ -16,29 +32,16 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz):
     for idx, rowOrColOrSqrWithZeros in enumerate(xCanidates):
         rOrCOrS = [set(x) if x != 0 else set([0]) for x in rowOrColOrSqrWithZeros]
         combSet = combinations(rOrCOrS, tupSiz)  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3)=84.
-        if tupSiz == 2:
-            combIdxs = \
-            list((i,j) for ((i,_),(j,_)) in combinations(enumerate(rOrCOrS), tupSiz))
-        elif tupSiz == 3:
-            combIdxs = \
-            list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rOrCOrS), tupSiz))
-        elif tupSiz == 4:
-            combIdxs = \
-            list((i,j,k,l) for ((i,_),(j,_),(k,_),(l,_)) in \
-                combinations(enumerate(rOrCOrS), tupSiz))
-        elif tupSiz == 5:
-            combIdxs = \
-            list((i,j,k,l,m) for ((i,_),(j,_),(k,_),(l,_),(m,_)) in \
-                combinations(enumerate(rOrCOrS), tupSiz))
+        combIdxs = getComIdxs(rOrCOrS, tupSiz)
 
         for comb,comIdx in zip(combSet,combIdxs):
             if any(el == {0} for el in comb) or any(len(el) == 1 for el in comb):
                 continue
 
-            comIdxC  = [ x for x in range(0,len(rOrCOrS)) if x not in comIdx ]
-            setH  = set.union(*comb)
-            setG   = set(fr.flatten([ rOrCOrS[ii] for ii in comIdxC if rOrCOrS[ii] != [0]]))
-            lstHmG = list(setH - setG)
+            comIdxC = [ x for x in range(0,len(rOrCOrS)) if x not in comIdx ]
+            setH    = set.union(*comb)
+            setG    = set(fr.flatten([ rOrCOrS[ii] for ii in comIdxC if rOrCOrS[ii] != [0]]))
+            lstHmG  = list(setH - setG)
 
             hIsNaked = len(setH) == tupSiz
 
@@ -46,40 +49,24 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz):
             if (len(setH) > tupSiz) and (len(lstHmG) == tupSiz):
                 hIsHidden = True
                 for aComb in comb:
-                    inter = set.intersection(set(lstHmG), aComb)
-                    if len(inter) == 0:
+                    if len(set.intersection(set(lstHmG), aComb) ) == 0:
                         hIsHidden = False
                         break
 
-            #print( '    {}{}'.format(str(comb).ljust(40),comIdx) )
-            #print('    idx, comIdx, Tcomp     = ', idx, comIdx, comIdxC   )
-            #print('    idx, H, G         = ', idx, H, G   )
-            #print('    idx, Hmg   = ', idx, HmG )
-            #print('    ',hIsNaked,hIsHidden)
-
             if hIsHidden and hiddenOrNaked == 'hidden':
-                #pr.printCanidates(xCanidates)
-                #print(' {} {} has hidden {}-tuple {} at index {}'.\
-                # format(house,idx,tupSiz,HmG,comIdx))
                 myD = {'row': idx, 'tripVals': lstHmG, 'tripIdxs': comIdx }
 
                 for tripIdx in myD['tripIdxs']:
                     temp  = [ x for x in rOrCOrS[tripIdx] if x in myD['tripVals'] ]
-
-                    inter = set.intersection( rOrCOrS[tripIdx], set(temp) )
-                    diff  = set(rOrCOrS[tripIdx]) - inter
+                    diff  = set(rOrCOrS[tripIdx]) - set.intersection( rOrCOrS[tripIdx], set(temp) )
                     if len(diff) != 0:
                         numPruned += len(diff)
                         #print( '   Removed {} from ({},{})'.format(diff, myD['row'], tripIdx) )
 
                     xCanidates[myD['row']][tripIdx] = temp
-                #pr.printCanidates(xCanidates)
                 break
 
             if hIsNaked and hiddenOrNaked == 'naked':
-                #pr.printCanidates(xCanidates)
-                #print(' {} {} has naked {}-tuple {} at index {}'.\
-                # format(house, idx, tupSiz, H, comIdx))
                 myD   = {'row': idx, 'tripVals': setH, 'tripIdxs': comIdx }
 
                 temp  = [ list(x) if kk in myD['tripIdxs'] else \
@@ -87,8 +74,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz):
                 temp2 = [ x if x != [0] else 0 for x in temp]
 
                 for idx, elem in enumerate(rOrCOrS):
-                    inter = set.intersection( elem, set(temp[idx]) )
-                    diff  = elem - inter
+                    diff  = elem - set.intersection( elem, set(temp[idx]) )
                     if len(diff) != 0:
                         numPruned += len(diff)
                         #print( '   Removed {} from ({},{})'.format(diff,  myD['row'], idx) )
@@ -106,7 +92,6 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz):
 ############################################################################
 
 def pruneXwings(canidates, house):
-    '''docstr'''
     #pr.printCanidates(canidates)
 
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
@@ -177,7 +162,6 @@ def pruneXwings(canidates, house):
 # process the pointing pairs in canidates.
 
 def prunePointingPairs(canidates):
-    '''docstr'''
     xCanidates = mp.mapSrqsToRows(canidates)
 
     #printCanidates(canidates)

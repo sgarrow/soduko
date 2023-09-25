@@ -12,17 +12,17 @@ def printCanidates(canidates):
             lineToPrn += '|'
             for cIdx,cell in enumerate(row):
                 for num in thingsToPrint:
-                    if (num-1)%3 == 0: 
+                    if (num-1)%3 == 0:
                         lineToPrn += '|'
                     if cell != 0 and num in cell:
-                        lineToPrn += '{:2}'.format(num)
+                        lineToPrn += f'{num:2}'
                         numPrintedThisLine = True
                         numPrintedThisRow  = True
                     else:
                         lineToPrn += '  '
-                if (cIdx+1)%3 == 0:  
+                if (cIdx+1)%3 == 0:
                     lineToPrn += '|'
-            lineToPrn += '| row {}'.format(rIdx)
+            lineToPrn += f'| row {rIdx}'
 
             if numPrintedThisLine:
                 print(lineToPrn)
@@ -31,7 +31,6 @@ def printCanidates(canidates):
 
         if (rIdx+1)%3 ==0:
             print('++------+------+------++------+------+------++------+------+------++')
-    return 0
 ############################################################################
 def prettyPrint3DArray(array):
     print()
@@ -39,7 +38,6 @@ def prettyPrint3DArray(array):
         str1 = ' '.join(str(e).ljust(21) for e in row)
         print('  ',str1)
     print()
-    return
 #############################################################################
 
 def printResults(puzzlesDict, prnType):
@@ -52,7 +50,7 @@ def printResults(puzzlesDict, prnType):
 
         if prnType == 'all':
             for ii in range(len(puzzlesDict[key]['puzzle'])):
-                print( '',puzzlesDict[key]['puzzle'  ][ii], '  ',  
+                print( '',puzzlesDict[key]['puzzle'  ][ii], '  ',
                        puzzlesDict[key]['solution'][ii]  )
             print()
 
@@ -76,8 +74,5 @@ def printResults(puzzlesDict, prnType):
         print( ' fillCellsViaSqrHistAnal calls,replacements  = {:2d}, {:2d}.'.\
             format(puzzlesDict[key]['sC'], puzzlesDict[key]['sR']))
 
-        print(62*'*')                     
-
-    return
+        print(62*'*')
 #############################################################################
-

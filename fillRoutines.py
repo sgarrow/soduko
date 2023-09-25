@@ -1,19 +1,16 @@
-'''docstr'''
-newline = '\n'
+NEWLINE = '\n'
 def flatten(inLst):
-    '''docstr'''
     outLst = []
     for elem in inLst:
         try:
             for subEl in elem:
                 outLst.append(subEl)
-        except:
+        except TypeError:
             outLst.append(elem)
     return outLst
 #############################################################################
 
 def genHistogram(inLst):
-    '''docstr'''
     hist = []
     for histBin in range(min(inLst), max(inLst)+1):
         binHeight = len([1 for x in inLst if x==histBin])
@@ -23,7 +20,6 @@ def genHistogram(inLst):
 #############################################################################
 
 def fillCellsViaOneCanidate(solution, canidates):
-    '''docstr'''
     print('\n  Filling solution cells that have only 1 canidate')
     numFilled = 0
     for rIdx,row in enumerate(solution):
@@ -37,12 +33,11 @@ def fillCellsViaOneCanidate(solution, canidates):
                         print()
     if numFilled != 0:
         numZeros = sum(x.count(0) for x in solution)
-        print(f'{newline}    NumZeros = {numZeros}.')
+        print(f'{NEWLINE}    NumZeros = {numZeros}.')
     return numFilled,solution
 #############################################################################
 
 def fillCellsViaRowHistAnal(solution, canidates):
-    '''docstr'''
     print('\n  Filling solution cells thru Row Hist Analysis')
     numFilled = 0
 
@@ -63,12 +58,11 @@ def fillCellsViaRowHistAnal(solution, canidates):
                 numFilled += 1
     if numFilled != 0:
         numZeros = sum(x.count(0) for x in solution)
-        print(f'{newline}    NumZeros = {numZeros}.')
+        print(f'{NEWLINE}    NumZeros = {numZeros}.')
     return numFilled,solution
 #############################################################################
 
 def fillCellsViaColHistAnal(solution, canidates):
-    '''docstr'''
     print('\n  Filling solution cells thru Col Hist Analysis')
     numFilled = 0
     xPos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
@@ -90,12 +84,11 @@ def fillCellsViaColHistAnal(solution, canidates):
                 numFilled += 1
     if numFilled != 0:
         numZeros = sum(x.count(0) for x in solution)
-        print(f'{newline}    NumZeros = {numZeros}.')
+        print(f'{NEWLINE}    NumZeros = {numZeros}.')
     return numFilled,solution
 #############################################################################
 
 def fillCellsViaSqrHistAnal(solution, canidates):
-    '''docstr'''
     print('\n  Filling solution cells thru Sqr Hist Analysis')
     numFilled = 0
     squareNums = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]]
@@ -125,6 +118,6 @@ def fillCellsViaSqrHistAnal(solution, canidates):
                 numFilled += 1
     if numFilled != 0:
         numZeros = sum(x.count(0) for x in solution)
-        print(f'{newline}    NumZeros = {numZeros}.')
+        print(f'{NEWLINE}    NumZeros = {numZeros}.')
     return numFilled,solution
 #############################################################################
