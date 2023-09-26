@@ -31,7 +31,7 @@ Each of the 81 "cells" lives in 3 "houses", a row, a col and a square.
 A solved puzzle has a number 1-9 in each of the 81 cells such that each 
 number appears only once in each house.
 '''
-#  C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
+# C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
 
 import printRoutines as pr
 import mapping       as mp
