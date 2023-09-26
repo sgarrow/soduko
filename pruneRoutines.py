@@ -174,8 +174,8 @@ def prunePointingPairs(canidates):
         flatRow = fr.flatten(row)
         histRow = fr.genHistogram(flatRow)
         allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
-    pp.pprint(allBinsHeightTwo)
-    print()
+    #pp.pprint(allBinsHeightTwo)
+    #print()
 
     k = 0
     myD = {}
@@ -206,11 +206,11 @@ def prunePointingPairs(canidates):
         if row0 != row1:
             print('SANITY CHECK')
             sys.exit()
-        print('    square {} has row pointing pair on row {} cols {},{} (val={})'.\
-            format(val['A_sqr'],row0,col0,col1,val['C_val']))
+        #print('    square {} has row pointing pair on row {} cols {},{} (val={})'.\
+        #    format(val['A_sqr'],row0,col0,col1,val['C_val']))
         ppD2[k] = { 'aRow':row0, 'bCols':[col0,col1], 'cVal':val['C_val'] }
         k += 1
-    pp.pprint(ppD2)
+    #pp.pprint(ppD2)
 
     rowsProcessed = []
     for val in ppD2.values():

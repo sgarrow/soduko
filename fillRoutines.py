@@ -29,7 +29,7 @@ def fillCellsViaOneCanidate(solution, canidates):
         for cIdx in range(len(row)):
             if canidates[rIdx][cIdx] != 0 and len(canidates[rIdx][cIdx]) == 1:
                 if solution[rIdx][cIdx] == 0:
-                    print(f'    Placing {canidates[rIdx][cIdx][0]} at {rIdx},{cIdx}')
+                    print(f'    Placing {canidates[rIdx][cIdx][0]} at {rIdx},{cIdx}', end = '')
                     solution[rIdx][cIdx] = canidates[rIdx][cIdx][0]
                     numFilled += 1
                     if numFilled%3 == 0:

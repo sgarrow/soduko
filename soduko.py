@@ -38,7 +38,7 @@ import fillRoutines  as fr
 import pruneRoutines as rr
 
 NEWLINE = '\n'
-STARS39 = 39*'*'
+STARS33 = 33*'*'
 STARS44 = 44*'*'
 POUND62 = 62*'#'
 #############################################################################
@@ -133,64 +133,48 @@ def prunePp(lclCanidates):
 
 def pruneCanidates(lclCanidates):
 
-    print('\nPruning  lclCanidates list')
-    totNumPrunedXw  = 0
-    totNumPrunedNht = 0
-    totNumPrunedPp  = 0
-    passNumXw       = 0
-    passNumNht      = 0
-    passNumPp       = 0
+    print('\nPruning canidates list')
+
+    pDict = {
+    'prune_XW' : { 'func': pruneXw,   'passNum': 0, 'totNumPruned': 0},
+    'prune_NHT': { 'func': pruneNht,  'passNum': 0, 'totNumPruned': 0},
+    'prune_PP' : { 'func': prunePp,   'passNum': 0, 'totNumPruned': 0}}
 
     prunedAtLeastOne = True
     while prunedAtLeastOne:
         prunedAtLeastOne = False
-        numPruned = 1
-        while numPruned:
-            print(f'  prune_XW  pass {passNumXw}')
-            numPruned, lclCanidates = pruneXw(lclCanidates)
-            totNumPrunedXw += numPruned
-            print(f'  prune_XW  prunned {numPruned}{NEWLINE}')
-            passNumXw += 1
-            if numPruned > 0:
-                prunedAtLeastOne = True
+        for k,v in pDict.items():
+            numPruned = 1
+            v['passNum'] = 0
+            while numPruned:
+                print('  {:9} pass {}'.format(k, v['passNum']))
+                numPruned, lclCanidates = v['func'](lclCanidates)
+                v['totNumPruned'] += numPruned
+                print(f'  {k:9} prunned {numPruned}{NEWLINE}')
+                v['passNum'] += 1
+                if numPruned > 0:
+                    prunedAtLeastOne = True
 
-        numPruned = 1
-        while numPruned:
-            print(f'  prune_NHT pass {passNumNht}')
-            numPruned, lclCanidates = pruneNht(lclCanidates)
-            totNumPrunedNht += numPruned
-            print(f'  prune_NHT  prunned {numPruned}{NEWLINE}')
-            passNumNht += 1
-            if numPruned > 0:
-                prunedAtLeastOne = True
-
-        numPruned = 1
-        while numPruned:
-            print(f'  prune_PP  pass {passNumPp}')
-            numPruned, lclCanidates = prunePp(lclCanidates)
-            totNumPrunedPp += numPruned
-            print(f'  prune_PP  prunned {numPruned}{NEWLINE}')
-            passNumPp += 1
-            if numPruned > 0:
-                prunedAtLeastOne = True
+            print(31*'*')
         print(31*'*')
 
-    print(f'  Total Prunned NHT {totNumPrunedNht:2} {STARS39}')
-    print(f'  Total Prunned XW  {totNumPrunedXw :2} {STARS39}')
-    print(f'  Total Prunned PP  {totNumPrunedPp :2} {STARS39}')
+    totTotNumPruned = 0
+    for k,v in pDict.items():
+        print('  Total Prunned {:9} {:2} {}'.format(k, v['totNumPruned'], STARS33))
+        totTotNumPruned += v['totNumPruned']
     print(62*'*')
-    return totNumPrunedXw + totNumPrunedNht + totNumPrunedPp, lclCanidates
+    return totTotNumPruned, lclCanidates
 #############################################################################
 
 def fillSolution(lclSolution, lclCanidates, lclDicOfFuncs ):
     totalNumFilled = 0
 
     print('\nFilling in solution cells')
-    for k in dicOfFuncs:
+    for k in lclDicOfFuncs:
         numFilled, lclSolution = lclDicOfFuncs[k]['func']( lclSolution, lclCanidates )
         totalNumFilled  += numFilled
-        dicOfFuncs[k]['calls']   += 1
-        dicOfFuncs[k]['replace'] += numFilled
+        lclDicOfFuncs[k]['calls']   += 1
+        lclDicOfFuncs[k]['replace'] += numFilled
     print(f'{NEWLINE}  Total filled {totalNumFilled:2d} {STARS44}')
     print(62*'*')
 
@@ -198,7 +182,7 @@ def fillSolution(lclSolution, lclCanidates, lclDicOfFuncs ):
 #############################################################################
 
 def initDicOfFuncsCntrs(lclDicOfFuncs):
-    for k in dicOfFuncs:
+    for k in lclDicOfFuncs:
         lclDicOfFuncs[k]['calls'  ] = 0
         lclDicOfFuncs[k]['replace'] = 0
     return lclDicOfFuncs
