@@ -1,4 +1,4 @@
-git add *
-git commit * --no-verify -m "Remove file gitCheatSheet.txt"
+git add *.py
+git commit * --no-verify -m "Remove file release.bat"
 git push -u origin main
 
