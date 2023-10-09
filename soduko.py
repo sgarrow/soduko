@@ -198,6 +198,7 @@ if __name__ == '__main__':
         'col': { 'func': fr.fillCellsViaColHistAnal, 'calls': 0, 'replace': 0 },
         'sqr': { 'func': fr.fillCellsViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
 
+    print(puzzlesDict['puzzleEsy']['puzzle'])
     for key,val in puzzlesDict.items():
         print(f'Processing puzzle {key}')
         solution = [x[:] for x in val['puzzle'] ]
