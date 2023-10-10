@@ -100,6 +100,17 @@ puzWtf = [ '800000000',
            '008500010',
            '090000400' ]
 
+puzUsr = [ '000000000',
+           '000000000', # 94 is first 2. <--1
+           '000000000',
+           '000000000',
+           '000000000', #  6 is second.  <--1
+           '000000000',
+           '000000000',
+           '000000000',
+           '000000000' ]
+
+
 puzzlesDict = {
 
     'puzzleEsy' : { 'puzzle' : convert(puzEsy), 'solution' : [], 'start0s' : 0, 'end0s' : 0,
@@ -135,6 +146,10 @@ puzzlesDict = {
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
     
     'puzzleXW'  : { 'puzzle' : convert(puzXW),  'solution' : [], 'start0s' : 0, 'end0s' : 0,
+                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+
+    'user'      : { 'puzzle' : convert(puzUsr), 'solution' : [], 'start0s' : 0, 'end0s' : 0,
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
     }

@@ -33,6 +33,7 @@ number appears only once in each house.
 '''
 #  C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
 
+import pprint        as pp
 import printRoutines as pr
 import mapping       as mp
 import fillRoutines  as fr
@@ -198,12 +199,21 @@ if __name__ == '__main__':
         'col': { 'func': fr.fillCellsViaColHistAnal, 'calls': 0, 'replace': 0 },
         'sqr': { 'func': fr.fillCellsViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
 
-    print(puzzlesDict['puzzleEsy']['puzzle'])
+    cu = input(' (c)anned or (u)ser')
+    if cu == 'u':
+        for ii in range(9):
+            aRow = input( f' Row {ii} ->' )
+            puzzlesDict['user']['puzzle'][ii] = [ int(ch) for ch in aRow ]
+
     for key,val in puzzlesDict.items():
-        print(f'Processing puzzle {key}')
         solution = [x[:] for x in val['puzzle'] ]
         val['start0s'] = sum(x.count(0) for x in solution)
         dicOfFuncs = initDicOfFuncsCntrs(dicOfFuncs)
+
+        if cu == 'c' and key == 'user': continue
+        if cu == 'u' and key != 'user': continue
+        
+        print(f'Processing puzzle {key}')
         while True:
             numZerosBeforeAllFill = sum(x.count(0) for x in solution)
             if sum(x.count(0) for x in solution)==0:
@@ -231,5 +241,5 @@ if __name__ == '__main__':
         print(f'{POUND62}')
     # end for loop on all puzzles
 
-    pr.printResults(puzzlesDict, 'all')
-    pr.printResults(puzzlesDict, 'summary')
+    pr.printResults(puzzlesDict, 'all',cu)
+    pr.printResults(puzzlesDict, 'summary',cu)

@@ -40,9 +40,12 @@ def prettyPrint3DArray(array):
     print()
 #############################################################################
 
-def printResults(puzzlesDict, prnType):
+def printResults(puzzlesDict, prnType, cu):
     print()
     for key in puzzlesDict:
+
+        if cu == 'c' and key == 'user': continue
+        if cu == 'u' and key != 'user': continue
 
         print(' puzzle {}. (numZeros = {}). {}.\n'.\
             format( key, puzzlesDict[key]['end0s'],
