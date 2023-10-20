@@ -89,7 +89,7 @@ def updatePuzzlesDictCntrs(lclPuzzlesDict,k, lclDicOfFuncs):
     return lclPuzzlesDict
 #############################################################################
 
-def pruneNht(lclCanidates):
+def pruneNht(lclCanidates, clArgs):
     hiddenNakedLst = [ 'hidden', 'naked' ]
     houseLst       = [ 'row','col','sqr' ]
     tupSizeLst     = [4,3,2]
@@ -100,7 +100,7 @@ def pruneNht(lclCanidates):
             for house in houseLst:
                 #print('Pruning {:6} {}-tuples in {}s'.format(hn,N,h))
                 numPruned, lclCanidates = \
-                rr.pruneNakedAndHiddenTuples(lclCanidates, house, hideNkd, tupSize)
+                rr.pruneNakedAndHiddenTuples(lclCanidates, house, hideNkd, tupSize, clArgs)
                 totNumPruned += numPruned
 
                 if numPruned:
@@ -109,11 +109,11 @@ def pruneNht(lclCanidates):
     return totNumPruned, lclCanidates
 #############################################################################
 
-def pruneXw(lclCanidates):
+def pruneXw(lclCanidates, clArgs):
     totNumPruned = 0
     houseLst = [ 'row','col' ]
     for house in houseLst:
-        numPruned, lclCanidates = rr.pruneXwings(lclCanidates, house)
+        numPruned, lclCanidates = rr.pruneXwings(lclCanidates, house, clArgs)
         totNumPruned += numPruned
 
         if numPruned:
@@ -122,9 +122,9 @@ def pruneXw(lclCanidates):
     return totNumPruned, lclCanidates
 #############################################################################
 
-def prunePp(lclCanidates):
+def prunePp(lclCanidates, clArgs):
     totNumPruned = 0
-    numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates)
+    numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates, clArgs)
     totNumPruned += numPruned
 
     if numPruned:
@@ -133,7 +133,7 @@ def prunePp(lclCanidates):
     return totNumPruned, lclCanidates
 #############################################################################
 
-def pruneCanidates(lclCanidates):
+def pruneCanidates(lclCanidates, clArgs):
 
     print('\nPruning canidates list')
 
@@ -146,11 +146,16 @@ def pruneCanidates(lclCanidates):
     while prunedAtLeastOne:
         prunedAtLeastOne = False
         for k,v in pDict.items():
+
+            if v['func'] == pruneXw  and 'xwOff'  in clArgs: continue
+            if v['func'] == pruneNht and 'nhtOff' in clArgs: continue
+            if v['func'] == prunePp  and 'ppOff'  in clArgs: continue
+
             numPruned = 1
             v['passNum'] = 0
             while numPruned:
                 print('  {:9} pass {}'.format(k, v['passNum']))
-                numPruned, lclCanidates = v['func'](lclCanidates)
+                numPruned, lclCanidates = v['func'](lclCanidates, clArgs)
                 v['totNumPruned'] += numPruned
                 print(f'  {k:9} prunned {numPruned}{NEWLINE}')
                 v['passNum'] += 1
@@ -199,6 +204,10 @@ if __name__ == '__main__':
         'col': { 'func': fr.fillCellsViaColHistAnal, 'calls': 0, 'replace': 0 },
         'sqr': { 'func': fr.fillCellsViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
 
+    cmdLineArgs = input(' Args-> ').split()
+    # nhtOff, xwOff, ppOff
+    # nhtPrn, wxPrn, ppPrn
+
     cu = input(' (c)anned or (u)ser')
     if cu == 'u':
         for ii in range(9):
@@ -227,7 +236,7 @@ if __name__ == '__main__':
                 canidates = [[ [] for ii in range(9)] for jj in range(9)]
                 canidates = updateCanidatesList(solution, canidates )
 
-                numberPruned, canidates = pruneCanidates(canidates)
+                numberPruned, canidates = pruneCanidates(canidates,cmdLineArgs)
                 NUMBER_FILLED, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs )
 
             numZerosAfterAllFill = sum(x.count(0) for x in solution)

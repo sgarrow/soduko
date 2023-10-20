@@ -22,7 +22,7 @@ def getComIdxs(rOrCOrS, tupSiz):
             combinations(enumerate(rOrCOrS), tupSiz))
     return combIdxs
 ############################################################################
-def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz):
+def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
     #pr.printCanidates(canidates)
 
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
@@ -61,7 +61,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz):
                     diff  = set(rOrCOrS[tripIdx]) - set.intersection( rOrCOrS[tripIdx], set(temp) )
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        #print( '   Removed {} from ({},{})'.format(diff, myD['row'], tripIdx) )
+                        if 'nhtPrn' in clArgs: print( '      remove {} from ({},{})'.format(diff, myD['row'], tripIdx) )
 
                     xCanidates[myD['row']][tripIdx] = temp
                 break
@@ -77,7 +77,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz):
                     diff  = elem - set.intersection( elem, set(temp[idx]) )
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        #print( '   Removed {} from ({},{})'.format(diff,  myD['row'], idx) )
+                        if 'nhtPrn' in clArgs: print( '      remove {} from ({},{})'.format(diff,  myD['row'], idx) )
 
                 xCanidates[myD['row']] = temp2
                 #pr.printCanidates(xCanidates)
@@ -91,7 +91,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz):
     return(numPruned, canidates)
 ############################################################################
 
-def pruneXwings(canidates, house):
+def pruneXwings(canidates, house, clArgs):
     #pr.printCanidates(canidates)
 
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
@@ -135,10 +135,10 @@ def pruneXwings(canidates, house):
                 if (rIdx not in xWing['A_rows'])  and \
                     (row[cIdx] != 0) and \
                     (xWing['C_val'] in row[cIdx]):
-                    #pr.printCanidates(xCanidates)
+                    #if 'xwPrn' in clArgs: pr.printCanidates(xCanidates)
                     xCanidates[rIdx][cIdx].remove(xWing['C_val'])
-                    #print('remove {} from ({},{})'.format(xw['C_val'], rIdx, cIdx))
-                    #pr.printCanidates(xCanidates)
+                    if 'xwPrn' in clArgs: print('    remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))
+                    #if 'xwPrn' in clArgs: pr.printCanidates(xCanidates)
                     numPruned += 1
 
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
@@ -161,7 +161,7 @@ def pruneXwings(canidates, house):
 #
 # process the pointing pairs in canidates.
 
-def prunePointingPairs(canidates):
+def prunePointingPairs(canidates, clArgs):
     xCanidates = mp.mapSrqsToRows(canidates)
 
     #printCanidates(canidates)
@@ -219,7 +219,7 @@ def prunePointingPairs(canidates):
             for cIdx in cols:
                 if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
                     canidates[ val['aRow']][cIdx].remove(val['cVal'])
-                    print('    removed {} from {},{}'.format(val['cVal'], val['aRow'], cIdx))
+                    if 'ppPrn' in clArgs: print('    remove {} from {},{}'.format(val['cVal'], val['aRow'], cIdx))
                     numPruned += 1
 
     #pr.printCanidates(canidates)
