@@ -4,6 +4,7 @@ from itertools import combinations
 import pprint  as pp
 import mapping as mp
 import fillRoutines  as fr
+import printRoutines as pr
 
 def getComIdxs(rOrCOrS, tupSiz):
     if tupSiz == 2:
@@ -55,19 +56,26 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
 
             if hIsHidden and hiddenOrNaked == 'hidden':
                 myD = {'row': idx, 'tripVals': lstHmG, 'tripIdxs': comIdx }
-
+                if 'nhtPrn' in clArgs: pr.printCanidates(xCanidates)
+                if 'nhtPrn' in clArgs: print('Hidden')
+                if 'nhtPrn' in clArgs: pp.pprint(myD)
+            
                 for tripIdx in myD['tripIdxs']:
                     temp  = [ x for x in rOrCOrS[tripIdx] if x in myD['tripVals'] ]
                     diff  = set(rOrCOrS[tripIdx]) - set.intersection( rOrCOrS[tripIdx], set(temp) )
                     if len(diff) != 0:
                         numPruned += len(diff)
                         if 'nhtPrn' in clArgs: print( '      remove {} from ({},{})'.format(diff, myD['row'], tripIdx) )
-
+            
                     xCanidates[myD['row']][tripIdx] = temp
+                if 'nhtPrn' in clArgs: pr.printCanidates(xCanidates)
                 break
 
             if hIsNaked and hiddenOrNaked == 'naked':
                 myD   = {'row': idx, 'tripVals': setH, 'tripIdxs': comIdx }
+                if 'nhtPrn' in clArgs: pr.printCanidates(xCanidates)
+                if 'nhtPrn' in clArgs: print('Naked')
+                if 'nhtPrn' in clArgs: pp.pprint(myD)
 
                 temp  = [ list(x) if kk in myD['tripIdxs'] else \
                           list(x-myD['tripVals']) for kk,x in enumerate(rOrCOrS) ]
@@ -80,7 +88,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
                         if 'nhtPrn' in clArgs: print( '      remove {} from ({},{})'.format(diff,  myD['row'], idx) )
 
                 xCanidates[myD['row']] = temp2
-                #pr.printCanidates(xCanidates)
+                if 'nhtPrn' in clArgs: pr.printCanidates(xCanidates)
                 break
 
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
@@ -129,18 +137,23 @@ def pruneXwings(canidates, house, clArgs):
             k += 1
     #pp.pprint(xWingD)
 
+    didRemove = False
     for xWing in xWingD.values():
         for rIdx,row in enumerate(xCanidates):
             for cIdx in xWing['B_cols']:
                 if (rIdx not in xWing['A_rows'])  and \
                     (row[cIdx] != 0) and \
                     (xWing['C_val'] in row[cIdx]):
-                    #if 'xwPrn' in clArgs: pr.printCanidates(xCanidates)
                     xCanidates[rIdx][cIdx].remove(xWing['C_val'])
+
+                    if not didRemove:
+                        pr.printCanidates(xCanidates)
+                        pp.pprint(xWingD)
+                        didRemove = True
                     if 'xwPrn' in clArgs: print('    remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))
-                    #if 'xwPrn' in clArgs: pr.printCanidates(xCanidates)
                     numPruned += 1
 
+    if didRemove: pr.printCanidates(xCanidates)
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
     canidates = cpyDic[house](xCanidates)
 
@@ -213,15 +226,20 @@ def prunePointingPairs(canidates, clArgs):
     #pp.pprint(ppD2)
 
     rowsProcessed = []
+    didRemove = False
     for val in ppD2.values():
         if val['aRow'] not in rowsProcessed:
             cols = [ x for x in range(9) if x not in val['bCols'] ]
             for cIdx in cols:
                 if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
                     canidates[ val['aRow']][cIdx].remove(val['cVal'])
-                    if 'ppPrn' in clArgs: print('    remove {} from {},{}'.format(val['cVal'], val['aRow'], cIdx))
+                    if not didRemove:
+                        pr.printCanidates(xCanidates)
+                        pp.pprint(ppD2)
+                        didRemove = True
+                    if 'ppPrn' in clArgs: print('    remove {} from ({},{})'.format(val['cVal'], val['aRow'], cIdx))
                     numPruned += 1
 
-    #pr.printCanidates(canidates)
+    if didRemove: pr.printCanidates(xCanidates)
     return numPruned,canidates
 ############################################################################
