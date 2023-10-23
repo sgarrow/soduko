@@ -146,11 +146,11 @@ def pruneXwings(canidates, house, clArgs):
                     (xWing['C_val'] in row[cIdx]):
                     xCanidates[rIdx][cIdx].remove(xWing['C_val'])
 
-                    if not didRemove:
+                    if not didRemove and 'xwPrn' in clArgs:
                         pr.printCanidates(xCanidates)
                         pp.pprint(xWingD)
                         didRemove = True
-                    if 'xwPrn' in clArgs: print('    remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))
+                    if 'xwPrn' in clArgs: print('   remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))
                     numPruned += 1
 
     if didRemove: pr.printCanidates(xCanidates)
@@ -233,7 +233,7 @@ def prunePointingPairs(canidates, clArgs):
             for cIdx in cols:
                 if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
                     canidates[ val['aRow']][cIdx].remove(val['cVal'])
-                    if not didRemove:
+                    if not didRemove and 'ppPrn' in clArgs:
                         pr.printCanidates(xCanidates)
                         pp.pprint(ppD2)
                         didRemove = True
