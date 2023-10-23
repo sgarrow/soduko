@@ -206,11 +206,16 @@ if __name__ == '__main__':
         'col': { 'func': fr.fillCellsViaColHistAnal, 'calls': 0, 'replace': 0 },
         'sqr': { 'func': fr.fillCellsViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
 
-    cmdLineArgs = input(' Args-> ').split()
     # nhtOff, xwOff, ppOff
     # nhtPrn, wxPrn, ppPrn
+    try:
+        with open('cfgFile.txt') as cfgFile:
+            cmdLineArgs  = cfgFile.read().split()
+        print(cmdLineArgs)
+    except:
+        cmdLineArgs = input(' Args-> ').split()
 
-    cu = input(' (c)anned or (u)ser')
+    cu = input(' (c)anned or (u)ser --> ')
     if cu == 'u':
         for ii in range(9):
             aRow = input( f' Row {ii} ->' )
