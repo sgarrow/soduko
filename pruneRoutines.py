@@ -175,6 +175,20 @@ def pruneXwings(canidates, house, clArgs):
 # process the pointing pairs in canidates.
 
 def prunePointingPairs(canidates, clArgs):
+
+    #canidates = [
+    #    [  [1,4,7], [2,3,7], [2,3,4,7],      0,  [4,7],  0,         0,       0,      [1,2,3,4] ],
+    #    [  0,       0,       [2,4,7],        0,  [4,7],  0,         [2,4,5], [4],    0         ],
+    #    [  [1,4],   0,       0,              0,  0,      0,         0,       [3,4],  [1,3,4]   ],
+    #                                        
+    #    [  0,  0,  0,                        0,  0,      0,         0,       0,      0         ],
+    #    [  0,  0,  0,                        0,  0,      0,         0,       0,      0         ],
+    #    [  0,  0,  [7],                      0,  0,      0,         [3,4],   0,      [3,4]     ],
+    # 
+    #    [  [4,7],  [2,3,7],  0,              0,   0,     0,         [2,3,4], 0,      [2,3,4]   ],
+    #    [  0,      [2,7],    [2,4,7],        [7], [5,7], 0,         0,       0,      0         ],
+    #    [  0,      0,        0,              0,   0,     0,         [3,5],   [3,7],  [3,5]     ]   ]
+
     xCanidates = mp.mapSrqsToRows(canidates)
 
     #printCanidates(canidates)
@@ -232,14 +246,16 @@ def prunePointingPairs(canidates, clArgs):
             cols = [ x for x in range(9) if x not in val['bCols'] ]
             for cIdx in cols:
                 if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
-                    canidates[ val['aRow']][cIdx].remove(val['cVal'])
                     if not didRemove and 'ppPrn' in clArgs:
+                        pr.printCanidates(canidates)
                         pr.printCanidates(xCanidates)
                         pp.pprint(ppD2)
                         didRemove = True
+                    canidates[ val['aRow']][cIdx].remove(val['cVal'])
                     if 'ppPrn' in clArgs: print('    remove {} from ({},{})'.format(val['cVal'], val['aRow'], cIdx))
                     numPruned += 1
 
-    if didRemove: pr.printCanidates(xCanidates)
+    if didRemove: pr.printCanidates(canidates)
+    #exit()
     return numPruned,canidates
 ############################################################################
