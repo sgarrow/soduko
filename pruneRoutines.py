@@ -162,13 +162,13 @@ def pruneXwings(canidates, house, clArgs):
 
 # map sqrs to rows -> xCanidates
 #
-# find all numbers in rows of xCanidates that appear exactly twice
+# find all nums in rows of xCanidates (sqrs of canidates) that appear exactly twice
 #
-# if the nums that appear exactly twice are in cols
+# if the nums that appear exactly twice are in cols of xCanidates (sqrs of canidates)
 # 0,1,2 or 3,4,5 of 6,7,8 then they are in the same row of canidates
 # and hence are a 'row' pointing pair.
 #
-# if the nums that appear exactly twice are in cols
+# if the nums that appear exactly twice are in cols of xCanidates (sqrs of canidates) 
 # 0,3,6 or 1,4,7 of 2,5,8 then they are in the same col of canidates
 # and hence are a 'col' pointing pair.
 #
@@ -176,44 +176,30 @@ def pruneXwings(canidates, house, clArgs):
 
 def prunePointingPairs(canidates, clArgs):
 
-    #canidates = [
-    #    [  [1,4,7], [2,3,7], [2,3,4,7],      0,  [4,7],  0,         0,       0,      [1,2,3,4] ],
-    #    [  0,       0,       [2,4,7],        0,  [4,7],  0,         [2,4,5], [4],    0         ],
-    #    [  [1,4],   0,       0,              0,  0,      0,         0,       [3,4],  [1,3,4]   ],
-    #                                        
-    #    [  0,  0,  0,                        0,  0,      0,         0,       0,      0         ],
-    #    [  0,  0,  0,                        0,  0,      0,         0,       0,      0         ],
-    #    [  0,  0,  [7],                      0,  0,      0,         [3,4],   0,      [3,4]     ],
-    # 
-    #    [  [4,7],  [2,3,7],  0,              0,   0,     0,         [2,3,4], 0,      [2,3,4]   ],
-    #    [  0,      [2,7],    [2,4,7],        [7], [5,7], 0,         0,       0,      0         ],
-    #    [  0,      0,        0,              0,   0,     0,         [3,5],   [3,7],  [3,5]     ]   ]
-
     xCanidates = mp.mapSrqsToRows(canidates)
+    numPruned  = 0
 
-    #printCanidates(canidates)
-    #printCanidates(xCanidates)
-
-    numPruned = 0
-
+    # find all nums in rows of xCanidates (sqrs of canidates) that appear exactly twice
     allBinsHeightTwo = []
     for row in xCanidates:
         flatRow = fr.flatten(row)
         histRow = fr.genHistogram(flatRow)
         allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
-    #pp.pprint(allBinsHeightTwo)
-    #print()
+    ####################################################################################
 
+    # place above data in a dict and add to data the two offset within the square 
+    # where the two nums appear
     k = 0
     myD = {}
     for idx,lstOfVals in enumerate(allBinsHeightTwo):
         for val in lstOfVals:
             cols = [ c for c,lst in enumerate(xCanidates[idx]) if lst != 0 and val in lst ]
-            #print(' in row {}, {} appears exactly twice - cols {}'.format(idx, val, cols))
             myD[k] = { 'A_sqr':idx, 'B_idxs':cols, 'C_val':val,  }
             k += 1
-    #pp.pprint(myD)
+    ####################################################################################
 
+    # create a new dict that's a subset of above dict. This new dict only contains the 
+    # elements of the old dict that have the pair on the saem square within the row.
     k = 0
     ppD = {}
     for val in myD.values():
@@ -223,39 +209,50 @@ def prunePointingPairs(canidates, clArgs):
         if diff < 3 and sameRem:
             ppD[k] = val
         k += 1
-    #pp.pprint(ppD)
+    ####################################################################################
 
+    # create a 3rd dict = above dict except sqr,offset mapped to abs r,c.
     k = 0
     ppD2 = {}
     for val in ppD.values():
         row0,col0 = mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][0])
         row1,col1 = mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][1])
-        if row0 != row1:
-            print('SANITY CHECK')
-            sys.exit()
-        #print('    square {} has row pointing pair on row {} cols {},{} (val={})'.\
-        #    format(val['A_sqr'],row0,col0,col1,val['C_val']))
         ppD2[k] = { 'aRow':row0, 'bCols':[col0,col1], 'cVal':val['C_val'] }
         k += 1
-    #pp.pprint(ppD2)
+    ####################################################################################
 
+    # debug prints
+    if 'ppPrn' in clArgs:
+        thingsPprint = { 'allBinsHeightTwo':allBinsHeightTwo,
+                         'myD':myD,'ppD':ppD,'ppD2':ppD2 }
+
+        print('canidates')
+        pr.printCanidates(canidates)
+        print()
+        for k,v in thingsPprint.items():
+            print(k)
+            pp.pprint(v)
+            print()
+    ####################################################################################
+
+    # perform associated removals.
     rowsProcessed = []
-    didRemove = False
     for val in ppD2.values():
         if val['aRow'] not in rowsProcessed:
+            if 'ppPrn' in clArgs: print( f' Processing {val}')
             cols = [ x for x in range(9) if x not in val['bCols'] ]
             for cIdx in cols:
                 if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
-                    if not didRemove and 'ppPrn' in clArgs:
-                        pr.printCanidates(canidates)
-                        pr.printCanidates(xCanidates)
-                        pp.pprint(ppD2)
-                        didRemove = True
                     canidates[ val['aRow']][cIdx].remove(val['cVal'])
-                    if 'ppPrn' in clArgs: print('    remove {} from ({},{})'.format(val['cVal'], val['aRow'], cIdx))
                     numPruned += 1
 
-    if didRemove: pr.printCanidates(canidates)
-    #exit()
+                    if 'ppPrn' in clArgs: 
+                        print('    remove {} from ({},{})'.format(val['cVal'], val['aRow'], cIdx))
+
+    if 'ppPrn' in clArgs: 
+        print()
+        pr.printCanidates(canidates)
+    ####################################################################################
+
     return numPruned,canidates
 ############################################################################
