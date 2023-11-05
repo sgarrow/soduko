@@ -126,11 +126,14 @@ def pruneXw(lclCanidates, clArgs):
 
 def prunePp(lclCanidates, clArgs):
     totNumPruned = 0
-    numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates, clArgs)
-    totNumPruned += numPruned
+    houseLst = [ 'row','col' ]
+    #houseLst = [ 'row']
+    for house in houseLst:
+        numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates, house, clArgs)
+        totNumPruned += numPruned
 
-    if numPruned:
-        print(f'    Prunned {numPruned:2} lclCanidates RE: Pointing Pairs in rows')
+        if numPruned:
+            print(f'    Prunned {numPruned:2} lclCanidates RE: Pointing Pairs in rows')
 
     return totNumPruned, lclCanidates
 #############################################################################

@@ -174,7 +174,7 @@ def pruneXwings(canidates, house, clArgs):
 #
 # process the pointing pairs in canidates.
 
-def prunePointingPairs(canidates, clArgs):
+def prunePointingPairs(canidates, house, clArgs):
 
     xCanidates = mp.mapSrqsToRows(canidates)
     numPruned  = 0
@@ -187,44 +187,57 @@ def prunePointingPairs(canidates, clArgs):
         allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
     ####################################################################################
 
-    # place above data in a dict and add to data the two offset within the square 
-    # where the two nums appear
+    # Place above data in a dict and add to data the two offset within the square 
+    # where the two nums appear. Note that pair may not be on the same row/col ...
     k = 0
-    myD = {}
+    allBinsHeightTwoD = {}
     for idx,lstOfVals in enumerate(allBinsHeightTwo):
         for val in lstOfVals:
             cols = [ c for c,lst in enumerate(xCanidates[idx]) if lst != 0 and val in lst ]
-            myD[k] = { 'A_sqr':idx, 'B_idxs':cols, 'C_val':val,  }
+            allBinsHeightTwoD[k] = { 'A_sqr':idx, 'B_idxs':cols, 'C_val':val,  }
             k += 1
     ####################################################################################
 
-    # create a new dict that's a subset of above dict. This new dict only contains the 
-    # elements of the old dict that have the pair on the saem square within the row.
+    # Create a new dict (either row or col, but not both) that are a subset of above dict.
+    # New dict only contains the elements of the old dict that have the pair (in the square)
+    # on the same row/col.  One of the two dicts will be empty.
     k = 0
-    ppD = {}
-    for val in myD.values():
-        #print(val)
-        diff = val['B_idxs'][1] - val['B_idxs'][0]
-        sameRem = val['B_idxs'][1]//3 == val['B_idxs'][0]//3
-        if diff < 3 and sameRem:
-            ppD[k] = val
-        k += 1
+    ppRowRqmt = [[0,1,2],[3,4,5],[6,7,8]]
+    ppColRqmt = [[0,3,6],[1,4,7],[2,5,8]]
+    ppRowD = {}
+    ppColD = {}
+    if house == 'row': rqmt = ppRowRqmt
+    if house == 'col': rqmt = ppColRqmt
+    for val in allBinsHeightTwoD.values():
+        for el in rqmt:
+            if all(x in el for x in val['B_idxs']):
+                if house == 'row': ppRowD[k] = val
+                if house == 'col': ppColD[k] = val
+                k += 1
     ####################################################################################
 
     # create a 3rd dict = above dict except sqr,offset mapped to abs r,c.
     k = 0
-    ppD2 = {}
+    ppRowAbsCoordD = {}
+    ppColAbsCoordD = {}
+    if house == 'row': ppD = ppRowD
+    if house == 'col': ppD = ppColD
     for val in ppD.values():
         row0,col0 = mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][0])
         row1,col1 = mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][1])
-        ppD2[k] = { 'aRow':row0, 'bCols':[col0,col1], 'cVal':val['C_val'] }
+        if house == 'row': ppRowAbsCoordD[k] = { 'aRow':row0, 'bCols':[col0,col1], 'cVal':val['C_val'] }
+        if house == 'col': ppColAbsCoordD[k] = { 'aCol':col0, 'bRows':[row0,row1], 'cVal':val['C_val'] }
         k += 1
     ####################################################################################
 
     # debug prints
     if 'ppPrn' in clArgs:
         thingsPprint = { 'allBinsHeightTwo':allBinsHeightTwo,
-                         'myD':myD,'ppD':ppD,'ppD2':ppD2 }
+                         'allBinsHeightTwoD':allBinsHeightTwoD,
+                         'ppRowD':ppRowD,
+                         'ppColD':ppColD,
+                         'ppRowAbsCoordD':ppRowAbsCoordD,
+                         'ppColAbsCoordD':ppColAbsCoordD }
 
         print('canidates')
         pr.printCanidates(canidates)
@@ -237,7 +250,7 @@ def prunePointingPairs(canidates, clArgs):
 
     # perform associated removals.
     rowsProcessed = []
-    for val in ppD2.values():
+    for val in ppRowAbsCoordD.values():
         if val['aRow'] not in rowsProcessed:
             if 'ppPrn' in clArgs: print( f' Processing {val}')
             cols = [ x for x in range(9) if x not in val['bCols'] ]
