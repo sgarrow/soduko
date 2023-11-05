@@ -216,7 +216,8 @@ def prunePointingPairs(canidates, house, clArgs):
                 k += 1
     ####################################################################################
 
-    # create a 3rd dict = above dict except sqr,offset mapped to abs r,c.
+    # create a 3rd dict (either row or col, but not both) that is the same as the above 
+    # dict except sqr,offset mapped to abs r,c.
     k = 0
     ppRowAbsCoordD = {}
     ppColAbsCoordD = {}
@@ -248,7 +249,8 @@ def prunePointingPairs(canidates, house, clArgs):
             print()
     ####################################################################################
 
-    # perform associated removals.
+    # perform associated removals Note only one of the 2 dicts looped through below will 
+    # have anything in it.
     rowsProcessed = []
     for val in ppRowAbsCoordD.values():
         if val['aRow'] not in rowsProcessed:
@@ -256,11 +258,24 @@ def prunePointingPairs(canidates, house, clArgs):
             cols = [ x for x in range(9) if x not in val['bCols'] ]
             for cIdx in cols:
                 if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
-                    canidates[ val['aRow']][cIdx].remove(val['cVal'])
+                    canidates[val['aRow']][cIdx].remove(val['cVal'])
                     numPruned += 1
 
                     if 'ppPrn' in clArgs: 
                         print('    remove {} from ({},{})'.format(val['cVal'], val['aRow'], cIdx))
+
+    colsProcessed = []
+    for val in ppColAbsCoordD.values():
+        if val['aCol'] not in colsProcessed:
+            if 'ppPrn' in clArgs: print( f' Processing {val}')
+            rows = [ x for x in range(9) if x not in val['bRows'] ]
+            for rIdx in rows:
+                if canidates[rIdx][val['aCol']]!=0 and val['cVal'] in canidates[rIdx][val['aCol']]:
+                    canidates[rIdx][val['aCol']].remove(val['cVal'])
+                    numPruned += 1
+
+                    if 'ppPrn' in clArgs: 
+                        print('    remove {} from ({},{})'.format(val['cVal'], rIdx, val['aCol'] ))
 
     if 'ppPrn' in clArgs: 
         print()
