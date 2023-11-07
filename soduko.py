@@ -166,6 +166,7 @@ def pruneCanidates(lclCanidates, clArgs):
                 v['passNum'] += 1
                 if numPruned > 0:
                     prunedAtLeastOne = True
+                if 'ss' in clArgs: input('Return to continue')
 
             print(31*'*')
         print(31*'*')
@@ -178,7 +179,7 @@ def pruneCanidates(lclCanidates, clArgs):
     return totTotNumPruned, lclCanidates
 #############################################################################
 
-def fillSolution(lclSolution, lclCanidates, lclDicOfFuncs ):
+def fillSolution(lclSolution, lclCanidates, lclDicOfFuncs, clArgs ):
     totalNumFilled = 0
 
     print('\nFilling in solution cells')
@@ -187,6 +188,7 @@ def fillSolution(lclSolution, lclCanidates, lclDicOfFuncs ):
         totalNumFilled  += numFilled
         lclDicOfFuncs[k]['calls']   += 1
         lclDicOfFuncs[k]['replace'] += numFilled
+        if 'ss' in clArgs: input('Return to continue')
     print(f'{NEWLINE}  Total filled {totalNumFilled:2d} {STARS44}')
     print(62*'*')
 
@@ -212,7 +214,7 @@ if __name__ == '__main__':
     try:
         with open('cfgFile.txt') as cfgFile:
             cmdLineArgs  = cfgFile.read().split()
-        print(cmdLineArgs)
+        #print(cmdLineArgs)
     except:
         cmdLineArgs = input(' Args-> ').split()
 
@@ -245,7 +247,7 @@ if __name__ == '__main__':
                 canidates = updateCanidatesList(solution, canidates )
 
                 numberPruned, canidates = pruneCanidates(canidates,cmdLineArgs)
-                NUMBER_FILLED, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs )
+                NUMBER_FILLED, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs,cmdLineArgs)
 
             numZerosAfterAllFill = sum(x.count(0) for x in solution)
             if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):

@@ -1,3 +1,4 @@
+import printRoutines as pr
 
 NEWLINE = '\n'
 #############################################################################
@@ -25,6 +26,7 @@ def genHistogram(inLst):
 def fillCellsViaOneCanidate(solution, canidates):
     print('\n  Filling solution cells that have only 1 canidate')
     numFilled = 0
+    #pr.printCanidates(canidates)
     for rIdx,row in enumerate(solution):
         for cIdx in range(len(row)):
             if canidates[rIdx][cIdx] != 0 and len(canidates[rIdx][cIdx]) == 1:
@@ -44,11 +46,13 @@ def fillCellsViaRowHistAnal(solution, canidates):
     print('\n  Filling solution cells thru Row Hist Analysis')
     numFilled = 0
 
+    #pr.printCanidates(canidates)
     for rIdx,row in enumerate(canidates):
 
         flatRow = flatten(row)
         histRow = genHistogram(flatRow)
         binsHeightOne = [ x[0] for x in histRow if x[1] == 1 and x[0] != 0]
+        #print('  ',histRow)
 
         if len(binsHeightOne) > 0:
             valOfBinHeight1 = binsHeightOne[0]
@@ -57,6 +61,7 @@ def fillCellsViaRowHistAnal(solution, canidates):
             idxOfSubLst =  row.index(subListContainingThatVal[0])
             if solution[rIdx][idxOfSubLst] == 0:
                 print(f'    Placing {valOfBinHeight1} at {rIdx},{idxOfSubLst}')
+                #print()
                 solution[rIdx][idxOfSubLst] = valOfBinHeight1
                 numFilled += 1
     if numFilled != 0:
