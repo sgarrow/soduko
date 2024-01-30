@@ -214,24 +214,14 @@ if __name__ == '__main__':
     try:
         with open('cfgFile.txt') as cfgFile:
             cmdLineArgs  = cfgFile.read().split()
-        #print(cmdLineArgs)
     except:
         cmdLineArgs = input(' Args-> ').split()
-
-    cu = input(' (c)anned or (u)ser --> ')
-    if cu == 'u':
-        for ii in range(9):
-            aRow = input( f' Row {ii} ->' )
-            puzzlesDict['user']['puzzle'][ii] = [ int(ch) for ch in aRow ]
 
     for key,val in puzzlesDict.items():
         solution = [x[:] for x in val['puzzle'] ]
         val['start0s'] = sum(x.count(0) for x in solution)
         dicOfFuncs = initDicOfFuncsCntrs(dicOfFuncs)
 
-        if cu == 'c' and key == 'user': continue
-        if cu == 'u' and key != 'user': continue
-        
         print(f'Processing puzzle {key}')
         while True:
             numZerosBeforeAllFill = sum(x.count(0) for x in solution)
@@ -260,5 +250,16 @@ if __name__ == '__main__':
         print(f'{POUND62}')
     # end for loop on all puzzles
 
-    pr.printResults(puzzlesDict, 'all',cu)
-    pr.printResults(puzzlesDict, 'summary',cu)
+    pr.printResults(puzzlesDict, 'all')
+    pr.printResults(puzzlesDict, 'summary')
+    #pr.prettyPrint3DArray(canidates)
+    #
+    #for row in canidates:
+    #    flatRow = fr.flatten(row)
+    #    histRow = fr.genHistogram(flatRow)
+    #    pp.pprint(histRow)
+
+
+
+
+

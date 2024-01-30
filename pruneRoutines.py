@@ -284,3 +284,10 @@ def prunePointingPairs(canidates, house, clArgs):
 
     return numPruned,canidates
 ############################################################################
+# 
+# Find 3 cells that have all have only 2 numbers.
+# Determine if 6 numbers consists of only 3 values.
+# Determine all pairs are different
+# find radix
+# Do house analysis
+# If all 3 are in the same house it's just a naked triplet.

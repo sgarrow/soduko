@@ -89,8 +89,18 @@ puzXW  = [ '100000569',
            '905061402',
            '621000005' ]
 
+puzUsr = [ '000320100',
+           '800706000',
+           '700090500',
+           '600005000',
+           '000000090',
+           '290010040',
+           '000000700', # solution -> start 0005
+           '030070000',
+           '005008001' ]
+
 #hardest evr
-puzWtf = [ '800000000',
+puzMax = [ '800000000',
            '003600000', # 94 is first 2. <--1
            '070090200',
            '050007000',
@@ -100,58 +110,61 @@ puzWtf = [ '800000000',
            '008500010',
            '090000400' ]
 
-puzUsr = [ '000000000',
-           '000000000', # 94 is first 2. <--1
-           '000000000',
-           '000000000',
-           '000000000', #  6 is second.  <--1
-           '000000000',
-           '000000000',
-           '000000000',
-           '000000000' ]
+
 
 
 puzzlesDict = {
 
-    #'puzzleEsy' : { 'puzzle' : convert(puzEsy), 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    #
-    #'puzzleMed' : { 'puzzle' : convert(puzMed), 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    #
-    #'puzzleHrd' : { 'puzzle' : convert(puzHrd), 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    #
-    #'puzzleExp' : { 'puzzle' : convert(puzExp), 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    #
-    #'puzzleEvl' : { 'puzzle' : convert(puzEvl), 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    #
-    #'puzzleEv2' : { 'puzzle' : convert(puzEv2), 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    #
-    #'puzzleWtf' : { 'puzzle' : convert(puzWtf), 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-    
-    'puzzleEv3' : { 'puzzle' : convert(puzEv3), 'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    'puzEsy_38' : { 'puzzle' : convert(puzEsy), 'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
     
-    'puzzleXW'  : { 'puzzle' : convert(puzXW),  'solution' : [], 'start0s' : 0, 'end0s' : 0,
+    'puzMed_32' : { 'puzzle' : convert(puzMed), 'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
     
-    #'user'      : { 'puzzle' : convert(puzUsr), 'solution' : [], 'start0s' : 0, 'end0s' : 0,
-    #                'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
-    #                'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    'puzHrd_29' : { 'puzzle' : convert(puzHrd), 'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
+                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    
+    'puzExp_23' : { 'puzzle' : convert(puzExp), 'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
+                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    
+    'puzEvl_23' : { 'puzzle' : convert(puzEvl), 'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
+                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    
+    'puzEv2_23' : { 'puzzle' : convert(puzEv2), 'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
+                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    
+    'puzEv3_23' : { 'puzzle' : convert(puzEv3), 'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
+                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    
+    'puzXW_46'  : { 'puzzle' : convert(puzXW),  'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
+                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    
+    'puzUsr'    : { 'puzzle' : convert(puzUsr), 'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
+                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+
+    'puzMax_21' : { 'puzzle' : convert(puzMax), 'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
+                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+    
     }
 
 if __name__ == '__main__':

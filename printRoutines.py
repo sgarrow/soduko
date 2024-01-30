@@ -40,42 +40,40 @@ def prettyPrint3DArray(array):
     print()
 #############################################################################
 
-def printResults(puzzlesDict, prnType, cu):
+def printResults(puzzlesDict, prnType):
     print()
     for key in puzzlesDict:
 
-        if cu == 'c' and key == 'user': continue
-        if cu == 'u' and key != 'user': continue
-
-        print(' puzzle {}. (numZeros = {}). {}.\n'.\
+        print(' puzzle {:9} (numZeros = {:2}). {}.'.\
             format( key, puzzlesDict[key]['end0s'],
                 'FAIL' if puzzlesDict[key]['end0s'] else 'PASS') )
 
         if prnType == 'all':
+            print()
             for ii in range(len(puzzlesDict[key]['puzzle'])):
                 print( '',puzzlesDict[key]['puzzle'  ][ii], '  ',
                        puzzlesDict[key]['solution'][ii]  )
             print()
 
-        print( ' Starting: filled-in + not-filled-in = {:2d}+{:2d} = {:2d}.'.\
-            format( 81-puzzlesDict[key]['start0s'],  puzzlesDict[key]['start0s'],
-                    81-puzzlesDict[key]['start0s'] + puzzlesDict[key]['start0s'] ))
+            print( ' Starting: filled-in + not-filled-in = {:2d}+{:2d} = {:2d}.'.\
+                format( 81-puzzlesDict[key]['start0s'],  puzzlesDict[key]['start0s'],
+                        81-puzzlesDict[key]['start0s'] + puzzlesDict[key]['start0s'] ))
+    
+            print( ' Ending:   filled-in + not-filled-in = {:2d}+{:2d} = {:2d}.'.\
+                format( 81-puzzlesDict[key]['end0s'],  puzzlesDict[key]['end0s'],
+                        81-puzzlesDict[key]['end0s'] + puzzlesDict[key]['end0s'] ))
+    
+            print( ' fillCellsViaOneCanidate calls,replacements  = {:2d}, {:2d}.'.\
+                format(puzzlesDict[key]['oC'], puzzlesDict[key]['oR']))
+    
+            print( ' fillCellsViaRowHistAnal calls,replacements  = {:2d}, {:2d}.'.\
+                format(puzzlesDict[key]['rC'], puzzlesDict[key]['rR']))
+    
+            print( ' fillCellsViaColHistAnal calls,replacements  = {:2d}, {:2d}.'.\
+                format(puzzlesDict[key]['cC'], puzzlesDict[key]['cR']))
+    
+            print( ' fillCellsViaSqrHistAnal calls,replacements  = {:2d}, {:2d}.'.\
+                format(puzzlesDict[key]['sC'], puzzlesDict[key]['sR']))
 
-        print( ' Ending:   filled-in + not-filled-in = {:2d}+{:2d} = {:2d}.'.\
-            format( 81-puzzlesDict[key]['end0s'],  puzzlesDict[key]['end0s'],
-                    81-puzzlesDict[key]['end0s'] + puzzlesDict[key]['end0s'] ))
-
-        print( ' fillCellsViaOneCanidate calls,replacements  = {:2d}, {:2d}.'.\
-            format(puzzlesDict[key]['oC'], puzzlesDict[key]['oR']))
-
-        print( ' fillCellsViaRowHistAnal calls,replacements  = {:2d}, {:2d}.'.\
-            format(puzzlesDict[key]['rC'], puzzlesDict[key]['rR']))
-
-        print( ' fillCellsViaColHistAnal calls,replacements  = {:2d}, {:2d}.'.\
-            format(puzzlesDict[key]['cC'], puzzlesDict[key]['cR']))
-
-        print( ' fillCellsViaSqrHistAnal calls,replacements  = {:2d}, {:2d}.'.\
-            format(puzzlesDict[key]['sC'], puzzlesDict[key]['sR']))
-
-        print(62*'*')
+            print(62*'*')
 #############################################################################
