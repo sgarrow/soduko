@@ -43,7 +43,7 @@ def getRowColFromSqrOffset(sqr,ofst):
     col = offsetInto9X9  % 9
     return row,col
 #############################################################################
-
+# HUGE BUG!!!
 def findRowsColsInSquare(rIdx, cIdx):
     if rIdx % 3 == 0:
         rOffsets = [ 1, 2]
@@ -57,7 +57,9 @@ def findRowsColsInSquare(rIdx, cIdx):
         cOffsets = [-1, 1]
     if cIdx % 3 == 2:
         cOffsets = [-1,-2]
-    rowsInSquare = [ rIdx+rOffsets[0], rIdx+rOffsets[1] ]
-    colsInSquare = [ cIdx+cOffsets[0], cIdx+cOffsets[1] ]
+
+    rowsInSquare = sorted([rIdx] + [ rIdx+rOffsets[0], rIdx+rOffsets[1] ] )
+    colsInSquare = sorted([cIdx] + [ cIdx+cOffsets[0], cIdx+cOffsets[1] ] )
+
     return rowsInSquare, colsInSquare
 #############################################################################

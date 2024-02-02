@@ -74,6 +74,12 @@ def updateCanidatesList(lclSolution,lclCanidates):
                     #print('   Adding {} as canidate for {},{}'.format(ii,rIdx,cIdx))
                     if lclCanidates[rIdx][cIdx] != 0:
                         lclCanidates[rIdx][cIdx].append(num)
+    totSum = 0
+    for rIdx,row in enumerate(lclCanidates):
+        for cIdx,elem in enumerate(row):
+            if lclCanidates[rIdx][cIdx] != 0:
+                totSum += sum(lclCanidates[rIdx][cIdx])
+    print('totSum = ', totSum)
     return lclCanidates
 #############################################################################
 
@@ -204,7 +210,8 @@ def initDicOfFuncsCntrs(lclDicOfFuncs):
 
 if __name__ == '__main__':
     from puzzles import puzzlesDict
-
+    #rr.yWing(0)
+    #exit()
     dicOfFuncs = {
         'one': { 'func': fr.fillCellsViaOneCanidate, 'calls': 0, 'replace': 0 },
         'row': { 'func': fr.fillCellsViaRowHistAnal, 'calls': 0, 'replace': 0 },
@@ -235,8 +242,10 @@ if __name__ == '__main__':
 
                 canidates = [[ [] for ii in range(9)] for jj in range(9)]
                 canidates = updateCanidatesList(solution, canidates )
+                # TODO: remove those things already pruned
 
                 numberPruned, canidates = pruneCanidates(canidates,cmdLineArgs)
+                # update those pruned
                 NUMBER_FILLED, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs,cmdLineArgs)
 
             numZerosAfterAllFill = sum(x.count(0) for x in solution)

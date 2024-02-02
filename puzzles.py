@@ -88,6 +88,16 @@ puzXW  = [ '100000569',
            '040500016',
            '905061402',
            '621000005' ]
+# Y-Wings
+puzYW  = [ '100540000',
+           '000000060',
+           '700008500',
+           '000600100',
+           '806000309',
+           '005004000',
+           '009100002',
+           '020000000',
+           '000075008' ]
 
 puzUsr = [ '000320100',
            '800706000',
@@ -154,12 +164,17 @@ puzzlesDict = {
                     'start0s' : 0, 'end0s' : 0,
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
+
+    'puzYW_nn'  : { 'puzzle' : convert(puzYW),  'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
+                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
     
     'puzUsr'    : { 'puzzle' : convert(puzUsr), 'solution' : [],
                     'start0s' : 0, 'end0s' : 0,
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0},
-
+    
     'puzMax_21' : { 'puzzle' : convert(puzMax), 'solution' : [],
                     'start0s' : 0, 'end0s' : 0,
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,

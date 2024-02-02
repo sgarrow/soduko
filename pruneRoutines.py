@@ -285,9 +285,159 @@ def prunePointingPairs(canidates, house, clArgs):
     return numPruned,canidates
 ############################################################################
 # 
-# Find 3 cells that have all have only 2 numbers.
-# Determine if 6 numbers consists of only 3 values.
-# Determine all pairs are different
-# find radix
-# Do house analysis
-# If all 3 are in the same house it's just a naked triplet.
+
+
+def prYWingDict(D):
+    for k,v in D.items():
+        print(' key    = {}'.format(k))
+        print(' cord   = {}'.format(v[ 'cord'   ]))
+        print(' sqrs   = {}'.format(v[ 'sqrs'   ]))
+        print(' vals   = {}'.format(v[ 'vals'   ]))
+        print()
+
+        print(' pIdx   = {}'.format(v[ 'pIdx'   ]))
+        print(' Z      = {}'.format(v[ 'Z'      ]))
+        print(' rmvIdx = {}'.format(v[ 'rmvIdx' ]))
+        print()
+        
+        print(' rSee   = {}'.format(v['rSee'][0]))
+        print('          {}'.format(v['rSee'][1]))
+        print('          {}'.format(v['rSee'][2]))
+        print() 
+        
+        print(' cSee   = {}'.format(v['cSee'][0]))
+        print('          {}'.format(v['cSee'][1]))
+        print('          {}'.format(v['cSee'][2]))
+        print()
+        
+        print(' sSee   = {}'.format(v['sSee'][0]))
+        print('          {}'.format(v['sSee'][1]))
+        print('          {}'.format(v['sSee'][2]))
+        print()
+        
+        print(' aSee   = {}'.format(v['allSeeSet'][0]))
+        print('          {}'.format(v['allSeeSet'][1]))
+        print('          {}'.format(v['allSeeSet'][2]))
+        print()
+    return 0
+#############################################################################
+
+
+def yWing (lclCanidates):
+    import random
+    from itertools import combinations
+    import pprint        as pp
+    import fillRoutines  as fr
+    import mapping       as mp
+
+    #lclCanidates = \
+    #[[0        ,     0     ,   0        ,   0     ,  0        ,    0        ,  0              , 0        ,  0              ],
+    # [0        ,     0     ,   [2, 3, 4],   0     ,  0        ,    0        ,  [9, 2, 3, 4]   , [2, 3]   ,  [9, 2, 3, 4]   ],
+    # [0        ,     [2, 4],   [2, 3, 4],   0     ,  0        ,    0        ,  0              , [2, 3, 6],  [2, 3, 4, 6]   ],
+    # [0        ,     [8, 4],   [8, 4, 7],   0     ,  [8, 3]   ,    0        ,  [2, 3, 8]      , 0        ,  [2, 3, 7]      ],
+    # [0        ,     0     ,   0        ,   [2, 4],  [8, 4]   ,    [2, 7]   ,  [6, 8]         , 0        ,  [6, 7]         ],
+    # [0        ,     0     ,   [8, 7]   ,   0     ,  0        ,    [3, 7]   ,  [8, 3]         , 0        ,  0              ],
+    # [[1, 4, 9],     [8, 2],   [8, 2, 6],   [1, 5],  [3, 4, 6],    [9, 2, 3],  0              , [8, 5]   ,  [2, 3, 4, 6, 9]],
+    # [[1, 4, 9],     0     ,   [8, 2, 6],   [1, 5],  0        ,    [9, 2]   ,  [9, 2, 4, 6]   , [8, 5]   ,  [9, 2, 4, 6]   ],
+    # [[9, 4]   ,     0     ,   0        ,   [2, 4],  [3, 4, 6],    0        ,  [2, 3, 4, 6, 9], [2, 3, 6],  0              ]]
+
+    lclCanidates = \
+    [[ 0           ,          0        ,  [8, 2, 3]   ,          0     ,  0        ,  [2, 7]   ,  [2, 8, 9],  [2, 3, 9]   ,  [3, 7]    ],
+     [ [2, 3, 4, 9],          0        ,  [8, 2, 3, 4],          [9, 3],  [1, 2]   ,  [1, 2, 7],  [2, 4, 8],  0           ,  [3, 4, 7] ],
+     [ 0           ,          [9, 3, 4],  [2, 3, 4]   ,          [9, 3],  0        ,  0        ,  0        ,  [1, 2, 3, 4],  [1, 3, 4] ],
+     [ [9, 2, 4]   ,          0        ,  [2, 4]      ,          0     ,  [9, 5]   ,  0        ,  0        ,  0           ,  [4, 5]    ],
+     [ 0           ,          [1, 4]   ,  0           ,          0     ,  [1, 2, 5],  [1, 2]   ,  0        ,  [4, 5]      ,  0         ],
+     [ [9, 3]      ,          [1, 3, 9],  0           ,          0     ,  [1, 9]   ,  0        ,  [2, 7]   ,  [2, 7]      ,  0         ],
+     [ [4, 5]      ,          0        ,  0           ,          0     ,  0        ,  0        ,  [4, 7]   ,  [4, 5, 7]   ,  0         ],
+     [ [3, 5]      ,          0        ,  0           ,          0     ,  0        ,  0        ,  0        ,  [1, 3, 5]   ,  [1, 3, 5] ],
+     [ 0           ,          [3, 4]   ,  0           ,          0     ,  0        ,  0        ,  [9, 4]   ,  [9, 3, 4]   ,  0         ]]
+
+    coordsOfAllPairs  = [ [r,c] for r in range(9) for c in range(9) \
+        if lclCanidates[r][c] != 0 and len(lclCanidates[r][c]) == 2] 
+    combSet3pairsCord = combinations(coordsOfAllPairs, 3)
+    combLst3pairsCord = list(combSet3pairsCord)
+
+    yWingDict = {}
+    for ii,comb in enumerate(combLst3pairsCord):
+
+        vals = []
+        rSee = [] 
+        cSee = [] 
+        sSee = [] 
+        aSet = [] 
+        sqrs = [] 
+        for cord in comb:
+            rowsInSq, colsInSq = mp.findRowsColsInSquare(cord[0], cord[1])
+
+            sqr = cord[0]//3*3 + cord[1]//3
+            v   = lclCanidates[cord[0]][cord[1]]
+            r   = [ [cord[0],c] for c in range(9) ]
+            c   = [ [r,cord[1]] for r in range(9) ]
+            s   = [ [r,c] for r in rowsInSq for c in colsInSq]
+            a   = [ x for x in r + c + s if x!= [cord[0], cord[1]] ] # self not in lst.
+            aS  = set( tuple(x) for x in a ) # no self, no dups.
+            sqrs.append(sqr)
+            vals.append(v)
+            rSee.append(r)
+            cSee.append(c)
+            sSee.append(s)
+            aSet.append(aS)
+
+        noValDups = list(map(list, set(map(tuple, map(set, vals)))))
+        histFlat  = fr.genHistogram(fr.flatten(vals))
+
+        # Do the 3 cells look like [a,b] [a,z] [b,z]? Yes, potential Y-Wing.
+        if len(noValDups) == 3 and len(histFlat) == 3:
+
+            yWingDict[ii] = {'cord':   list(comb), 'sqrs': sqrs, 
+                             'pIdx':   None, 
+                             'Z':      None, 
+                             'rmvIdx': None,
+                             'vals':   vals, 
+                             'rSee':   rSee, 'cSee': cSee, 'sSee': sSee,
+                             'allSeeSet': aSet}
+
+    # Wings 1&2 must be in the same r or c or s as the pivot.
+    # Wings 1&2 must not be in the same r or c or s.
+    yWingDict2 = {}
+    for k,v in yWingDict.items():
+        aSeesB = v['cord'][0][0] == v['cord'][1][0] or \
+                 v['cord'][0][1] == v['cord'][1][1] or \
+                 v['sqrs'][0]    == v['sqrs'][1]       
+
+        aSeesC = v['cord'][0][0] == v['cord'][2][0] or \
+                 v['cord'][0][1] == v['cord'][2][1] or \
+                 v['sqrs'][0]    == v['sqrs'][2]
+
+        bSeesC = v['cord'][1][0] == v['cord'][2][0] or \
+                 v['cord'][1][1] == v['cord'][2][1] or \
+                 v['sqrs'][1]    == v['sqrs'][2]
+
+        seesLst = [aSeesB, aSeesC, bSeesC]
+        if seesLst.count(False) == 1: # This is one! (Not just a potential).
+            pIdx = 2- seesLst.index(False)
+            notP = [i for i in range(len(seesLst)) if seesLst[i] == True]
+            Z    = [ x for x in v['vals'][notP[0]] if x not in v['vals'][pIdx] ][0]
+
+            delCrds = set.intersection( v['allSeeSet'][notP[0]], v['allSeeSet'][notP[1]] )
+            rmvIdx  = [ x for x in delCrds if x!= (v['cord'][pIdx][0], v['cord'][pIdx][1]) ]
+            
+            yWingDict2[k]           = v
+            yWingDict2[k]['pIdx']   = pIdx    # pivot.
+            yWingDict2[k]['Z']      = Z       # Val to del.
+            yWingDict2[k]['rmvIdx'] = rmvIdx  # Where to del from.
+
+    #prYWingDict(yWingDict)
+    prYWingDict(yWingDict2)
+
+    #pr.prettyPrint3DArray(lclCanidates)
+    for k,v in yWingDict2.items():
+        for cord in v['rmvIdx']:
+            if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
+                lclCanidates[cord[0]][cord[1]].remove(v['Z'])
+                print('removed {} from {},{}'.format(v['Z'], cord[0],cord[1]))
+
+
+    #pr.prettyPrint3DArray(lclCanidates)
+    return lclCanidates
+#############################################################################
