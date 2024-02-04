@@ -300,25 +300,25 @@ def prYWingDict(D):
         print(' rmvIdx = {}'.format(v[ 'rmvIdx' ]))
         print()
         
-        print(' rSee   = {}'.format(v['rSee'][0]))
-        print('          {}'.format(v['rSee'][1]))
-        print('          {}'.format(v['rSee'][2]))
-        print() 
-        
-        print(' cSee   = {}'.format(v['cSee'][0]))
-        print('          {}'.format(v['cSee'][1]))
-        print('          {}'.format(v['cSee'][2]))
-        print()
-        
-        print(' sSee   = {}'.format(v['sSee'][0]))
-        print('          {}'.format(v['sSee'][1]))
-        print('          {}'.format(v['sSee'][2]))
-        print()
-        
-        print(' aSee   = {}'.format(v['allSeeSet'][0]))
-        print('          {}'.format(v['allSeeSet'][1]))
-        print('          {}'.format(v['allSeeSet'][2]))
-        print()
+        #print(' rSee   = {}'.format(v['rSee'][0]))
+        #print('          {}'.format(v['rSee'][1]))
+        #print('          {}'.format(v['rSee'][2]))
+        #print() 
+        #
+        #print(' cSee   = {}'.format(v['cSee'][0]))
+        #print('          {}'.format(v['cSee'][1]))
+        #print('          {}'.format(v['cSee'][2]))
+        #print()
+        #
+        #print(' sSee   = {}'.format(v['sSee'][0]))
+        #print('          {}'.format(v['sSee'][1]))
+        #print('          {}'.format(v['sSee'][2]))
+        #print()
+        #
+        #print(' aSee   = {}'.format(v['allSeeSet'][0]))
+        #print('          {}'.format(v['allSeeSet'][1]))
+        #print('          {}'.format(v['allSeeSet'][2]))
+        #print()
     return 0
 #############################################################################
 
@@ -330,27 +330,27 @@ def yWing (lclCanidates):
     import fillRoutines  as fr
     import mapping       as mp
 
-    #lclCanidates = \
-    #[[0        ,     0     ,   0        ,   0     ,  0        ,    0        ,  0              , 0        ,  0              ],
-    # [0        ,     0     ,   [2, 3, 4],   0     ,  0        ,    0        ,  [9, 2, 3, 4]   , [2, 3]   ,  [9, 2, 3, 4]   ],
-    # [0        ,     [2, 4],   [2, 3, 4],   0     ,  0        ,    0        ,  0              , [2, 3, 6],  [2, 3, 4, 6]   ],
-    # [0        ,     [8, 4],   [8, 4, 7],   0     ,  [8, 3]   ,    0        ,  [2, 3, 8]      , 0        ,  [2, 3, 7]      ],
-    # [0        ,     0     ,   0        ,   [2, 4],  [8, 4]   ,    [2, 7]   ,  [6, 8]         , 0        ,  [6, 7]         ],
-    # [0        ,     0     ,   [8, 7]   ,   0     ,  0        ,    [3, 7]   ,  [8, 3]         , 0        ,  0              ],
-    # [[1, 4, 9],     [8, 2],   [8, 2, 6],   [1, 5],  [3, 4, 6],    [9, 2, 3],  0              , [8, 5]   ,  [2, 3, 4, 6, 9]],
-    # [[1, 4, 9],     0     ,   [8, 2, 6],   [1, 5],  0        ,    [9, 2]   ,  [9, 2, 4, 6]   , [8, 5]   ,  [9, 2, 4, 6]   ],
-    # [[9, 4]   ,     0     ,   0        ,   [2, 4],  [3, 4, 6],    0        ,  [2, 3, 4, 6, 9], [2, 3, 6],  0              ]]
-
     lclCanidates = \
-    [[ 0           ,          0        ,  [8, 2, 3]   ,          0     ,  0        ,  [2, 7]   ,  [2, 8, 9],  [2, 3, 9]   ,  [3, 7]    ],
-     [ [2, 3, 4, 9],          0        ,  [8, 2, 3, 4],          [9, 3],  [1, 2]   ,  [1, 2, 7],  [2, 4, 8],  0           ,  [3, 4, 7] ],
-     [ 0           ,          [9, 3, 4],  [2, 3, 4]   ,          [9, 3],  0        ,  0        ,  0        ,  [1, 2, 3, 4],  [1, 3, 4] ],
-     [ [9, 2, 4]   ,          0        ,  [2, 4]      ,          0     ,  [9, 5]   ,  0        ,  0        ,  0           ,  [4, 5]    ],
-     [ 0           ,          [1, 4]   ,  0           ,          0     ,  [1, 2, 5],  [1, 2]   ,  0        ,  [4, 5]      ,  0         ],
-     [ [9, 3]      ,          [1, 3, 9],  0           ,          0     ,  [1, 9]   ,  0        ,  [2, 7]   ,  [2, 7]      ,  0         ],
-     [ [4, 5]      ,          0        ,  0           ,          0     ,  0        ,  0        ,  [4, 7]   ,  [4, 5, 7]   ,  0         ],
-     [ [3, 5]      ,          0        ,  0           ,          0     ,  0        ,  0        ,  0        ,  [1, 3, 5]   ,  [1, 3, 5] ],
-     [ 0           ,          [3, 4]   ,  0           ,          0     ,  0        ,  0        ,  [9, 4]   ,  [9, 3, 4]   ,  0         ]]
+    [[0        ,     0     ,   0        ,   0     ,  0        ,    0        ,  0              , 0        ,  0              ],
+     [0        ,     0     ,   [2, 3, 4],   0     ,  0        ,    0        ,  [9, 2, 3, 4]   , [2, 3]   ,  [9, 2, 3, 4]   ],
+     [0        ,     [2, 4],   [2, 3, 4],   0     ,  0        ,    0        ,  0              , [2, 3, 6],  [2, 3, 4, 6]   ],
+     [0        ,     [8, 4],   [8, 4, 7],   0     ,  [8, 3]   ,    0        ,  [2, 3, 8]      , 0        ,  [2, 3, 7]      ],
+     [0        ,     0     ,   0        ,   [2, 4],  [8, 4]   ,    [2, 7]   ,  [6, 8]         , 0        ,  [6, 7]         ],
+     [0        ,     0     ,   [8, 7]   ,   0     ,  0        ,    [3, 7]   ,  [8, 3]         , 0        ,  0              ],
+     [[1, 4, 9],     [8, 2],   [8, 2, 6],   [1, 5],  [3, 4, 6],    [9, 2, 3],  0              , [8, 5]   ,  [2, 3, 4, 6, 9]],
+     [[1, 4, 9],     0     ,   [8, 2, 6],   [1, 5],  0        ,    [9, 2]   ,  [9, 2, 4, 6]   , [8, 5]   ,  [9, 2, 4, 6]   ],
+     [[9, 4]   ,     0     ,   0        ,   [2, 4],  [3, 4, 6],    0        ,  [2, 3, 4, 6, 9], [2, 3, 6],  0              ]]
+
+    #lclCanidates = \
+    #[[ 0           ,          0        ,  [8, 2, 3]   ,          0     ,  0        ,  [2, 7]   ,  [2, 8, 9],  [2, 3, 9]   ,  [3, 7]    ],
+    # [ [2, 3, 4, 9],          0        ,  [8, 2, 3, 4],          [9, 3],  [1, 2]   ,  [1, 2, 7],  [2, 4, 8],  0           ,  [3, 4, 7] ],
+    # [ 0           ,          [9, 3, 4],  [2, 3, 4]   ,          [9, 3],  0        ,  0        ,  0        ,  [1, 2, 3, 4],  [1, 3, 4] ],
+    # [ [9, 2, 4]   ,          0        ,  [2, 4]      ,          0     ,  [9, 5]   ,  0        ,  0        ,  0           ,  [4, 5]    ],
+    # [ 0           ,          [1, 4]   ,  0           ,          0     ,  [1, 2, 5],  [1, 2]   ,  0        ,  [4, 5]      ,  0         ],
+    # [ [9, 3]      ,          [1, 3, 9],  0           ,          0     ,  [1, 9]   ,  0        ,  [2, 7]   ,  [2, 7]      ,  0         ],
+    # [ [4, 5]      ,          0        ,  0           ,          0     ,  0        ,  0        ,  [4, 7]   ,  [4, 5, 7]   ,  0         ],
+    # [ [3, 5]      ,          0        ,  0           ,          0     ,  0        ,  0        ,  0        ,  [1, 3, 5]   ,  [1, 3, 5] ],
+    # [ 0           ,          [3, 4]   ,  0           ,          0     ,  0        ,  0        ,  [9, 4]   ,  [9, 3, 4]   ,  0         ]]
 
     coordsOfAllPairs  = [ [r,c] for r in range(9) for c in range(9) \
         if lclCanidates[r][c] != 0 and len(lclCanidates[r][c]) == 2] 
@@ -399,6 +399,9 @@ def yWing (lclCanidates):
 
     # Wings 1&2 must be in the same r or c or s as the pivot.
     # Wings 1&2 must not be in the same r or c or s.
+    prYWingDict(yWingDict)
+    print('************')
+    print('************')
     yWingDict2 = {}
     for k,v in yWingDict.items():
         aSeesB = v['cord'][0][0] == v['cord'][1][0] or \
@@ -417,6 +420,14 @@ def yWing (lclCanidates):
         if seesLst.count(False) == 1: # This is one! (Not just a potential).
             pIdx = 2- seesLst.index(False)
             notP = [i for i in range(len(seesLst)) if seesLst[i] == True]
+
+            print('key  = {}'.format(k))
+            print('vals = {}'.format(v['vals']))
+            print('notP = {}'.format(notP))
+            print('pIdx = {}'.format(pIdx))
+            #print( v['vals'][notP[0]] )
+            #print( v['vals'][pIdx]    )
+
             Z    = [ x for x in v['vals'][notP[0]] if x not in v['vals'][pIdx] ][0]
 
             delCrds = set.intersection( v['allSeeSet'][notP[0]], v['allSeeSet'][notP[1]] )
@@ -427,6 +438,8 @@ def yWing (lclCanidates):
             yWingDict2[k]['Z']      = Z       # Val to del.
             yWingDict2[k]['rmvIdx'] = rmvIdx  # Where to del from.
 
+    print('************')
+    print('************')
     #prYWingDict(yWingDict)
     prYWingDict(yWingDict2)
 
@@ -436,7 +449,6 @@ def yWing (lclCanidates):
             if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
                 lclCanidates[cord[0]][cord[1]].remove(v['Z'])
                 print('removed {} from {},{}'.format(v['Z'], cord[0],cord[1]))
-
 
     #pr.prettyPrint3DArray(lclCanidates)
     return lclCanidates

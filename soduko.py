@@ -177,6 +177,8 @@ def pruneCanidates(lclCanidates, clArgs):
             print(31*'*')
         print(31*'*')
 
+    lclCanidates = rr.yWing(lclCanidates)
+
     totTotNumPruned = 0
     for k,v in pDict.items():
         print('  Total Prunned {:9} {:2} {}'.format(k, v['totNumPruned'], STARS33))
@@ -230,6 +232,7 @@ if __name__ == '__main__':
         dicOfFuncs = initDicOfFuncsCntrs(dicOfFuncs)
 
         print(f'Processing puzzle {key}')
+        #input()
         while True:
             numZerosBeforeAllFill = sum(x.count(0) for x in solution)
             if sum(x.count(0) for x in solution)==0:
