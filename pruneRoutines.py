@@ -330,16 +330,16 @@ def yWing (lclCanidates):
     import fillRoutines  as fr
     import mapping       as mp
 
-    lclCanidates = \
-    [[0        ,     0     ,   0        ,   0     ,  0        ,    0        ,  0              , 0        ,  0              ],
-     [0        ,     0     ,   [2, 3, 4],   0     ,  0        ,    0        ,  [9, 2, 3, 4]   , [2, 3]   ,  [9, 2, 3, 4]   ],
-     [0        ,     [2, 4],   [2, 3, 4],   0     ,  0        ,    0        ,  0              , [2, 3, 6],  [2, 3, 4, 6]   ],
-     [0        ,     [8, 4],   [8, 4, 7],   0     ,  [8, 3]   ,    0        ,  [2, 3, 8]      , 0        ,  [2, 3, 7]      ],
-     [0        ,     0     ,   0        ,   [2, 4],  [8, 4]   ,    [2, 7]   ,  [6, 8]         , 0        ,  [6, 7]         ],
-     [0        ,     0     ,   [8, 7]   ,   0     ,  0        ,    [3, 7]   ,  [8, 3]         , 0        ,  0              ],
-     [[1, 4, 9],     [8, 2],   [8, 2, 6],   [1, 5],  [3, 4, 6],    [9, 2, 3],  0              , [8, 5]   ,  [2, 3, 4, 6, 9]],
-     [[1, 4, 9],     0     ,   [8, 2, 6],   [1, 5],  0        ,    [9, 2]   ,  [9, 2, 4, 6]   , [8, 5]   ,  [9, 2, 4, 6]   ],
-     [[9, 4]   ,     0     ,   0        ,   [2, 4],  [3, 4, 6],    0        ,  [2, 3, 4, 6, 9], [2, 3, 6],  0              ]]
+    #lclCanidates = \
+    #[[0        ,     0     ,   0        ,   0     ,  0        ,    0        ,  0              , 0        ,  0              ],
+    # [0        ,     0     ,   [2, 3, 4],   0     ,  0        ,    0        ,  [9, 2, 3, 4]   , [2, 3]   ,  [9, 2, 3, 4]   ],
+    # [0        ,     [2, 4],   [2, 3, 4],   0     ,  0        ,    0        ,  0              , [2, 3, 6],  [2, 3, 4, 6]   ],
+    # [0        ,     [8, 4],   [8, 4, 7],   0     ,  [8, 3]   ,    0        ,  [2, 3, 8]      , 0        ,  [2, 3, 7]      ],
+    # [0        ,     0     ,   0        ,   [2, 4],  [8, 4]   ,    [2, 7]   ,  [6, 8]         , 0        ,  [6, 7]         ],
+    # [0        ,     0     ,   [8, 7]   ,   0     ,  0        ,    [3, 7]   ,  [8, 3]         , 0        ,  0              ],
+    # [[1, 4, 9],     [8, 2],   [8, 2, 6],   [1, 5],  [3, 4, 6],    [9, 2, 3],  0              , [8, 5]   ,  [2, 3, 4, 6, 9]],
+    # [[1, 4, 9],     0     ,   [8, 2, 6],   [1, 5],  0        ,    [9, 2]   ,  [9, 2, 4, 6]   , [8, 5]   ,  [9, 2, 4, 6]   ],
+    # [[9, 4]   ,     0     ,   0        ,   [2, 4],  [3, 4, 6],    0        ,  [2, 3, 4, 6, 9], [2, 3, 6],  0              ]]
 
     #lclCanidates = \
     #[[ 0           ,          0        ,  [8, 2, 3]   ,          0     ,  0        ,  [2, 7]   ,  [2, 8, 9],  [2, 3, 9]   ,  [3, 7]    ],
@@ -419,14 +419,15 @@ def yWing (lclCanidates):
         seesLst = [aSeesB, aSeesC, bSeesC]
         if seesLst.count(False) == 1: # This is one! (Not just a potential).
             pIdx = 2- seesLst.index(False)
-            notP = [i for i in range(len(seesLst)) if seesLst[i] == True]
+            notP = [i for i in range(3) if i != pIdx]
 
-            print('key  = {}'.format(k))
-            print('vals = {}'.format(v['vals']))
-            print('notP = {}'.format(notP))
-            print('pIdx = {}'.format(pIdx))
-            #print( v['vals'][notP[0]] )
-            #print( v['vals'][pIdx]    )
+            #print('key  = {}'.format(k))
+            #print('vals = {}'.format(v['vals']))
+            #print('notP = {}'.format(notP))
+            #print('pIdx = {}'.format(pIdx))
+            #print( 'v[vals][notP[0]] = {}'.format(v['vals'][notP[0]] ))
+            #print( 'v[vals][pIdx]    = {}'.format(v['vals'][pIdx]    ))
+            #print()
 
             Z    = [ x for x in v['vals'][notP[0]] if x not in v['vals'][pIdx] ][0]
 
@@ -442,6 +443,7 @@ def yWing (lclCanidates):
     print('************')
     #prYWingDict(yWingDict)
     prYWingDict(yWingDict2)
+    input()
 
     #pr.prettyPrint3DArray(lclCanidates)
     for k,v in yWingDict2.items():
@@ -449,6 +451,7 @@ def yWing (lclCanidates):
             if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
                 lclCanidates[cord[0]][cord[1]].remove(v['Z'])
                 print('removed {} from {},{}'.format(v['Z'], cord[0],cord[1]))
+                input()
 
     #pr.prettyPrint3DArray(lclCanidates)
     return lclCanidates
