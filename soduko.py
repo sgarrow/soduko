@@ -147,6 +147,7 @@ def prunePp(lclCanidates, clArgs):
 def pruneCanidates(lclCanidates, clArgs):
 
     print('\nPruning canidates list')
+    #pr.prettyPrint3DArray(lclCanidates)
 
     pDict = {
     'prune_XW' : { 'func': pruneXw,   'passNum': 0, 'totNumPruned': 0},
@@ -178,12 +179,14 @@ def pruneCanidates(lclCanidates, clArgs):
         print(31*'*')
 
     lclCanidates = rr.yWing(lclCanidates)
-
     totTotNumPruned = 0
     for k,v in pDict.items():
         print('  Total Prunned {:9} {:2} {}'.format(k, v['totNumPruned'], STARS33))
         totTotNumPruned += v['totNumPruned']
     print(62*'*')
+
+    #pr.prettyPrint3DArray(lclCanidates)
+    #input()
     return totTotNumPruned, lclCanidates
 #############################################################################
 
@@ -244,7 +247,11 @@ if __name__ == '__main__':
                     break
 
                 canidates = [[ [] for ii in range(9)] for jj in range(9)]
+                #pp.pprint(solution)
+                #pr.prettyPrint3DArray(canidates)
                 canidates = updateCanidatesList(solution, canidates )
+                #pr.prettyPrint3DArray(canidates)
+                #input()
                 # TODO: remove those things already pruned
 
                 numberPruned, canidates = pruneCanidates(canidates,cmdLineArgs)

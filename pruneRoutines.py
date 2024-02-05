@@ -399,9 +399,9 @@ def yWing (lclCanidates):
 
     # Wings 1&2 must be in the same r or c or s as the pivot.
     # Wings 1&2 must not be in the same r or c or s.
+    print('************')
+    print(' Dict 1    *')
     prYWingDict(yWingDict)
-    print('************')
-    print('************')
     yWingDict2 = {}
     for k,v in yWingDict.items():
         aSeesB = v['cord'][0][0] == v['cord'][1][0] or \
@@ -440,10 +440,11 @@ def yWing (lclCanidates):
             yWingDict2[k]['rmvIdx'] = rmvIdx  # Where to del from.
 
     print('************')
-    print('************')
+    print(' Dict 2    *')
     #prYWingDict(yWingDict)
     prYWingDict(yWingDict2)
-    input()
+    print('************')
+    #input() 
 
     #pr.prettyPrint3DArray(lclCanidates)
     for k,v in yWingDict2.items():
