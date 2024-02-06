@@ -1,36 +1,3 @@
-''' A suduko puzzle is a partailly filled 2D array of 9 rows and 9 cols.
-The puzzle can also be thought of a 9 3x3 sub-grids called squares.
-So, threre are 9 rows, 9 colums and 9 squares. Like this:
-
-    col0 col1 col2    col3 col4 col5   col6 col7 col8
-  ++----+----+----+  +----+----+----+  +----+----+----++
-  ||    |    |    |  |    |    |    |  |    |    |    || row0
-  ++----+----+----+  +----+----+----+  +----+----+----++
-  ||   square 0   |  |   square 1   |  |    |    |    || row1
-  ++----+----+----+  +----+----+----+  +----+----+----++
-  ||    |    |    |  |    |    |    |  |    |    |    || row2
-  ++----+----+----+  +----+----+----+  +----+----+----++
-
-  ++----+----+----+  +----+----+----+  +----+----+----++
-  ||    |    |    |  |    |    |    |  |    |    |    || row3
-  ++----+----+----+  +----+----+----+  +----+----+----++
-  ||    |    |    |  |    |    |    |  |    |    |    || row4
-  ++----+----+----+  +----+----+----+  +----+----+----++
-  ||    |    |    |  |    |    |    |  |    |    |    || row5
-  ++----+----+----+  +----+----+----+  +----+----+----++
-
-  ++----+----+----+  +----+----+----+  +----+----+----++
-  ||    |    |    |  |    |    |    |  |    |    |    || row6
-  ++----+----+----+  +----+----+----+  +----+----+----++
-  ||    |    |    |  |    |    |    |  |   square 8   || row7
-  ++----+----+----+  +----+----+----+  +----+----+----++
-  ||    |    |    |  |    |    |    |  |    |    |    || row8
-  ++----+----+----+  +----+----+----+  +----+----+----++
-
-Each of the 81 "cells" lives in 3 "houses", a row, a col and a square.
-A solved puzzle has a number 1-9 in each of the 81 cells such that each 
-number appears only once in each house.
-'''
 #  C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
 
 import pprint        as pp
@@ -99,7 +66,7 @@ def pruneNht(lclCanidates, clArgs):
     hiddenNakedLst = [ 'hidden', 'naked' ]
     houseLst       = [ 'row','col','sqr' ]
     tupSizeLst     = [4,3,2]
-    #tupSizeLst     = [2]
+    #tupSizeLst     = [3,2]
     totNumPruned   = 0
 
     for hideNkd in hiddenNakedLst:
@@ -130,6 +97,17 @@ def pruneXw(lclCanidates, clArgs):
     return totNumPruned, lclCanidates
 #############################################################################
 
+def pruneYw(lclCanidates, clArgs):
+    totNumPruned = 0
+    numPruned, lclCanidates = rr.pruneyWings(lclCanidates, clArgs)
+    totNumPruned += numPruned
+
+    if numPruned:
+        print(f'    Prunned {numPruned:2} lclCanidates RE: Y-Wings.')
+
+    return totNumPruned, lclCanidates
+#############################################################################
+
 def prunePp(lclCanidates, clArgs):
     totNumPruned = 0
     houseLst = [ 'row','col' ]
@@ -144,15 +122,15 @@ def prunePp(lclCanidates, clArgs):
     return totNumPruned, lclCanidates
 #############################################################################
 
-def pruneCanidates(lclCanidates, clArgs):
+def pruneCanidates(clArgs, lclCanidates):
 
     print('\nPruning canidates list')
-    #pr.prettyPrint3DArray(lclCanidates)
 
     pDict = {
     'prune_XW' : { 'func': pruneXw,   'passNum': 0, 'totNumPruned': 0},
     'prune_NHT': { 'func': pruneNht,  'passNum': 0, 'totNumPruned': 0},
-    'prune_PP' : { 'func': prunePp,   'passNum': 0, 'totNumPruned': 0}}
+    'prune_PP' : { 'func': prunePp,   'passNum': 0, 'totNumPruned': 0},
+    'prune_YW' : { 'func': pruneYw,   'passNum': 0, 'totNumPruned': 0}}
 
     prunedAtLeastOne = True
     while prunedAtLeastOne:
@@ -162,6 +140,7 @@ def pruneCanidates(lclCanidates, clArgs):
             if v['func'] == pruneXw  and 'xwOff'  in clArgs: continue
             if v['func'] == pruneNht and 'nhtOff' in clArgs: continue
             if v['func'] == prunePp  and 'ppOff'  in clArgs: continue
+            if v['func'] == pruneYw  and 'yWOff'  in clArgs: continue
 
             numPruned = 1
             v['passNum'] = 0
@@ -178,15 +157,12 @@ def pruneCanidates(lclCanidates, clArgs):
             print(31*'*')
         print(31*'*')
 
-    lclCanidates = rr.yWing(lclCanidates)
     totTotNumPruned = 0
     for k,v in pDict.items():
         print('  Total Prunned {:9} {:2} {}'.format(k, v['totNumPruned'], STARS33))
         totTotNumPruned += v['totNumPruned']
     print(62*'*')
 
-    #pr.prettyPrint3DArray(lclCanidates)
-    #input()
     return totTotNumPruned, lclCanidates
 #############################################################################
 
@@ -235,7 +211,6 @@ if __name__ == '__main__':
         dicOfFuncs = initDicOfFuncsCntrs(dicOfFuncs)
 
         print(f'Processing puzzle {key}')
-        #input()
         while True:
             numZerosBeforeAllFill = sum(x.count(0) for x in solution)
             if sum(x.count(0) for x in solution)==0:
@@ -247,16 +222,10 @@ if __name__ == '__main__':
                     break
 
                 canidates = [[ [] for ii in range(9)] for jj in range(9)]
-                #pp.pprint(solution)
-                #pr.prettyPrint3DArray(canidates)
-                canidates = updateCanidatesList(solution, canidates )
-                #pr.prettyPrint3DArray(canidates)
-                #input()
-                # TODO: remove those things already pruned
+                canidates = updateCanidatesList(solution, canidates)
 
-                numberPruned, canidates = pruneCanidates(canidates,cmdLineArgs)
-                # update those pruned
-                NUMBER_FILLED, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs,cmdLineArgs)
+                numPrunned,canidates = pruneCanidates(cmdLineArgs, canidates)
+                NUMBER_FILLED, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs, cmdLineArgs)
 
             numZerosAfterAllFill = sum(x.count(0) for x in solution)
             if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
