@@ -7,7 +7,6 @@ import fillRoutines  as fr
 import pruneRoutines as rr
 
 NEWLINE = '\n'
-STARS33 = 33*'*'
 STARS44 = 44*'*'
 POUND62 = 62*'#'
 #############################################################################
@@ -127,7 +126,6 @@ def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
     print('\nPruning canidates list')
 
     prunedAtLeastOne   = True
-    numPrunnedAllLoops = []
     cumStr = ''
     while prunedAtLeastOne:                      # Loop over function group.
 
@@ -138,7 +136,7 @@ def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
             if v['func'] == pruneXw  and 'xwOff'  in clArgs: continue
             if v['func'] == pruneNht and 'nhtOff' in clArgs: continue
             if v['func'] == prunePp  and 'ppOff'  in clArgs: continue
-            if v['func'] == pruneYw  and 'yWOff'  in clArgs: continue
+            if v['func'] == pruneYw  and 'ywOff'  in clArgs: continue
 
             passNum            = 0
             numPrunnedThisPass = 0
@@ -197,8 +195,7 @@ def initfillDicOfFuncsCntrs(lclfillDicOfFuncs):
 
 if __name__ == '__main__':
     from puzzles import puzzlesDict
-    #rr.yWing(0)
-    #exit()
+
     fillDicOfFuncs = {
     'one': { 'func': fr.fillCellsViaOneCanidate, 'calls': 0, 'replace': 0 },
     'row': { 'func': fr.fillCellsViaRowHistAnal, 'calls': 0, 'replace': 0 },
@@ -211,13 +208,35 @@ if __name__ == '__main__':
     'prune_PP' : { 'func': prunePp,  'numPrunned': []},
     'prune_YW' : { 'func': pruneYw,  'numPrunned': []}}
 
-    try:
-        with open('cfgFile.txt') as cfgFile:
-            cmdLineArgs  = cfgFile.read().split()
-    except:
-        cmdLineArgs = input(' Args-> ').split()
+    ###########################################################
+    puzDicKeys = [ k for k in puzzlesDict.keys() ]
+    print()
+    for ii,k in enumerate(puzDicKeys):
+        print('  {:2} - {}'.format( ii,k ))
+    print( '   a - all')
+    print( '   q - quit')
+    puzIdxs = input('\n Choice -> ' ).split()
+
+    if 'q' in puzIdxs:
+        exit()
+
+    if 'a' in puzIdxs:
+        dsrdKeys = [ puzDicKeys[    x ] for x in range(len(puzDicKeys))]  
+    else:
+        dsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs] 
+        print(puzIdxs, dsrdKeys)
+    #input()
+    ###########################################################
+    with open('cfgFile.txt') as cfgFile:
+        cmdLineArgs  = cfgFile.read().split()
+    ###########################################################
 
     for key,val in puzzlesDict.items():
+
+        if puzIdxs != 'a':
+            if key not in dsrdKeys: 
+                continue
+
         solution = [x[:] for x in val['puzzle'] ]
         val['start0s'] = sum(x.count(0) for x in solution)
         fillDicOfFuncs = initfillDicOfFuncsCntrs(fillDicOfFuncs)
@@ -236,31 +255,21 @@ if __name__ == '__main__':
                 canidates = [[ [] for ii in range(9)] for jj in range(9)]
                 canidates = updateCanidatesList(solution, canidates)
 
-                pruneDicOfFuncs,canidates = pruneCanidates(cmdLineArgs, pruneDicOfFuncs, canidates)
-                NUMBER_FILLED, solution, fillDicOfFuncs = fillSolution(solution, canidates, fillDicOfFuncs, cmdLineArgs)
+                pruneDicOfFuncs,canidates = \
+                    pruneCanidates(cmdLineArgs, pruneDicOfFuncs, canidates)
+                NUMBER_FILLED, solution, fillDicOfFuncs = \
+                    fillSolution(solution, canidates, fillDicOfFuncs, cmdLineArgs)
 
             numZerosAfterAllFill = sum(x.count(0) for x in solution)
             if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
                 break
             numZerosBeforeAllFill = numZerosAfterAllFill
         # end while loop for this puzzle
-        #pp.pprint(pruneDicOfFuncs)
         val['end0s'] = numZerosAfterAllFill
         puzzlesDict = updatePuzzlesDictCntrs(puzzlesDict,key, fillDicOfFuncs)
         val['solution'] = solution
         print(f'{POUND62}')
     # end for loop on all puzzles
 
-    pr.printResults(puzzlesDict, 'all')
-    pr.printResults(puzzlesDict, 'summary')
-    #pr.prettyPrint3DArray(canidates)
-    #
-    #for row in canidates:
-    #    flatRow = fr.flatten(row)
-    #    histRow = fr.genHistogram(flatRow)
-    #    pp.pprint(histRow)
-
-
-
-
-
+    pr.printResults(puzzlesDict, 'all', dsrdKeys)
+    pr.printResults(puzzlesDict, 'summary', dsrdKeys)

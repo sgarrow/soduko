@@ -168,7 +168,7 @@ def pruneXwings(canidates, house, clArgs):
 # 0,1,2 or 3,4,5 of 6,7,8 then they are in the same row of canidates
 # and hence are a 'row' pointing pair.
 #
-# if the nums that appear exactly twice are in cols of xCanidates (sqrs of canidates) 
+# if the nums that appear exactly twice are in cols of xCanidates (sqrs of canidates)
 # 0,3,6 or 1,4,7 of 2,5,8 then they are in the same col of canidates
 # and hence are a 'col' pointing pair.
 #
@@ -187,7 +187,7 @@ def prunePointingPairs(canidates, house, clArgs):
         allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
     ####################################################################################
 
-    # Place above data in a dict and add to data the two offset within the square 
+    # Place above data in a dict and add to data the two offset within the square
     # where the two nums appear. Note that pair may not be on the same row/col ...
     k = 0
     allBinsHeightTwoD = {}
@@ -216,7 +216,7 @@ def prunePointingPairs(canidates, house, clArgs):
                 k += 1
     ####################################################################################
 
-    # create a 3rd dict (either row or col, but not both) that is the same as the above 
+    # create a 3rd dict (either row or col, but not both) that is the same as the above
     # dict except sqr,offset mapped to abs r,c.
     k = 0
     ppRowAbsCoordD = {}
@@ -224,10 +224,10 @@ def prunePointingPairs(canidates, house, clArgs):
     if house == 'row': ppD = ppRowD
     if house == 'col': ppD = ppColD
     for val in ppD.values():
-        row0,col0 = mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][0])
-        row1,col1 = mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][1])
-        if house == 'row': ppRowAbsCoordD[k] = { 'aRow':row0, 'bCols':[col0,col1], 'cVal':val['C_val'] }
-        if house == 'col': ppColAbsCoordD[k] = { 'aCol':col0, 'bRows':[row0,row1], 'cVal':val['C_val'] }
+        row0,col0= mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][0])
+        row1,col1= mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][1])
+        if house == 'row': ppRowAbsCoordD[k]= {'aRow':row0,'bCols':[col0,col1],'cVal':val['C_val']}
+        if house == 'col': ppColAbsCoordD[k]= {'aCol':col0,'bRows':[row0,row1],'cVal':val['C_val']}
         k += 1
     ####################################################################################
 
@@ -284,8 +284,6 @@ def prunePointingPairs(canidates, house, clArgs):
 
     return numPruned,canidates
 ############################################################################
-# 
-
 
 def prYWingDict(D):
     for k,v in D.items():
@@ -324,26 +322,14 @@ def prYWingDict(D):
 
 
 def pruneyWings (lclCanidates, clArgs):
-    import random
     from itertools import combinations
     import pprint        as pp
     import fillRoutines  as fr
     import mapping       as mp
 
-    #lclCanidates = \
-    #[[ 0           ,          0        ,  [8, 2, 3]   ,          0     ,  0        ,  [2, 7]   ,  [2, 8, 9],  [2, 3, 9]   ,  [3, 7]    ],
-    # [ [2, 3, 4, 9],          0        ,  [8, 2, 3, 4],          [9, 3],  [1, 2]   ,  [1, 2, 7],  [2, 4, 8],  0           ,  [3, 4, 7] ],
-    # [ 0           ,          [9, 3, 4],  [2, 3, 4]   ,          [9, 3],  0        ,  0        ,  0        ,  [1, 2, 3, 4],  [1, 3, 4] ],
-    # [ [9, 2, 4]   ,          0        ,  [2, 4]      ,          0     ,  [9, 5]   ,  0        ,  0        ,  0           ,  [4, 5]    ],
-    # [ 0           ,          [1, 4]   ,  0           ,          0     ,  [1, 2, 5],  [1, 2]   ,  0        ,  [4, 5]      ,  0         ],
-    # [ [9, 3]      ,          [1, 3, 9],  0           ,          0     ,  [1, 9]   ,  0        ,  [2, 7]   ,  [2, 7]      ,  0         ],
-    # [ [4, 5]      ,          0        ,  0           ,          0     ,  0        ,  0        ,  [4, 7]   ,  [4, 5, 7]   ,  0         ],
-    # [ [3, 5]      ,          0        ,  0           ,          0     ,  0        ,  0        ,  0        ,  [1, 3, 5]   ,  [1, 3, 5] ],
-    # [ 0           ,          [3, 4]   ,  0           ,          0     ,  0        ,  0        ,  [9, 4]   ,  [9, 3, 4]   ,  0         ]]
-
     numPruned = 0
     coordsOfAllPairs  = [ [r,c] for r in range(9) for c in range(9) \
-        if lclCanidates[r][c] != 0 and len(lclCanidates[r][c]) == 2] 
+        if lclCanidates[r][c] != 0 and len(lclCanidates[r][c]) == 2]
     combSet3pairsCord = combinations(coordsOfAllPairs, 3)
     combLst3pairsCord = list(combSet3pairsCord)
 
@@ -351,11 +337,11 @@ def pruneyWings (lclCanidates, clArgs):
     for ii,comb in enumerate(combLst3pairsCord):
 
         vals = []
-        rSee = [] 
-        cSee = [] 
-        sSee = [] 
-        aSet = [] 
-        sqrs = [] 
+        rSee = []
+        cSee = []
+        sSee = []
+        aSet = []
+        sqrs = []
         for cord in comb:
             rowsInSq, colsInSq = mp.findRowsColsInSquare(cord[0], cord[1])
 
@@ -379,7 +365,7 @@ def pruneyWings (lclCanidates, clArgs):
         # Do the 3 cells look like [a,b] [a,z] [b,z]? Yes, potential Y-Wing.
         if len(noValDups) == 3 and len(histFlat) == 3:
 
-            yWingDict[ii] = {'cord':   list(comb), 'sqrs': sqrs, 
+            yWingDict[ii] = {'cord':   list(comb), 'sqrs': sqrs,
                              'pIdx':   None, 
                              'Z':      None, 
                              'rmvIdx': None,
