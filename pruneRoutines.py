@@ -420,10 +420,10 @@ def pruneyWings (lclCanidates, clArgs):
             yWingDict2[k]['Z']      = Z       # Val to del.
             yWingDict2[k]['rmvIdx'] = rmvIdx  # Where to del from.
 
-    print('************')
-    print(' Dict 2    *')
+    #print('************')
+    #print(' Dict 2    *')
     prYWingDict(yWingDict2)
-    print('************')
+    #print('************')
     #input() 
 
     #pr.prettyPrint3DArray(lclCanidates)

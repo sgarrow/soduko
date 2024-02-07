@@ -50,15 +50,15 @@ def updateCanidatesList(lclSolution,lclCanidates):
     return lclCanidates
 #############################################################################
 
-def updatePuzzlesDictCntrs(lclPuzzlesDict,k, lclDicOfFuncs):
-    lclPuzzlesDict[k]['oC'] = lclDicOfFuncs['one']['calls'  ]
-    lclPuzzlesDict[k]['oR'] = lclDicOfFuncs['one']['replace']
-    lclPuzzlesDict[k]['rC'] = lclDicOfFuncs['row']['calls'  ]
-    lclPuzzlesDict[k]['rR'] = lclDicOfFuncs['row']['replace']
-    lclPuzzlesDict[k]['cC'] = lclDicOfFuncs['col']['calls'  ]
-    lclPuzzlesDict[k]['cR'] = lclDicOfFuncs['col']['replace']
-    lclPuzzlesDict[k]['sC'] = lclDicOfFuncs['sqr']['calls'  ]
-    lclPuzzlesDict[k]['sR'] = lclDicOfFuncs['sqr']['replace']
+def updatePuzzlesDictCntrs(lclPuzzlesDict,k, lclfillDicOfFuncs):
+    lclPuzzlesDict[k]['oC'] = lclfillDicOfFuncs['one']['calls'  ]
+    lclPuzzlesDict[k]['oR'] = lclfillDicOfFuncs['one']['replace']
+    lclPuzzlesDict[k]['rC'] = lclfillDicOfFuncs['row']['calls'  ]
+    lclPuzzlesDict[k]['rR'] = lclfillDicOfFuncs['row']['replace']
+    lclPuzzlesDict[k]['cC'] = lclfillDicOfFuncs['col']['calls'  ]
+    lclPuzzlesDict[k]['cR'] = lclfillDicOfFuncs['col']['replace']
+    lclPuzzlesDict[k]['sC'] = lclfillDicOfFuncs['sqr']['calls'  ]
+    lclPuzzlesDict[k]['sR'] = lclfillDicOfFuncs['sqr']['replace']
     return lclPuzzlesDict
 #############################################################################
 
@@ -122,82 +122,94 @@ def prunePp(lclCanidates, clArgs):
     return totNumPruned, lclCanidates
 #############################################################################
 
-def pruneCanidates(clArgs, lclCanidates):
-
+def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
+    #numPrunedPerPass
     print('\nPruning canidates list')
 
-    pDict = {
-    'prune_XW' : { 'func': pruneXw,   'passNum': 0, 'totNumPruned': 0},
-    'prune_NHT': { 'func': pruneNht,  'passNum': 0, 'totNumPruned': 0},
-    'prune_PP' : { 'func': prunePp,   'passNum': 0, 'totNumPruned': 0},
-    'prune_YW' : { 'func': pruneYw,   'passNum': 0, 'totNumPruned': 0}}
+    prunedAtLeastOne   = True
+    numPrunnedAllLoops = []
+    cumStr = ''
+    while prunedAtLeastOne:                      # Loop over function group.
 
-    prunedAtLeastOne = True
-    while prunedAtLeastOne:
-        prunedAtLeastOne = False
-        for k,v in pDict.items():
+        prunedAtLeastOne   = False
+
+        for k,v in lclPruneDicOfFuncs.items():   # Loop over each function.
 
             if v['func'] == pruneXw  and 'xwOff'  in clArgs: continue
             if v['func'] == pruneNht and 'nhtOff' in clArgs: continue
             if v['func'] == prunePp  and 'ppOff'  in clArgs: continue
             if v['func'] == pruneYw  and 'yWOff'  in clArgs: continue
 
-            numPruned = 1
-            v['passNum'] = 0
-            while numPruned:
-                print('  {:9} pass {}'.format(k, v['passNum']))
-                numPruned, lclCanidates = v['func'](lclCanidates, clArgs)
-                v['totNumPruned'] += numPruned
-                print(f'  {k:9} prunned {numPruned}{NEWLINE}')
-                v['passNum'] += 1
-                if numPruned > 0:
-                    prunedAtLeastOne = True
+            passNum            = 0
+            numPrunnedThisPass = 0
+            numPrunnedThisLoop = []
+
+            while True:                          # Loop over one function.
+
+                print('  {:9} pass {}'.format(k, passNum))
+                numPrunnedThisPass, lclCanidates = v['func'](lclCanidates, clArgs)
+                numPrunnedThisLoop.append(numPrunnedThisPass)
+                if numPrunnedThisPass != 0:
+                    cumStr += (f'  {k:9} prunned {numPrunnedThisPass}{NEWLINE}')
+                passNum += 1
+
                 if 'ss' in clArgs: input('Return to continue')
 
+                if numPrunnedThisPass > 0:
+                    prunedAtLeastOne = True
+                else:
+                    break
+
+            v['numPrunned'].append(numPrunnedThisLoop)
+            print('  Total Prunned {:9} {}'.format(k, sum(v['numPrunned'][-1])))
             print(31*'*')
+
         print(31*'*')
 
-    totTotNumPruned = 0
-    for k,v in pDict.items():
-        print('  Total Prunned {:9} {:2} {}'.format(k, v['totNumPruned'], STARS33))
-        totTotNumPruned += v['totNumPruned']
+    print(cumStr)
     print(62*'*')
 
-    return totTotNumPruned, lclCanidates
+    return lclPruneDicOfFuncs, lclCanidates
 #############################################################################
 
-def fillSolution(lclSolution, lclCanidates, lclDicOfFuncs, clArgs ):
+def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, clArgs ):
     totalNumFilled = 0
 
     print('\nFilling in solution cells')
-    for k in lclDicOfFuncs:
-        numFilled, lclSolution = lclDicOfFuncs[k]['func']( lclSolution, lclCanidates )
+    for k in lclfillDicOfFuncs:
+        numFilled, lclSolution = lclfillDicOfFuncs[k]['func']( lclSolution, lclCanidates )
         totalNumFilled  += numFilled
-        lclDicOfFuncs[k]['calls']   += 1
-        lclDicOfFuncs[k]['replace'] += numFilled
+        lclfillDicOfFuncs[k]['calls']   += 1
+        lclfillDicOfFuncs[k]['replace'] += numFilled
         if 'ss' in clArgs: input('Return to continue')
     print(f'{NEWLINE}  Total filled {totalNumFilled:2d} {STARS44}')
     print(62*'*')
 
-    return totalNumFilled, lclSolution, lclDicOfFuncs
+    return totalNumFilled, lclSolution, lclfillDicOfFuncs
 #############################################################################
 
-def initDicOfFuncsCntrs(lclDicOfFuncs):
-    for k in lclDicOfFuncs:
-        lclDicOfFuncs[k]['calls'  ] = 0
-        lclDicOfFuncs[k]['replace'] = 0
-    return lclDicOfFuncs
+def initfillDicOfFuncsCntrs(lclfillDicOfFuncs):
+    for k in lclfillDicOfFuncs:
+        lclfillDicOfFuncs[k]['calls'  ] = 0
+        lclfillDicOfFuncs[k]['replace'] = 0
+    return lclfillDicOfFuncs
 #############################################################################
 
 if __name__ == '__main__':
     from puzzles import puzzlesDict
     #rr.yWing(0)
     #exit()
-    dicOfFuncs = {
-        'one': { 'func': fr.fillCellsViaOneCanidate, 'calls': 0, 'replace': 0 },
-        'row': { 'func': fr.fillCellsViaRowHistAnal, 'calls': 0, 'replace': 0 },
-        'col': { 'func': fr.fillCellsViaColHistAnal, 'calls': 0, 'replace': 0 },
-        'sqr': { 'func': fr.fillCellsViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
+    fillDicOfFuncs = {
+    'one': { 'func': fr.fillCellsViaOneCanidate, 'calls': 0, 'replace': 0 },
+    'row': { 'func': fr.fillCellsViaRowHistAnal, 'calls': 0, 'replace': 0 },
+    'col': { 'func': fr.fillCellsViaColHistAnal, 'calls': 0, 'replace': 0 },
+    'sqr': { 'func': fr.fillCellsViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
+
+    pruneDicOfFuncs = {
+    'prune_XW' : { 'func': pruneXw,  'numPrunned': []},
+    'prune_NHT': { 'func': pruneNht, 'numPrunned': []},
+    'prune_PP' : { 'func': prunePp,  'numPrunned': []},
+    'prune_YW' : { 'func': pruneYw,  'numPrunned': []}}
 
     try:
         with open('cfgFile.txt') as cfgFile:
@@ -208,7 +220,7 @@ if __name__ == '__main__':
     for key,val in puzzlesDict.items():
         solution = [x[:] for x in val['puzzle'] ]
         val['start0s'] = sum(x.count(0) for x in solution)
-        dicOfFuncs = initDicOfFuncsCntrs(dicOfFuncs)
+        fillDicOfFuncs = initfillDicOfFuncsCntrs(fillDicOfFuncs)
 
         print(f'Processing puzzle {key}')
         while True:
@@ -224,16 +236,17 @@ if __name__ == '__main__':
                 canidates = [[ [] for ii in range(9)] for jj in range(9)]
                 canidates = updateCanidatesList(solution, canidates)
 
-                numPrunned,canidates = pruneCanidates(cmdLineArgs, canidates)
-                NUMBER_FILLED, solution, dicOfFuncs = fillSolution(solution, canidates, dicOfFuncs, cmdLineArgs)
+                pruneDicOfFuncs,canidates = pruneCanidates(cmdLineArgs, pruneDicOfFuncs, canidates)
+                NUMBER_FILLED, solution, fillDicOfFuncs = fillSolution(solution, canidates, fillDicOfFuncs, cmdLineArgs)
 
             numZerosAfterAllFill = sum(x.count(0) for x in solution)
             if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
                 break
             numZerosBeforeAllFill = numZerosAfterAllFill
         # end while loop for this puzzle
+        #pp.pprint(pruneDicOfFuncs)
         val['end0s'] = numZerosAfterAllFill
-        puzzlesDict = updatePuzzlesDictCntrs(puzzlesDict,key, dicOfFuncs)
+        puzzlesDict = updatePuzzlesDictCntrs(puzzlesDict,key, fillDicOfFuncs)
         val['solution'] = solution
         print(f'{POUND62}')
     # end for loop on all puzzles
