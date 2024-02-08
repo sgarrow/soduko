@@ -1,6 +1,8 @@
 #  C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
 
-import pprint        as pp
+#import pprint        as pp
+import sys
+import time
 import printRoutines as pr
 import mapping       as mp
 import fillRoutines  as fr
@@ -45,19 +47,19 @@ def updateCanidatesList(lclSolution,lclCanidates):
         for cIdx,elem in enumerate(row):
             if lclCanidates[rIdx][cIdx] != 0:
                 totSum += sum(lclCanidates[rIdx][cIdx])
-    print('totSum = ', totSum)
+    #print('totSum = ', totSum)
     return lclCanidates
 #############################################################################
 
-def updatePuzzlesDictCntrs(lclPuzzlesDict,k, lclfillDicOfFuncs):
-    lclPuzzlesDict[k]['oC'] = lclfillDicOfFuncs['one']['calls'  ]
-    lclPuzzlesDict[k]['oR'] = lclfillDicOfFuncs['one']['replace']
-    lclPuzzlesDict[k]['rC'] = lclfillDicOfFuncs['row']['calls'  ]
-    lclPuzzlesDict[k]['rR'] = lclfillDicOfFuncs['row']['replace']
-    lclPuzzlesDict[k]['cC'] = lclfillDicOfFuncs['col']['calls'  ]
-    lclPuzzlesDict[k]['cR'] = lclfillDicOfFuncs['col']['replace']
-    lclPuzzlesDict[k]['sC'] = lclfillDicOfFuncs['sqr']['calls'  ]
-    lclPuzzlesDict[k]['sR'] = lclfillDicOfFuncs['sqr']['replace']
+def updatePuzzlesDictCntrs(lclPuzzlesDict,lclKey, lclfillDicOfFuncs):
+    lclPuzzlesDict[lclKey]['oC'] = lclfillDicOfFuncs['one']['calls'  ]
+    lclPuzzlesDict[lclKey]['oR'] = lclfillDicOfFuncs['one']['replace']
+    lclPuzzlesDict[lclKey]['rC'] = lclfillDicOfFuncs['row']['calls'  ]
+    lclPuzzlesDict[lclKey]['rR'] = lclfillDicOfFuncs['row']['replace']
+    lclPuzzlesDict[lclKey]['cC'] = lclfillDicOfFuncs['col']['calls'  ]
+    lclPuzzlesDict[lclKey]['cR'] = lclfillDicOfFuncs['col']['replace']
+    lclPuzzlesDict[lclKey]['sC'] = lclfillDicOfFuncs['sqr']['calls'  ]
+    lclPuzzlesDict[lclKey]['sR'] = lclfillDicOfFuncs['sqr']['replace']
     return lclPuzzlesDict
 #############################################################################
 
@@ -197,10 +199,10 @@ if __name__ == '__main__':
     from puzzles import puzzlesDict
 
     fillDicOfFuncs = {
-    'one': { 'func': fr.fillCellsViaOneCanidate, 'calls': 0, 'replace': 0 },
-    'row': { 'func': fr.fillCellsViaRowHistAnal, 'calls': 0, 'replace': 0 },
-    'col': { 'func': fr.fillCellsViaColHistAnal, 'calls': 0, 'replace': 0 },
-    'sqr': { 'func': fr.fillCellsViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
+    'one': { 'func': fr.fillViaOneCanidate, 'calls': 0, 'replace': 0 },
+    'row': { 'func': fr.fillViaRowHistAnal, 'calls': 0, 'replace': 0 },
+    'col': { 'func': fr.fillViaColHistAnal, 'calls': 0, 'replace': 0 },
+    'sqr': { 'func': fr.fillViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
 
     pruneDicOfFuncs = {
     'prune_XW' : { 'func': pruneXw,  'numPrunned': []},
@@ -217,24 +219,23 @@ if __name__ == '__main__':
     print( '   q - quit')
     puzIdxs = input('\n Choice -> ' ).split()
 
-    if 'q' in puzIdxs:
-        exit()
-
-    if 'a' in puzIdxs:
-        dsrdKeys = [ puzDicKeys[    x ] for x in range(len(puzDicKeys))]  
-    else:
-        dsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs] 
-        print(puzIdxs, dsrdKeys)
-    #input()
     ###########################################################
-    with open('cfgFile.txt') as cfgFile:
+    with open('cfgFile.txt', encoding='utf-8') as cfgFile:
         cmdLineArgs  = cfgFile.read().split()
+    ###########################################################
+    if 'q' in puzIdxs:
+        sys.exit()
+    if 'a' in puzIdxs:
+        dsrdKeys = [ puzDicKeys[    x ] for x in range(len(puzDicKeys))]
+    else:
+        dsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs]
+    #input()
     ###########################################################
 
     for key,val in puzzlesDict.items():
-
+        time.sleep(0.01)
         if puzIdxs != 'a':
-            if key not in dsrdKeys: 
+            if key not in dsrdKeys:
                 continue
 
         solution = [x[:] for x in val['puzzle'] ]
@@ -271,5 +272,6 @@ if __name__ == '__main__':
         print(f'{POUND62}')
     # end for loop on all puzzles
 
+    #pr.printCanidates(canidates)
     pr.printResults(puzzlesDict, 'all', dsrdKeys)
     pr.printResults(puzzlesDict, 'summary', dsrdKeys)

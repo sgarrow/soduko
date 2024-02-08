@@ -44,7 +44,7 @@ def printResults(puzzlesDict, prnType, dsrdKeys):
     print()
     for key in puzzlesDict:
 
-        if key not in dsrdKeys: 
+        if key not in dsrdKeys:
             continue
 
         print(' puzzle {:9} (numZeros = {:2}). {}.'.\
@@ -66,16 +66,16 @@ def printResults(puzzlesDict, prnType, dsrdKeys):
                 format( 81-puzzlesDict[key]['end0s'],  puzzlesDict[key]['end0s'],
                         81-puzzlesDict[key]['end0s'] + puzzlesDict[key]['end0s'] ))
 
-            print( ' fillCellsViaOneCanidate calls,replacements  = {:2d}, {:2d}.'.\
+            print( ' fillViaOneCanidate calls,replacements  = {:2d}, {:2d}.'.\
                 format(puzzlesDict[key]['oC'], puzzlesDict[key]['oR']))
 
-            print( ' fillCellsViaRowHistAnal calls,replacements  = {:2d}, {:2d}.'.\
+            print( ' fillViaRowHistAnal calls,replacements  = {:2d}, {:2d}.'.\
                 format(puzzlesDict[key]['rC'], puzzlesDict[key]['rR']))
 
-            print( ' fillCellsViaColHistAnal calls,replacements  = {:2d}, {:2d}.'.\
+            print( ' fillViaColHistAnal calls,replacements  = {:2d}, {:2d}.'.\
                 format(puzzlesDict[key]['cC'], puzzlesDict[key]['cR']))
 
-            print( ' fillCellsViaSqrHistAnal calls,replacements  = {:2d}, {:2d}.'.\
+            print( ' fillViaSqrHistAnal calls,replacements  = {:2d}, {:2d}.'.\
                 format(puzzlesDict[key]['sC'], puzzlesDict[key]['sR']))
 
             print(62*'*')

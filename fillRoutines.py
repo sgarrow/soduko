@@ -1,4 +1,4 @@
-import printRoutines as pr
+#import printRoutines as pr
 
 NEWLINE = '\n'
 #############################################################################
@@ -23,7 +23,7 @@ def genHistogram(inLst):
     return hist
 #############################################################################
 
-def fillCellsViaOneCanidate(solution, canidates):
+def fillViaOneCanidate(solution, canidates):
     print('\n  Filling solution cells that have only 1 canidate')
     numFilled = 0
     #pr.printCanidates(canidates)
@@ -42,7 +42,7 @@ def fillCellsViaOneCanidate(solution, canidates):
     return numFilled,solution
 #############################################################################
 
-def fillCellsViaRowHistAnal(solution, canidates):
+def fillViaRowHistAnal(solution, canidates):
     print('\n  Filling solution cells thru Row Hist Analysis')
     numFilled = 0
 
@@ -70,7 +70,7 @@ def fillCellsViaRowHistAnal(solution, canidates):
     return numFilled,solution
 #############################################################################
 
-def fillCellsViaColHistAnal(solution, canidates):
+def fillViaColHistAnal(solution, canidates):
     print('\n  Filling solution cells thru Col Hist Analysis')
     numFilled = 0
     xPos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
@@ -96,7 +96,7 @@ def fillCellsViaColHistAnal(solution, canidates):
     return numFilled,solution
 #############################################################################
 
-def fillCellsViaSqrHistAnal(solution, canidates):
+def fillViaSqrHistAnal(solution, canidates):
     print('\n  Filling solution cells thru Sqr Hist Analysis')
     numFilled = 0
     squareNums = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]]
