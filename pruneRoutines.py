@@ -3,7 +3,7 @@ import copy
 from itertools import combinations
 import pprint        as pp
 import fillRoutines  as fr
-import printRoutines as pr
+#import printRoutines as pr
 import mapping       as mp
 
 
@@ -57,11 +57,9 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
 
             if hIsHidden and hiddenOrNaked == 'hidden':
                 myD = {'row': idx, 'tripVals': lstHmG, 'tripIdxs': comIdx }
-                if 'nhtPrn' in clArgs: 
-                    #pr.printCanidates(xCanidates)
-                    print('   Hidden ({})'.format(house))
+                if 'nhtPrn' in clArgs:
                     myDstr = pp.pformat(myD)
-                    print(('      {}').format(myDstr))
+                    print('   Hidden ({}) \n      {}'.format(house, myDstr))
 
                 for tripIdx in myD['tripIdxs']:
                     temp  = [ x for x in rOrCOrS[tripIdx] if x in myD['tripVals'] ]
@@ -69,7 +67,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
                     if len(diff) != 0:
                         numPruned += len(diff)
                         if 'nhtPrn' in clArgs:
-                            print( '      remove {} from ({},{})'.format(diff, myD['row'], tripIdx) )
+                            print( '      remove {} from ({},{})'.format(diff,myD['row'],tripIdx))
 
                     xCanidates[myD['row']][tripIdx] = temp
                 #if 'nhtPrn' in clArgs: pr.printCanidates(xCanidates)
@@ -77,11 +75,9 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
 
             if hIsNaked and hiddenOrNaked == 'naked':
                 myD   = {'row': idx, 'tripVals': setH, 'tripIdxs': comIdx }
-                if 'nhtPrn' in clArgs: 
-                    #pr.printCanidates(xCanidates)
-                    print('   Naked ({})'.format(house))
+                if 'nhtPrn' in clArgs:
                     myDstr = pp.pformat(myD)
-                    print(('      {}').format(myDstr))
+                    print('   Naked ({}) \n      {}'.format(house, myDstr))
 
                 temp  = [ list(x) if kk in myD['tripIdxs'] else \
                           list(x-myD['tripVals']) for kk,x in enumerate(rOrCOrS) ]
@@ -91,7 +87,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
                     diff  = elem - set.intersection( elem, set(temp[idx]) )
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        if 'nhtPrn' in clArgs: 
+                        if 'nhtPrn' in clArgs:
                             print( '      remove {} from ({},{})'.format(diff,  myD['row'], idx) )
 
                 xCanidates[myD['row']] = temp2
@@ -157,7 +153,7 @@ def pruneXwings(canidates, house, clArgs):
                         #pr.printCanidates(xCanidates)
                         #pp.pprint(xWingD)
                         didRemove = True
-                    if 'xwPrn' in clArgs: 
+                    if 'xwPrn' in clArgs:
                         print('   ', xWing)
                         print('      remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))
                     numPruned += 1
@@ -275,7 +271,7 @@ def prunePointingPairs(canidates, house, clArgs):
                     numPruned += 1
 
                     if 'ppPrn' in clArgs:
-                        print('       remove {} from ({},{})'.format(val['cVal'], val['aRow'], cIdx))
+                        print('       remove {} from ({},{})'.format(val['cVal'],val['aRow'],cIdx))
 
     colsProcessed = []
     for val in ppColAbsCoordD.values():
@@ -288,7 +284,7 @@ def prunePointingPairs(canidates, house, clArgs):
                     numPruned += 1
 
                     if 'ppPrn' in clArgs:
-                        print('       remove {} from ({},{})'.format(val['cVal'], rIdx, val['aCol'] ))
+                        print('       remove {} from ({},{})'.format(val['cVal'],rIdx,val['aCol']))
 
     if 'ppPrn' in clArgs:
         print()
@@ -298,8 +294,8 @@ def prunePointingPairs(canidates, house, clArgs):
     return numPruned,canidates
 ############################################################################
 
-def prYWingDict(D):
-    for k,v in D.items():
+def prYWingDict(aDict):
+    for k,v in aDict.items():
         print('    key    = {}'.format(k))
         print('    cord   = {}'.format(v[ 'cord'   ]))
         print('    sqrs   = {}'.format(v[ 'sqrs'   ]))
@@ -345,12 +341,7 @@ def pruneyWings (lclCanidates, clArgs):
     yWingDict = {}
     for ii,comb in enumerate(combLst3pairsCord):
 
-        vals = []
-        rSee = []
-        cSee = []
-        sSee = []
-        aSet = []
-        sqrs = []
+        vals,rSee,cSee,sSee,aSet,sqrs = [],[],[],[],[],[]
         for cord in comb:
             rowsInSq, colsInSq = mp.findRowsColsInSquare(cord[0], cord[1])
 

@@ -124,7 +124,6 @@ def prunePp(lclCanidates, clArgs):
 #############################################################################
 
 def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
-    #numPrunedPerPass
     print('\nPruning canidates list')
 
     prunedAtLeastOne   = True
@@ -133,12 +132,12 @@ def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
 
         prunedAtLeastOne   = False
 
-        for k,v in lclPruneDicOfFuncs.items():   # Loop over each function.
+        for theKey,v in lclPruneDicOfFuncs.items():   # Loop over each function.
 
-            if v['func'] == pruneXw  and 'xwOff'  in clArgs: continue
-            if v['func'] == pruneNht and 'nhtOff' in clArgs: continue
-            if v['func'] == prunePp  and 'ppOff'  in clArgs: continue
-            if v['func'] == pruneYw  and 'ywOff'  in clArgs: continue
+            if v['func'] is pruneXw  and 'xwOff'  in clArgs: continue
+            if v['func'] is pruneNht and 'nhtOff' in clArgs: continue
+            if v['func'] is prunePp  and 'ppOff'  in clArgs: continue
+            if v['func'] is pruneYw  and 'ywOff'  in clArgs: continue
 
             passNum            = 0
             numPrunnedThisPass = 0
@@ -146,11 +145,11 @@ def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
 
             while True:                          # Loop over one function.
 
-                print('  {:9} pass {}'.format(k, passNum))
+                print('  {:9} pass {}'.format(theKey, passNum))
                 numPrunnedThisPass, lclCanidates = v['func'](lclCanidates, clArgs)
                 numPrunnedThisLoop.append(numPrunnedThisPass)
                 if numPrunnedThisPass != 0:
-                    cumStr += (f'  {k:9} prunned {numPrunnedThisPass}{NEWLINE}')
+                    cumStr += (f'  {theKey:9} prunned {numPrunnedThisPass}{NEWLINE}')
                 passNum += 1
 
                 if 'ss' in clArgs: input('Return to continue')
@@ -161,7 +160,7 @@ def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
                     break
 
             v['numPrunned'].append(numPrunnedThisLoop)
-            print('  Total Prunned {:9} {}'.format(k, sum(v['numPrunned'][-1])))
+            print('  Total Prunned {:9} {}'.format(theKey, sum(v['numPrunned'][-1])))
             print(31*'*')
 
         print(31*'*')
@@ -176,11 +175,11 @@ def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, clArgs ):
     totalNumFilled = 0
 
     print('\nFilling in solution cells')
-    for k in lclfillDicOfFuncs:
-        numFilled, lclSolution = lclfillDicOfFuncs[k]['func']( lclSolution, lclCanidates )
+    for theK in lclfillDicOfFuncs:
+        numFilled, lclSolution = lclfillDicOfFuncs[theK]['func'](lclSolution,lclCanidates)
         totalNumFilled  += numFilled
-        lclfillDicOfFuncs[k]['calls']   += 1
-        lclfillDicOfFuncs[k]['replace'] += numFilled
+        lclfillDicOfFuncs[theK]['calls']   += 1
+        lclfillDicOfFuncs[theK]['replace'] += numFilled
         if 'ss' in clArgs: input('Return to continue')
     print(f'{NEWLINE}  Total filled {totalNumFilled:2d} {STARS44}')
     print(62*'*')
@@ -189,9 +188,9 @@ def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, clArgs ):
 #############################################################################
 
 def initfillDicOfFuncsCntrs(lclfillDicOfFuncs):
-    for k in lclfillDicOfFuncs:
-        lclfillDicOfFuncs[k]['calls'  ] = 0
-        lclfillDicOfFuncs[k]['replace'] = 0
+    for theK in lclfillDicOfFuncs:
+        lclfillDicOfFuncs[theK]['calls'  ] = 0
+        lclfillDicOfFuncs[theK]['replace'] = 0
     return lclfillDicOfFuncs
 #############################################################################
 

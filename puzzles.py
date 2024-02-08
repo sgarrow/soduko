@@ -1,8 +1,8 @@
 def convert(inLstOfStrs):
-    p1 = []
+    allLines = []
     for el in inLstOfStrs:
-        p1.append([ int(ch) for ch in el if ch != ' ' ])
-    return p1
+        allLines.append([ int(ch) for ch in el if ch != ' ' ])
+    return allLines
 
 
 #easy
