@@ -194,8 +194,7 @@ def initfillDicOfFuncsCntrs(lclfillDicOfFuncs):
     return lclfillDicOfFuncs
 #############################################################################
 
-if __name__ == '__main__':
-    from puzzles import puzzlesDict
+def solvePuzzles(lclPuzzlesDict, lclPuzIdxs, lclCmdLineArgs):
 
     fillDicOfFuncs = {
     'one': { 'func': fr.fillViaOneCanidate, 'calls': 0, 'replace': 0 },
@@ -208,8 +207,62 @@ if __name__ == '__main__':
     'prune_NHT': { 'func': pruneNht, 'numPrunned': []},
     'prune_PP' : { 'func': prunePp,  'numPrunned': []},
     'prune_YW' : { 'func': pruneYw,  'numPrunned': []}}
-
     ###########################################################
+
+    if 'q' in lclPuzIdxs:
+        sys.exit()
+    if 'a' in lclPuzIdxs:
+        lclDsrdKeys = [ puzDicKeys[    x ] for x in range(len(puzDicKeys))]
+    else:
+        lclDsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs]
+    #input()
+    ###########################################################
+
+    for key,val in lclPuzzlesDict.items():
+        time.sleep(0.01)
+        if puzIdxs != 'a':
+            if key not in lclDsrdKeys:
+                continue
+
+        solution = [x[:] for x in val['puzzle'] ]
+        val['start0s'] = sum(x.count(0) for x in solution)
+        fillDicOfFuncs = initfillDicOfFuncsCntrs(fillDicOfFuncs)
+
+        print(f'Processing puzzle {key}')
+        while True:
+            numZerosBeforeAllFill = sum(x.count(0) for x in solution)
+            if sum(x.count(0) for x in solution)==0:
+                break
+            numberFilled = 1
+            while numberFilled:
+
+                if sum(x.count(0) for x in solution)==0:
+                    break
+
+                canidates = [[ [] for ii in range(9)] for jj in range(9)]
+                canidates = updateCanidatesList(solution, canidates)
+
+                pruneDicOfFuncs,canidates = \
+                    pruneCanidates(lclCmdLineArgs, pruneDicOfFuncs, canidates)
+                numberFilled, solution, fillDicOfFuncs = \
+                    fillSolution(solution, canidates, fillDicOfFuncs, lclCmdLineArgs)
+
+            numZerosAfterAllFill = sum(x.count(0) for x in solution)
+            if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
+                break
+            numZerosBeforeAllFill = numZerosAfterAllFill
+        # end while loop for this puzzle
+        val['end0s'] = numZerosAfterAllFill
+        lclPuzzlesDict = updatePuzzlesDictCntrs(lclPuzzlesDict, key, fillDicOfFuncs)
+        val['solution'] = solution
+        print(f'{POUND62}')
+    # end for loop on all puzzles
+    return lclDsrdKeys, lclPuzzlesDict
+#############################################################################
+
+if __name__ == '__main__':
+    from puzzles import puzzlesDict
+
     puzDicKeys = [ k for k in puzzlesDict.keys() ]
     print()
     for ii,k in enumerate(puzDicKeys):
@@ -222,55 +275,10 @@ if __name__ == '__main__':
     with open('cfgFile.txt', encoding='utf-8') as cfgFile:
         cmdLineArgs  = cfgFile.read().split()
     ###########################################################
-    if 'q' in puzIdxs:
-        sys.exit()
-    if 'a' in puzIdxs:
-        dsrdKeys = [ puzDicKeys[    x ] for x in range(len(puzDicKeys))]
-    else:
-        dsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs]
-    #input()
-    ###########################################################
 
-    for key,val in puzzlesDict.items():
-        time.sleep(0.01)
-        if puzIdxs != 'a':
-            if key not in dsrdKeys:
-                continue
-
-        solution = [x[:] for x in val['puzzle'] ]
-        val['start0s'] = sum(x.count(0) for x in solution)
-        fillDicOfFuncs = initfillDicOfFuncsCntrs(fillDicOfFuncs)
-
-        print(f'Processing puzzle {key}')
-        while True:
-            numZerosBeforeAllFill = sum(x.count(0) for x in solution)
-            if sum(x.count(0) for x in solution)==0:
-                break
-            NUMBER_FILLED = 1
-            while NUMBER_FILLED:
-
-                if sum(x.count(0) for x in solution)==0:
-                    break
-
-                canidates = [[ [] for ii in range(9)] for jj in range(9)]
-                canidates = updateCanidatesList(solution, canidates)
-
-                pruneDicOfFuncs,canidates = \
-                    pruneCanidates(cmdLineArgs, pruneDicOfFuncs, canidates)
-                NUMBER_FILLED, solution, fillDicOfFuncs = \
-                    fillSolution(solution, canidates, fillDicOfFuncs, cmdLineArgs)
-
-            numZerosAfterAllFill = sum(x.count(0) for x in solution)
-            if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
-                break
-            numZerosBeforeAllFill = numZerosAfterAllFill
-        # end while loop for this puzzle
-        val['end0s'] = numZerosAfterAllFill
-        puzzlesDict = updatePuzzlesDictCntrs(puzzlesDict,key, fillDicOfFuncs)
-        val['solution'] = solution
-        print(f'{POUND62}')
-    # end for loop on all puzzles
-
-    #pr.printCanidates(canidates)
-    pr.printResults(puzzlesDict, 'all', dsrdKeys)
-    pr.printResults(puzzlesDict, 'summary', dsrdKeys)
+    for _ in range(2):
+        dsrdKeys, puzzlesDict = solvePuzzles(puzzlesDict, puzIdxs, cmdLineArgs)
+        #pr.printCanidates(canidates)
+        pr.printResults(puzzlesDict, 'all', dsrdKeys)
+        pr.printResults(puzzlesDict, 'summary', dsrdKeys)
+        time.sleep(5)
