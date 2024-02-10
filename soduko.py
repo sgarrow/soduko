@@ -1,8 +1,9 @@
 #  C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
 
-#import pprint        as pp
+import pprint        as pp
 import sys
 import time
+from itertools import combinations
 import printRoutines as pr
 import mapping       as mp
 import fillRoutines  as fr
@@ -134,10 +135,10 @@ def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
 
         for theKey,v in lclPruneDicOfFuncs.items():   # Loop over each function.
 
-            if v['func'] is pruneXw  and 'xwOff'  in clArgs: continue
-            if v['func'] is pruneNht and 'nhtOff' in clArgs: continue
-            if v['func'] is prunePp  and 'ppOff'  in clArgs: continue
-            if v['func'] is pruneYw  and 'ywOff'  in clArgs: continue
+            if v['func'] is pruneXw  and not 'xwOn' in clArgs: continue
+            if v['func'] is pruneNht and not 'nhOn' in clArgs: continue
+            if v['func'] is prunePp  and not 'ppOn' in clArgs: continue
+            if v['func'] is pruneYw  and not 'ywOn' in clArgs: continue
 
             passNum            = 0
             numPrunnedThisPass = 0
@@ -215,6 +216,7 @@ def solvePuzzles(lclPuzzlesDict, lclPuzIdxs, lclCmdLineArgs):
         lclDsrdKeys = [ puzDicKeys[    x ] for x in range(len(puzDicKeys))]
     else:
         lclDsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs]
+    #print(lclDsrdKeys)
     #input()
     ###########################################################
 
@@ -255,6 +257,7 @@ def solvePuzzles(lclPuzzlesDict, lclPuzIdxs, lclCmdLineArgs):
         val['end0s'] = numZerosAfterAllFill
         lclPuzzlesDict = updatePuzzlesDictCntrs(lclPuzzlesDict, key, fillDicOfFuncs)
         val['solution'] = solution
+        val['prunes'] = lclCmdLineArgs
         print(f'{POUND62}')
     # end for loop on all puzzles
     return lclDsrdKeys, lclPuzzlesDict
@@ -262,6 +265,21 @@ def solvePuzzles(lclPuzzlesDict, lclPuzIdxs, lclCmdLineArgs):
 
 if __name__ == '__main__':
     from puzzles import puzzlesDict
+
+    print()
+    print('  puzEsy_38 can PASS w/ :[\'0\']')
+    print('  puzMed_32 can PASS w/ :[\'0\']')
+    print('  puzHrd_29 can PASS w/ :[\'0\']')
+    print('  puzExp_23 can PASS w/ :[\'0\']')
+    print('  puzEvl_23 can PASS w/ :[\'0\']')
+    print('  puzEv2_23 can PASS w/ :[\'0\']')
+    print('  puzEv3_23 can PASS w/ :[\'nhOn\']')
+    print('  puzXW_46  can PASS w/ :[\'xwOn\']')
+    print('  puzYW_29  can PASS w/ :[\'nhOn_ywOn\', \'ppOn_ywOn\']')
+    print('  puzYW_26  can PASS w/ :[\'ywOn\']')
+    print('  puzUsr    can PASS w/ :[\'ppOn_ywOn\']')
+    print('  puzMax_21 always FAILS')
+    print()
 
     puzDicKeys = [ k for k in puzzlesDict.keys() ]
     print()
@@ -273,12 +291,32 @@ if __name__ == '__main__':
 
     ###########################################################
     with open('cfgFile.txt', encoding='utf-8') as cfgFile:
-        cmdLineArgs  = cfgFile.read().split()
+        rawCmdLineArgs  = cfgFile.read().split()
+    cmdLineArgs = [x for x in rawCmdLineArgs if not x.startswith('#')]
     ###########################################################
+    
+    pruneSet0 = set(combinations(cmdLineArgs, 0))
+    pruneSet1 = set(combinations(cmdLineArgs, 1))
+    pruneSet2 = set(combinations(cmdLineArgs, 2))
+    pruneSet3 = set(combinations(cmdLineArgs, 3))
+    pruneSet4 = set(combinations(cmdLineArgs, 4))
+    allSets = set.union(pruneSet0, pruneSet1, pruneSet2, pruneSet3, pruneSet4)
+    pp.pprint(allSets)
+    #sys.exit()
 
-    for _ in range(2):
+    characterize = True
+    #characterize = False
+
+    cumSumStr = ''
+    if characterize:
+        for args in allSets:
+            dsrdKeys, puzzlesDict = solvePuzzles(puzzlesDict, puzIdxs, args)
+            cumSumStr += pr.printResults(puzzlesDict, 'summary', dsrdKeys, args)
+        print(cumSumStr)
+    else:
         dsrdKeys, puzzlesDict = solvePuzzles(puzzlesDict, puzIdxs, cmdLineArgs)
+        pr.printResults(puzzlesDict, 'all'    , dsrdKeys, cmdLineArgs)
+        cumSumStr += pr.printResults(puzzlesDict, 'summary', dsrdKeys, cmdLineArgs)
+        print(cumSumStr)
         #pr.printCanidates(canidates)
-        pr.printResults(puzzlesDict, 'all', dsrdKeys)
-        pr.printResults(puzzlesDict, 'summary', dsrdKeys)
-        time.sleep(5)
+

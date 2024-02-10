@@ -40,18 +40,24 @@ def prettyPrint3DArray(array):
     print()
 #############################################################################
 
-def printResults(puzzlesDict, prnType, dsrdKeys):
+def printResults(puzzlesDict, prnType, dsrdKeys, lclArgs):
     print()
+
+    cumSumStr = ''
     for key in puzzlesDict:
 
         if key not in dsrdKeys:
             continue
 
-        print(' puzzle {:9} (numZeros = {:2}). {}.'.\
-            format( key, puzzlesDict[key]['end0s'],
-                'FAIL' if puzzlesDict[key]['end0s'] else 'PASS') )
+        sumStr = ' puzzle {:9} (numZeros = {:2}). {} (args = {}).\n'.\
+                   format( key, puzzlesDict[key]['end0s'],
+                   'FAIL' if puzzlesDict[key]['end0s'] else 'PASS',
+                   puzzlesDict[key]['prunes'] )
+        cumSumStr += sumStr
 
         if prnType == 'all':
+            print(sumStr)
+
             print()
             for ii in range(len(puzzlesDict[key]['puzzle'])):
                 print( '',puzzlesDict[key]['puzzle'  ][ii], '  ',
@@ -79,4 +85,8 @@ def printResults(puzzlesDict, prnType, dsrdKeys):
                 format(puzzlesDict[key]['sC'], puzzlesDict[key]['sR']))
 
             print(62*'*')
+    if prnType == 'all':
+        return sumStr
+    else:
+        return cumSumStr
 #############################################################################
