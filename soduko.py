@@ -68,7 +68,7 @@ def pruneNht(lclCanidates, clArgs):
     hiddenNakedLst = [ 'hidden', 'naked' ]
     houseLst       = [ 'row','col','sqr' ]
     tupSizeLst     = [4,3,2]
-    #tupSizeLst     = [3,2]
+
     totNumPruned   = 0
 
     for hideNkd in hiddenNakedLst:
@@ -82,7 +82,6 @@ def pruneNht(lclCanidates, clArgs):
                 if numPruned:
                     print(f'    Prunned {numPruned:2} RE: {hideNkd:6} {tupSize}-tuples in {house}s')
 
-    #exit()
     return totNumPruned, lclCanidates
 #############################################################################
 
@@ -305,7 +304,7 @@ if __name__ == '__main__':
     #sys.exit()
 
     characterize = True
-    #characterize = False
+    characterize = False
 
     cumSumStr = ''
     if characterize:

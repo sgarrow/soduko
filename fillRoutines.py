@@ -73,6 +73,7 @@ def fillViaRowHistAnal(solution, canidates):
 def fillViaColHistAnal(solution, canidates):
     print('\n  Filling solution cells thru Col Hist Analysis')
     numFilled = 0
+    #pr.printCanidates(canidates)
     xPos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
 
     for cIdx,col in enumerate(xPos):
@@ -80,6 +81,7 @@ def fillViaColHistAnal(solution, canidates):
         flatCol = flatten(col)
         histCol = genHistogram(flatCol)
         binsHeightOne = [ x[0] for x in histCol if x[1] == 1 and x[0] != 0]
+        #print('  ',histCol)
 
         if len(binsHeightOne) > 0:
             valOfBinHeight1 = binsHeightOne[0]
@@ -99,6 +101,7 @@ def fillViaColHistAnal(solution, canidates):
 def fillViaSqrHistAnal(solution, canidates):
     print('\n  Filling solution cells thru Sqr Hist Analysis')
     numFilled = 0
+    #pr.printCanidates(canidates)
     squareNums = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]]
 
     for squareNum in squareNums:
@@ -111,6 +114,7 @@ def fillViaSqrHistAnal(solution, canidates):
         flatSq = flatten(canidatesSq)
         histSq = genHistogram(flatSq)
         binsHeightOne = [ x[0] for x in histSq if x[1] == 1 and x[0] != 0]
+        #print('  ',histSq)
 
         if len(binsHeightOne) > 0:
             valOfBinHeight1 = binsHeightOne[0]
