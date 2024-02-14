@@ -3,7 +3,7 @@ import copy
 from itertools import combinations
 import pprint        as pp
 import fillRoutines  as fr
-#import printRoutines as pr
+import printRoutines as pr
 import mapping       as mp
 
 
@@ -60,6 +60,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
                 if 'nhtPrn' in clArgs:
                     myDstr = pp.pformat(myD)
                     print('   Hidden ({}) \n      {}'.format(house, myDstr))
+                    #pr.printCanidates(canidates)
 
                 for tripIdx in myD['tripIdxs']:
                     temp  = [ x for x in rOrCOrS[tripIdx] if x in myD['tripVals'] ]
@@ -78,6 +79,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
                 if 'nhtPrn' in clArgs:
                     myDstr = pp.pformat(myD)
                     print('   Naked ({}) \n      {}'.format(house, myDstr))
+                    #pr.printCanidates(canidates)
 
                 temp  = [ list(x) if kk in myD['tripIdxs'] else \
                           list(x-myD['tripVals']) for kk,x in enumerate(rOrCOrS) ]
@@ -140,7 +142,7 @@ def pruneXwings(canidates, house, clArgs):
             k += 1
     #pp.pprint(xWingD)
 
-    didRemove = False
+    didPrint = False
     for xWing in xWingD.values():
         for rIdx,row in enumerate(xCanidates):
             for cIdx in xWing['B_cols']:
@@ -149,10 +151,10 @@ def pruneXwings(canidates, house, clArgs):
                     (xWing['C_val'] in row[cIdx]):
                     xCanidates[rIdx][cIdx].remove(xWing['C_val'])
 
-                    if not didRemove and 'xwPrn' in clArgs:
-                        #pr.printCanidates(xCanidates)
-                        #pp.pprint(xWingD)
-                        didRemove = True
+                    if not didPrint and 'xwPrn' in clArgs:
+                        pr.printCanidates(xCanidates)
+                        pp.pprint(xWingD)
+                        didPrint = True
                     if 'xwPrn' in clArgs:
                         print('   ', xWing)
                         print('      remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))
@@ -256,6 +258,8 @@ def prunePointingPairs(canidates, house, clArgs):
                     myStr = pp.pformat(el)
                     print('    ',myStr)
                 print()
+        pr.printCanidates(canidates)
+
     ####################################################################################
 
     # perform associated removals Note only one of the 2 dicts looped through below will
@@ -406,7 +410,7 @@ def pruneyWings (lclCanidates, clArgs):
             yWingDict2[k]['Z']      = Z       # Val to del.
             yWingDict2[k]['rmvIdx'] = rmvIdx  # Where to del from.
 
-    #pr.prettyPrint3DArray(lclCanidates)
+    #pr.printCanidates(lclCanidates)
     #prYWingDict(yWingDict2)
     didRemove = False
     for k,v in yWingDict2.items():
