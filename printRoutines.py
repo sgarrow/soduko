@@ -49,9 +49,8 @@ def printResults(puzzlesDict, prnType, dsrdKeys, lclArgs):
         if key not in dsrdKeys:
             continue
 
-        sumStr = ' puzzle {:9} (numZeros = {:2}). {} (args = {}).\n'.\
-                   format( key, puzzlesDict[key]['end0s'],
-                   'FAIL' if puzzlesDict[key]['end0s'] else 'PASS',
+        sumStr = ' {:9} {} {}\n'.\
+                   format( key,'FAIL' if puzzlesDict[key]['end0s'] else 'PASS',
                    puzzlesDict[key]['prunes'] )
         cumSumStr += sumStr
 

@@ -8,6 +8,7 @@ import printRoutines as pr
 import mapping       as mp
 import fillRoutines  as fr
 import pruneRoutines as rr
+import ana           as an
 
 NEWLINE = '\n'
 STARS44 = 44*'*'
@@ -318,6 +319,9 @@ if __name__ == '__main__':
             dsrdKeys, puzzlesDict = solvePuzzles(puzzlesDict, puzIdxs, args)
             cumSumStr += pr.printResults(puzzlesDict, 'summary', dsrdKeys, args)
         print(cumSumStr)
+        with open('pData.txt', 'w', encoding='utf-8') as pFile:
+            pFile.write(cumSumStr)
+        an.analyze()
     else:
         dsrdKeys, puzzlesDict = solvePuzzles(puzzlesDict, puzIdxs, cmdLineArgs)
         pr.printResults(puzzlesDict, 'all'    , dsrdKeys, cmdLineArgs)
