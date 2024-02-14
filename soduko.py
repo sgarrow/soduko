@@ -65,9 +65,15 @@ def updatePuzzlesDictCntrs(lclPuzzlesDict,lclKey, lclfillDicOfFuncs):
 #############################################################################
 
 def pruneNht(lclCanidates, clArgs):
+
     hiddenNakedLst = [ 'hidden', 'naked' ]
+    #hiddenNakedLst = [ 'hidden']
+
     houseLst       = [ 'row','col','sqr' ]
+    #houseLst       = [ 'row' ]
+
     tupSizeLst     = [4,3,2]
+    #tupSizeLst     = [3]
 
     totNumPruned   = 0
 

@@ -407,8 +407,8 @@ def pruneyWings (lclCanidates, clArgs):
             yWingDict2[k]['rmvIdx'] = rmvIdx  # Where to del from.
 
     #pr.prettyPrint3DArray(lclCanidates)
+    #prYWingDict(yWingDict2)
     didRemove = False
-    prYWingDict(yWingDict2)
     for k,v in yWingDict2.items():
         for cord in v['rmvIdx']:
             if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
