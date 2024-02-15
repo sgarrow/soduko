@@ -15,10 +15,6 @@ def analyze():
         prn  = '_'.join(x for x in sorted(prn2))
         if prn == '': prn = '0'
 
-        #print(puz)
-        #print(sts)
-        #print(prn)
-
         if puz not in mainD:
             mainD[puz] = { sts:[prn] }
         else:

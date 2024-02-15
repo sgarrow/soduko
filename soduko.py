@@ -9,6 +9,7 @@ import mapping       as mp
 import fillRoutines  as fr
 import pruneRoutines as rr
 import ana           as an
+import fillRoutines  as fr
 
 NEWLINE = '\n'
 STARS44 = 44*'*'
@@ -266,26 +267,38 @@ def solvePuzzles(lclPuzzlesDict, lclPuzIdxs, lclCmdLineArgs):
         val['prunes'] = lclCmdLineArgs
         print(f'{POUND62}')
     # end for loop on all puzzles
+    #pr.printCanidates(canidates)
+    #print()
+    #allRowHist = []
+    #for row in canidates:
+    #    flatRow = fr.flatten(row)
+    #    histRow = fr.genHistogram(flatRow)
+    #    allRowHist.append([ x for x in histRow ])
+    #pp.pprint(allRowHist)
+    #print()
+    #
+    #sortedHist = []
+    #for hist in allRowHist:
+    #    sortedHist.append(sorted(hist, key=lambda x:x[1]))
+    #pp.pprint( sortedHist )
+    #print()
+    #[ print(x[-1]) for x in sortedHist ]
+    #
+    ##singleRow = []
+    #for row in canidates:
+    #    singleRow.extend(fr.flatten(row))
+    #singleHist = fr.genHistogram(singleRow)
+    ##print(singleRow)
+    #print(singleHist)
+
+
+
+
     return lclDsrdKeys, lclPuzzlesDict
 #############################################################################
 
 if __name__ == '__main__':
     from puzzles import puzzlesDict
-
-    print()
-    print('  puzEsy_38 can PASS w/ :[\'0\']')
-    print('  puzMed_32 can PASS w/ :[\'0\']')
-    print('  puzHrd_29 can PASS w/ :[\'0\']')
-    print('  puzExp_23 can PASS w/ :[\'0\']')
-    print('  puzEvl_23 can PASS w/ :[\'0\']')
-    print('  puzEv2_23 can PASS w/ :[\'0\']')
-    print('  puzEv3_23 can PASS w/ :[\'nhOn\']')
-    print('  puzXW_46  can PASS w/ :[\'xwOn\']')
-    print('  puzYW_26  can PASS w/ :[\'ywOn\']')
-    print('  puzYW_29  can PASS w/ :[\'nhOn_ywOn\', \'ppOn_ywOn\']')
-    print('  puzUsr    can PASS w/ :[\'ppOn_ywOn\']')
-    print('  puzMax_21 always FAILS')
-    print()
 
     puzDicKeys = [ k for k in puzzlesDict.keys() ]
     print()
@@ -307,11 +320,9 @@ if __name__ == '__main__':
     pruneSet3 = set(combinations(cmdLineArgs, 3))
     pruneSet4 = set(combinations(cmdLineArgs, 4))
     allSets = set.union(pruneSet0, pruneSet1, pruneSet2, pruneSet3, pruneSet4)
-    pp.pprint(allSets)
-    #sys.exit()
 
     characterize = True
-    characterize = False
+    #characterize = False
 
     cumSumStr = ''
     if characterize:
@@ -327,5 +338,4 @@ if __name__ == '__main__':
         pr.printResults(puzzlesDict, 'all'    , dsrdKeys, cmdLineArgs)
         cumSumStr += pr.printResults(puzzlesDict, 'summary', dsrdKeys, cmdLineArgs)
         print(cumSumStr)
-        #pr.printCanidates(canidates)
 
