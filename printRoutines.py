@@ -1,12 +1,16 @@
-def printCanidates(canidates):
-    print('   c0  c1  c2   c3  c4  c5   c6  c7  c8  ')
+def printCanidates(canidates,alreadyPrn = False):
+
+    if alreadyPrn:
+        return
+
+    print('     c0  c1  c2   c3  c4  c5   c6  c7  c8  ')
     for rIdx,row in enumerate(canidates):     # for each row
-        print('++---+---+---++---+---+---++---+---+---++')
+        print('  ++---+---+---++---+---+---++---+---+---++')
         numPrintedThisRow = False
         for ii in range(3):   # print 3 lines.
 
             numPrintedThisLine = False
-            lineToPrn = ''
+            lineToPrn = '  '
             thingsToPrint = list(range( ii*3+1, ii*3+4 )) # 1,2,3; 4,5,6; 7,8,9
             #print(thingsToPrint)
             lineToPrn += '|'
@@ -30,7 +34,7 @@ def printCanidates(canidates):
                 print(lineToPrn)
 
         if (rIdx+1)%3 ==0:
-            print('++---+---+---++---+---+---++---+---+---++')
+            print('  ++---+---+---++---+---+---++---+---+---++')
 ############################################################################
 def prettyPrint3DArray(array):
     print()

@@ -126,7 +126,7 @@ def prunePp(lclCanidates, clArgs):
         totNumPruned += numPruned
 
         if numPruned:
-            print(f'    Prunned {numPruned:2} lclCanidates RE: Pointing Pairs in rows')
+            print(f'    Prunned {numPruned:2} lclCanidates RE: Pointing Pairs in {house}')
 
     return totNumPruned, lclCanidates
 #############################################################################
@@ -322,7 +322,7 @@ if __name__ == '__main__':
     allSets = set.union(pruneSet0, pruneSet1, pruneSet2, pruneSet3, pruneSet4)
 
     characterize = True
-    #characterize = False
+    characterize = False
 
     cumSumStr = ''
     if characterize:
@@ -335,7 +335,7 @@ if __name__ == '__main__':
         an.analyze()
     else:
         dsrdKeys, puzzlesDict = solvePuzzles(puzzlesDict, puzIdxs, cmdLineArgs)
-        pr.printResults(puzzlesDict, 'all'    , dsrdKeys, cmdLineArgs)
+        pr.printResults(puzzlesDict, 'all', dsrdKeys, cmdLineArgs)
         cumSumStr += pr.printResults(puzzlesDict, 'summary', dsrdKeys, cmdLineArgs)
         print(cumSumStr)
 
