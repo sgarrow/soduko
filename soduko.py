@@ -322,7 +322,7 @@ if __name__ == '__main__':
     allSets = set.union(pruneSet0, pruneSet1, pruneSet2, pruneSet3, pruneSet4)
 
     characterize = True
-    characterize = False
+    #characterize = False
 
     cumSumStr = ''
     if characterize:
