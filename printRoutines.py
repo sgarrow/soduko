@@ -44,52 +44,33 @@ def prettyPrint3DArray(array):
     print()
 #############################################################################
 
-def printResults(puzzlesDict, prnType, dsrdKeys, lclArgs):
-    print()
+def printResults(pNme, apDict):
 
-    cumSumStr = ''
-    for key in puzzlesDict:
+    sumStr = ''
+    allStr = ''
 
-        if key not in dsrdKeys:
-            continue
+    pf      = 'FAIL' if apDict['end0s'] else 'PASS'
+    sumStr += ' {:9} {} {}\n'.format( pNme, pf, apDict['prunes'] )
 
-        sumStr = ' {:9} {} {}\n'.\
-                   format( key,'FAIL' if puzzlesDict[key]['end0s'] else 'PASS',
-                   puzzlesDict[key]['prunes'] )
-        cumSumStr += sumStr
+    allStr = '\n' + sumStr[:] + '\n'
+    for ii in range(len(apDict['puzzle'])):
+        allStr += ' {}   {}\n'.format(apDict['puzzle'][ii], apDict['solution'][ii])
+    allStr += '\n'
 
-        if prnType == 'all':
-            print(sumStr)
+    allStr += ' Start: filled-in + not-filled-in = {:2d}+{:2d} = {:2d}.\n'.\
+              format( 81-apDict['start0s'],  apDict['start0s'],
+                      81-apDict['start0s'] + apDict['start0s'] )
 
-            print()
-            for ii in range(len(puzzlesDict[key]['puzzle'])):
-                print( '',puzzlesDict[key]['puzzle'  ][ii], '  ',
-                       puzzlesDict[key]['solution'][ii]  )
-            print()
+    allStr += ' End:   filled-in + not-filled-in = {:2d}+{:2d} = {:2d}.\n\n'.\
+              format( 81-apDict['end0s'],    apDict['end0s'],
+                      81-apDict['end0s'] +   apDict['end0s']   )
 
-            print( ' Starting: filled-in + not-filled-in = {:2d}+{:2d} = {:2d}.'.\
-                format( 81-puzzlesDict[key]['start0s'],  puzzlesDict[key]['start0s'],
-                        81-puzzlesDict[key]['start0s'] + puzzlesDict[key]['start0s'] ))
+    allStr += ' fillOneCan  calls,fills = {:2d}, {:2d}.\n'.format(apDict['oC'], apDict['oR'])
+    allStr += ' fillRowHist calls,fills = {:2d}, {:2d}.\n'.format(apDict['rC'], apDict['rR'])
+    allStr += ' fillColHist calls,fills = {:2d}, {:2d}.\n'.format(apDict['cC'], apDict['cR'])
+    allStr += ' fillSqrHist calls,fills = {:2d}, {:2d}.\n'.format(apDict['sC'], apDict['sR'])
 
-            print( ' Ending:   filled-in + not-filled-in = {:2d}+{:2d} = {:2d}.'.\
-                format( 81-puzzlesDict[key]['end0s'],  puzzlesDict[key]['end0s'],
-                        81-puzzlesDict[key]['end0s'] + puzzlesDict[key]['end0s'] ))
+    allStr += 62*'*' + '\n'
 
-            print( ' fillViaOneCanidate calls,replacements  = {:2d}, {:2d}.'.\
-                format(puzzlesDict[key]['oC'], puzzlesDict[key]['oR']))
-
-            print( ' fillViaRowHistAnal calls,replacements  = {:2d}, {:2d}.'.\
-                format(puzzlesDict[key]['rC'], puzzlesDict[key]['rR']))
-
-            print( ' fillViaColHistAnal calls,replacements  = {:2d}, {:2d}.'.\
-                format(puzzlesDict[key]['cC'], puzzlesDict[key]['cR']))
-
-            print( ' fillViaSqrHistAnal calls,replacements  = {:2d}, {:2d}.'.\
-                format(puzzlesDict[key]['sC'], puzzlesDict[key]['sR']))
-
-            print(62*'*')
-    if prnType == 'all':
-        return sumStr
-    else:
-        return cumSumStr
+    return allStr, sumStr
 #############################################################################

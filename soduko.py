@@ -54,18 +54,6 @@ def updateCanidatesList(lclSolution,lclCanidates):
     return lclCanidates
 #############################################################################
 
-def updatePuzzlesDictCntrs(lclPuzzlesDict,lclKey, lclfillDicOfFuncs):
-    lclPuzzlesDict[lclKey]['oC'] = lclfillDicOfFuncs['one']['calls'  ]
-    lclPuzzlesDict[lclKey]['oR'] = lclfillDicOfFuncs['one']['replace']
-    lclPuzzlesDict[lclKey]['rC'] = lclfillDicOfFuncs['row']['calls'  ]
-    lclPuzzlesDict[lclKey]['rR'] = lclfillDicOfFuncs['row']['replace']
-    lclPuzzlesDict[lclKey]['cC'] = lclfillDicOfFuncs['col']['calls'  ]
-    lclPuzzlesDict[lclKey]['cR'] = lclfillDicOfFuncs['col']['replace']
-    lclPuzzlesDict[lclKey]['sC'] = lclfillDicOfFuncs['sqr']['calls'  ]
-    lclPuzzlesDict[lclKey]['sR'] = lclfillDicOfFuncs['sqr']['replace']
-    return lclPuzzlesDict
-#############################################################################
-
 def pruneNht(lclCanidates, clArgs):
 
     hiddenNakedLst = [ 'hidden', 'naked' ]
@@ -188,9 +176,9 @@ def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, clArgs ):
         totalNumFilled  += numFilled
         lclfillDicOfFuncs[theK]['calls']   += 1
         lclfillDicOfFuncs[theK]['replace'] += numFilled
-        if 'ss' in clArgs: input('Return to continue')
     print(f'{NEWLINE}  Total filled {totalNumFilled:2d} {STARS44}')
     print(62*'*')
+    if 'ss' in clArgs: input('Return to continue')
 
     return totalNumFilled, lclSolution, lclfillDicOfFuncs
 #############################################################################
@@ -202,7 +190,7 @@ def initfillDicOfFuncsCntrs(lclfillDicOfFuncs):
     return lclfillDicOfFuncs
 #############################################################################
 
-def solvePuzzles(lclPuzzlesDict, lclPuzIdxs, lclCmdLineArgs):
+def solvePuzzle(aPuzzleDict, lclCmdLineArgs):
 
     fillDicOfFuncs = {
     'one': { 'func': fr.fillViaOneCanidate, 'calls': 0, 'replace': 0 },
@@ -217,85 +205,84 @@ def solvePuzzles(lclPuzzlesDict, lclPuzIdxs, lclCmdLineArgs):
     'prune_YW' : { 'func': pruneYw,  'numPrunned': []}}
     ###########################################################
 
-    if 'q' in lclPuzIdxs:
-        sys.exit()
-    if 'a' in lclPuzIdxs:
-        lclDsrdKeys = [ puzDicKeys[    x ] for x in range(len(puzDicKeys))]
-    else:
-        lclDsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs]
-    #print(lclDsrdKeys)
-    #input()
-    ###########################################################
+    solution = [x[:] for x in aPuzzleDict['puzzle'] ]
+    aPuzzleDict['start0s'] = sum(x.count(0) for x in solution)
+    fillDicOfFuncs = initfillDicOfFuncsCntrs(fillDicOfFuncs)
 
-    for key,val in lclPuzzlesDict.items():
-        time.sleep(0.01)
-        if puzIdxs != 'a':
-            if key not in lclDsrdKeys:
-                continue
+    while True:
+        numZerosBeforeAllFill = sum(x.count(0) for x in solution)
+        if sum(x.count(0) for x in solution)==0:
+            break
+        numberFilled = 1
+        while numberFilled:
 
-        solution = [x[:] for x in val['puzzle'] ]
-        val['start0s'] = sum(x.count(0) for x in solution)
-        fillDicOfFuncs = initfillDicOfFuncsCntrs(fillDicOfFuncs)
-
-        print(f'Processing puzzle {key}')
-        while True:
-            numZerosBeforeAllFill = sum(x.count(0) for x in solution)
             if sum(x.count(0) for x in solution)==0:
                 break
-            numberFilled = 1
-            while numberFilled:
 
-                if sum(x.count(0) for x in solution)==0:
-                    break
+            canidates = [[ [] for ii in range(9)] for jj in range(9)]
+            canidates = updateCanidatesList(solution, canidates)
 
-                canidates = [[ [] for ii in range(9)] for jj in range(9)]
-                canidates = updateCanidatesList(solution, canidates)
+            pruneDicOfFuncs,canidates = \
+                pruneCanidates(lclCmdLineArgs, pruneDicOfFuncs, canidates)
+            numberFilled, solution, fillDicOfFuncs = \
+                fillSolution(solution, canidates, fillDicOfFuncs, lclCmdLineArgs)
 
-                pruneDicOfFuncs,canidates = \
-                    pruneCanidates(lclCmdLineArgs, pruneDicOfFuncs, canidates)
-                numberFilled, solution, fillDicOfFuncs = \
-                    fillSolution(solution, canidates, fillDicOfFuncs, lclCmdLineArgs)
+        numZerosAfterAllFill = sum(x.count(0) for x in solution)
+        if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
+            break
+        numZerosBeforeAllFill = numZerosAfterAllFill
+    # end while loop for this puzzle
 
-            numZerosAfterAllFill = sum(x.count(0) for x in solution)
-            if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
-                break
-            numZerosBeforeAllFill = numZerosAfterAllFill
-        # end while loop for this puzzle
-        val['end0s'] = numZerosAfterAllFill
-        lclPuzzlesDict = updatePuzzlesDictCntrs(lclPuzzlesDict, key, fillDicOfFuncs)
-        val['solution'] = solution
-        val['prunes'] = lclCmdLineArgs
-        print(f'{POUND62}')
-    # end for loop on all puzzles
-    #pr.printCanidates(canidates)
-    #print()
-    #allRowHist = []
-    #for row in canidates:
-    #    flatRow = fr.flatten(row)
-    #    histRow = fr.genHistogram(flatRow)
-    #    allRowHist.append([ x for x in histRow ])
-    #pp.pprint(allRowHist)
-    #print()
-    #
-    #sortedHist = []
-    #for hist in allRowHist:
-    #    sortedHist.append(sorted(hist, key=lambda x:x[1]))
-    #pp.pprint( sortedHist )
-    #print()
-    #[ print(x[-1]) for x in sortedHist ]
-    #
-    ##singleRow = []
-    #for row in canidates:
-    #    singleRow.extend(fr.flatten(row))
-    #singleHist = fr.genHistogram(singleRow)
-    ##print(singleRow)
-    #print(singleHist)
+    aPuzzleDict['end0s']    = numZerosAfterAllFill
+    aPuzzleDict['solution'] = solution
+    aPuzzleDict['prunes']   = lclCmdLineArgs
+    aPuzzleDict['oC']       = fillDicOfFuncs['one']['calls'  ]
+    aPuzzleDict['oR']       = fillDicOfFuncs['one']['replace']
+    aPuzzleDict['rC']       = fillDicOfFuncs['row']['calls'  ]
+    aPuzzleDict['rR']       = fillDicOfFuncs['row']['replace']
+    aPuzzleDict['cC']       = fillDicOfFuncs['col']['calls'  ]
+    aPuzzleDict['cR']       = fillDicOfFuncs['col']['replace']
+    aPuzzleDict['sC']       = fillDicOfFuncs['sqr']['calls'  ]
+    aPuzzleDict['sR']       = fillDicOfFuncs['sqr']['replace']
 
-
-
-
-    return lclDsrdKeys, lclPuzzlesDict
+    print(f'{POUND62}')
+    return aPuzzleDict
 #############################################################################
+
+
+def getGuesses(lclSolution):
+    tryDict    = {}
+    tryValsLst = []
+
+    lclCanidates = [[ [] for ii in range(9)] for jj in range(9)]
+    lclCanidates = updateCanidatesList(lclSolution, lclCanidates)
+    pr.printCanidates(lclCanidates)
+
+    lenCanR0C02 = [ 0 if lclCanidates[0][c] == 0 else len(lclCanidates[0][c]) for c in range(0,3) ]
+    lenCanR1C35 = [ 0 if lclCanidates[0][c] == 0 else len(lclCanidates[0][c]) for c in range(3,6) ]
+    lenCanR2C68 = [ 0 if lclCanidates[0][c] == 0 else len(lclCanidates[0][c]) for c in range(6,9) ]
+
+    idxOfMaxR0C02 = lenCanR0C02.index(max(lenCanR0C02))
+    idxOfMaxR1C35 = lenCanR1C35.index(max(lenCanR1C35))
+    idxOfMaxR2C68 = lenCanR2C68.index(max(lenCanR2C68))
+    
+    tryDict = { 
+        (0,0+idxOfMaxR0C02): lclCanidates[0][0+idxOfMaxR0C02],
+        (1,3+idxOfMaxR1C35): lclCanidates[1][3+idxOfMaxR1C35],
+        (2,6+idxOfMaxR2C68): lclCanidates[2][6+idxOfMaxR2C68]
+    }
+    pp.pprint(tryDict)
+
+    for g1 in tryDict[(0,0+idxOfMaxR0C02)]:
+        for g2 in tryDict[(1,3+idxOfMaxR1C35)]:
+            for g3 in tryDict[(2,6+idxOfMaxR2C68)]:
+                tryValsLst.append([g1,g2,g3])
+    pp.pprint(tryValsLst)
+
+    return tryDict, tryValsLst
+#############################################################################
+
+
 
 if __name__ == '__main__':
     from puzzles import puzzlesDict
@@ -308,12 +295,23 @@ if __name__ == '__main__':
     print( '   q - quit')
     puzIdxs = input('\n Choice -> ' ).split()
 
+    if 'q' in puzIdxs:
+        sys.exit()
+
+    if 'a' in puzIdxs:
+        dsrdKeys = [ puzDicKeys[    x ] for x in range(len(puzDicKeys))]
+    else:
+        dsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs]
+
+    #print(dsrdKeys)
+    #exit()
     ###########################################################
+
     with open('cfgFile.txt', encoding='utf-8') as cfgFile:
         rawCmdLineArgs  = cfgFile.read().split()
     cmdLineArgs = [x for x in rawCmdLineArgs if not x.startswith('#')]
     ###########################################################
-    
+
     pruneSet0 = set(combinations(cmdLineArgs, 0))
     pruneSet1 = set(combinations(cmdLineArgs, 1))
     pruneSet2 = set(combinations(cmdLineArgs, 2))
@@ -324,18 +322,36 @@ if __name__ == '__main__':
     characterize = True
     #characterize = False
 
+    guessDict = {}
+    tryLst    = []
+    cumAllStr = ''
     cumSumStr = ''
+
+    for pNme in dsrdKeys:
+        pDat = puzzlesDict[pNme]
+
+        if characterize:
+
+            for args in allSets:
+
+                puzzlesDict[pNme] = solvePuzzle(pDat, args)
+                aStr, sStr = pr.printResults(pNme, pDat)
+                cumAllStr += aStr
+                cumSumStr += sStr
+
+        else:
+
+            puzzlesDict[pNme] = solvePuzzle(pDat, cmdLineArgs)
+            aStr, sStr = pr.printResults(pNme, pDat)
+            cumAllStr += aStr
+            cumSumStr += sStr
+
+    print(cumAllStr)
+    print(cumSumStr)
+
     if characterize:
-        for args in allSets:
-            dsrdKeys, puzzlesDict = solvePuzzles(puzzlesDict, puzIdxs, args)
-            cumSumStr += pr.printResults(puzzlesDict, 'summary', dsrdKeys, args)
-        print(cumSumStr)
         with open('pData.txt', 'w', encoding='utf-8') as pFile:
             pFile.write(cumSumStr)
         an.analyze()
-    else:
-        dsrdKeys, puzzlesDict = solvePuzzles(puzzlesDict, puzIdxs, cmdLineArgs)
-        pr.printResults(puzzlesDict, 'all', dsrdKeys, cmdLineArgs)
-        cumSumStr += pr.printResults(puzzlesDict, 'summary', dsrdKeys, cmdLineArgs)
-        print(cumSumStr)
+
 
