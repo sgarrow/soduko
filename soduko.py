@@ -302,9 +302,6 @@ if __name__ == '__main__':
         dsrdKeys = [ puzDicKeys[    x ] for x in range(len(puzDicKeys))]
     else:
         dsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs]
-
-    #print(dsrdKeys)
-    #exit()
     ###########################################################
 
     with open('cfgFile.txt', encoding='utf-8') as cfgFile:
@@ -322,26 +319,19 @@ if __name__ == '__main__':
     characterize = True
     #characterize = False
 
+    if characterize: clArgs = allSets
+    else: clArgs = [cmdLineArgs]
+
     guessDict = {}
     tryLst    = []
     cumAllStr = ''
     cumSumStr = ''
+    ###########################################################
 
     for pNme in dsrdKeys:
         pDat = puzzlesDict[pNme]
-
-        if characterize:
-
-            for args in allSets:
-
-                puzzlesDict[pNme] = solvePuzzle(pDat, args)
-                aStr, sStr = pr.printResults(pNme, pDat)
-                cumAllStr += aStr
-                cumSumStr += sStr
-
-        else:
-
-            puzzlesDict[pNme] = solvePuzzle(pDat, cmdLineArgs)
+        for args in clArgs:
+            puzzlesDict[pNme] = solvePuzzle(pDat, args)
             aStr, sStr = pr.printResults(pNme, pDat)
             cumAllStr += aStr
             cumSumStr += sStr
