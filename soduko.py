@@ -1,5 +1,6 @@
 #  C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
 
+#from __future__ import print_function
 import pprint        as pp
 import sys
 import time
@@ -120,6 +121,9 @@ def prunePp(lclCanidates, clArgs):
 #############################################################################
 
 def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
+    if len(clArgs) == 0:
+        return lclPruneDicOfFuncs, lclCanidates
+
     print('\nPruning canidates list')
 
     prunedAtLeastOne   = True
@@ -256,28 +260,83 @@ def getGuesses(lclSolution):
 
     lclCanidates = [[ [] for ii in range(9)] for jj in range(9)]
     lclCanidates = updateCanidatesList(lclSolution, lclCanidates)
-    pr.printCanidates(lclCanidates)
 
-    lenCanR0C02 = [ 0 if lclCanidates[0][c] == 0 else len(lclCanidates[0][c]) for c in range(0,3) ]
-    lenCanR1C35 = [ 0 if lclCanidates[0][c] == 0 else len(lclCanidates[0][c]) for c in range(3,6) ]
-    lenCanR2C68 = [ 0 if lclCanidates[0][c] == 0 else len(lclCanidates[0][c]) for c in range(6,9) ]
+    lenCanRows = []
+    for row in lclCanidates:
+        lenCanRow = [ 0 if row[c] == 0 else len(row[c]) for c in range(0,9) ]
+        lenCanRows.append(lenCanRow)
 
-    idxOfMaxR0C02 = lenCanR0C02.index(max(lenCanR0C02))
-    idxOfMaxR1C35 = lenCanR1C35.index(max(lenCanR1C35))
-    idxOfMaxR2C68 = lenCanR2C68.index(max(lenCanR2C68))
-    
-    tryDict = { 
-        (0,0+idxOfMaxR0C02): lclCanidates[0][0+idxOfMaxR0C02],
-        (1,3+idxOfMaxR1C35): lclCanidates[1][3+idxOfMaxR1C35],
-        (2,6+idxOfMaxR2C68): lclCanidates[2][6+idxOfMaxR2C68]
-    }
-    pp.pprint(tryDict)
+    lenCanRowsBySqr = []
+    for row in lenCanRows:
+        twoD = [row[ii:ii+3] for ii in range(0,len(row),3)]
+        lenCanRowsBySqr.append(twoD)
+        
+    maxLenCanRowsBy3Cols = []
+    for row in lenCanRowsBySqr:
+        maxLenCanBySqr = [ max(el) for el in row ]
+        maxLenCanRowsBy3Cols.append(maxLenCanBySqr)
 
-    for g1 in tryDict[(0,0+idxOfMaxR0C02)]:
-        for g2 in tryDict[(1,3+idxOfMaxR1C35)]:
-            for g3 in tryDict[(2,6+idxOfMaxR2C68)]:
-                tryValsLst.append([g1,g2,g3])
-    pp.pprint(tryValsLst)
+    possibleIdxs = [ [0,1,2], [0,2,1], [1,0,2], [1,2,0], [2,0,1], [2,1,0]]
+    tryLst = []
+    for ii in range(3):
+        tryL = []
+        for idxLst in possibleIdxs:
+            tLst = [ maxLenCanRowsBy3Cols[ii*3:(ii+1)*3][0][idxLst[0]], 
+                     maxLenCanRowsBy3Cols[ii*3:(ii+1)*3][1][idxLst[1]],
+                     maxLenCanRowsBy3Cols[ii*3:(ii+1)*3][2][idxLst[2]] 
+                   ]
+            tryL.append(tLst)
+        tryLst.append(tryL)
+
+    tryLstNo0 = []
+    for el in tryLst:
+        tryLstNo0.append([ x for x in el if 0 not in x ])
+    pp.pprint(tryLstNo0)
+    print()
+
+    tryAbsCoord = []
+    for ii,rowOfSqrsTLst in enumerate(tryLstNo0):
+        for TryEl in rowOfSqrsTLst:
+            c02 = [ii*3+0, lenCanRows[ii*3+0].index(TryEl[0])]
+            c35 = [ii*3+1, lenCanRows[ii*3+1].index(TryEl[1])]
+            c68 = [ii*3+2, lenCanRows[ii*3+2].index(TryEl[2])]
+            tryAbsCoord.append([c02,c35,c68])
+
+    tryAbsCoordUniqueSqrs = []
+    for threeCoords in tryAbsCoord:
+        s1 = threeCoords[0][1]//3
+        s2 = threeCoords[1][1]//3
+        s3 = threeCoords[2][1]//3
+        sSet = set([s1,s2,s3])
+        if len(sSet) == 3:
+            tryAbsCoordUniqueSqrs.append(threeCoords)
+
+    print()
+    print('canidates')
+    #pr.printCanidates(lclCanidates)
+    #print()
+    #print('length canidates - rows')
+    #pp.pprint(lenCanRows)
+    #print()
+    #print('length canidates - sqrs')
+    #pp.pprint(lenCanRowsBySqr)
+    #print()
+    #print('max length canidates rows by 3 cols')
+    #pp.pprint(maxLenCanRowsBy3Cols)
+    #print()
+    #print('tryLst for 3 rows of squares')
+    #pp.pprint(tryLst)
+    #print()
+    #print('tryLst No zeros for 3 rows of squares')
+    #pp.pprint(tryLstNo0)
+    #print()
+    #print('tryAbsCoord')
+    #pp.pprint(tryAbsCoord)
+    #print()
+    print('tryAbsCoordUnique Squares')
+    for x in tryAbsCoordUniqueSqrs:
+        print(x)
+    print()
 
     return tryDict, tryValsLst
 #############################################################################
@@ -317,7 +376,7 @@ if __name__ == '__main__':
     allSets = set.union(pruneSet0, pruneSet1, pruneSet2, pruneSet3, pruneSet4)
 
     characterize = True
-    #characterize = False
+    characterize = False
 
     if characterize: clArgs = allSets
     else: clArgs = [cmdLineArgs]
@@ -335,6 +394,27 @@ if __name__ == '__main__':
             aStr, sStr = pr.printResults(pNme, pDat)
             cumAllStr += aStr
             cumSumStr += sStr
+
+            #if puzzlesDict[pNme]['end0s'] != 0:
+            #    print(pNme)
+            #    input()
+            #    tryDict, tryValsLst = \
+            #    getGuesses(puzzlesDict[pNme]['solution'])
+            #    #pp.pprint(tryDict)
+            #    #pp.pprint(tryValsLst)
+            #
+            #    for tVals in tryValsLst:
+            #        for ii,k in enumerate(tryDict):
+            #            puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = tVals[ii]
+            #
+            #        puzzlesDict[pNme] = solvePuzzle(pDat, args)
+            #        aStr, sStr = pr.printResults(pNme, pDat)
+            #        if puzzlesDict[pNme]['end0s'] == 0:
+            #            cumAllStr += aStr
+            #            cumSumStr += sStr
+            #    print(cumAllStr)
+            #    print(cumSumStr)
+            #    exit()
 
     print(cumAllStr)
     print(cumSumStr)
