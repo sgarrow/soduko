@@ -381,7 +381,7 @@ if __name__ == '__main__':
     if characterize: clArgs = allSets
     else: clArgs = [cmdLineArgs]
 
-    guessDict = {}
+    guessDict ={}
     tryLst    = []
     cumAllStr = ''
     cumSumStr = ''
