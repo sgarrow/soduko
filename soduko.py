@@ -4,6 +4,7 @@
 import pprint        as pp
 import sys
 import time
+import copy
 from itertools import combinations
 import printRoutines as pr
 import mapping       as mp
@@ -194,6 +195,23 @@ def initfillDicOfFuncsCntrs(lclfillDicOfFuncs):
     return lclfillDicOfFuncs
 #############################################################################
 
+def checkStatus(sln):
+    cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
+
+    cumPassed = True
+    for k,v in cpyDic.items():
+        s = v(sln)
+        pp.pprint(s)
+        for rIdx,row in enumerate(s):
+            myCnt  = [ row.count(x) for x in row ]
+            passed = not(any( x != 1 for x  in myCnt))
+            #print('house-{} idx-{} sts-{}'.format(k,rIdx,passed))
+            if not passed:
+                cumPassed = False
+        #input()
+    return cumPassed
+#############################################################################
+
 def solvePuzzle(aPuzzleDict, lclCmdLineArgs):
 
     fillDicOfFuncs = {
@@ -237,6 +255,13 @@ def solvePuzzle(aPuzzleDict, lclCmdLineArgs):
         numZerosBeforeAllFill = numZerosAfterAllFill
     # end while loop for this puzzle
 
+    if numZerosAfterAllFill != 0:
+        aPuzzleDict['passed'] = False
+    else:
+        status = checkStatus(solution)
+        aPuzzleDict['passed'] = status
+
+
     aPuzzleDict['end0s']    = numZerosAfterAllFill
     aPuzzleDict['solution'] = solution
     aPuzzleDict['prunes']   = lclCmdLineArgs
@@ -255,8 +280,6 @@ def solvePuzzle(aPuzzleDict, lclCmdLineArgs):
 
 
 def getGuesses(lclSolution):
-    tryDict    = {}
-    tryValsLst = []
 
     lclCanidates = [[ [] for ii in range(9)] for jj in range(9)]
     lclCanidates = updateCanidatesList(lclSolution, lclCanidates)
@@ -291,8 +314,8 @@ def getGuesses(lclSolution):
     tryLstNo0 = []
     for el in tryLst:
         tryLstNo0.append([ x for x in el if 0 not in x ])
-    pp.pprint(tryLstNo0)
-    print()
+    #pp.pprint(tryLstNo0)
+    #print()
 
     tryAbsCoord = []
     for ii,rowOfSqrsTLst in enumerate(tryLstNo0):
@@ -311,8 +334,22 @@ def getGuesses(lclSolution):
         if len(sSet) == 3:
             tryAbsCoordUniqueSqrs.append(threeCoords)
 
-    print()
-    print('canidates')
+    canVals  = []
+    firstTryCoord = []
+    if len(tryAbsCoordUniqueSqrs) > 0:
+        firstTryCoord = tryAbsCoordUniqueSqrs[0]
+        for coord in tryAbsCoordUniqueSqrs[0]:
+            canVals.append([ x for x in lclCanidates[coord[0] ][coord[1]]])
+
+    canValsLst = []
+    for x in canVals[0]:
+        for y in canVals[1]:
+            for z in canVals[2]:
+                canValsLst.append([x,y,z])
+
+
+    #print()
+    #print('canidates')
     #pr.printCanidates(lclCanidates)
     #print()
     #print('length canidates - rows')
@@ -333,12 +370,22 @@ def getGuesses(lclSolution):
     #print('tryAbsCoord')
     #pp.pprint(tryAbsCoord)
     #print()
-    print('tryAbsCoordUnique Squares')
-    for x in tryAbsCoordUniqueSqrs:
-        print(x)
-    print()
-
-    return tryDict, tryValsLst
+    #print('tryAbsCoordUnique Squares')
+    #for x in tryAbsCoordUniqueSqrs:
+    #    print(x)
+    #print()
+    #print('firstTryCoord')
+    #pp.pprint(firstTryCoord)
+    #print()
+    #print('canVals')
+    #pp.pprint(canVals)
+    #print()
+    #print('canValsLst')
+    #pp.pprint(canValsLst)
+    #print()
+    #
+    #input()
+    return firstTryCoord, canValsLst
 #############################################################################
 
 
@@ -395,28 +442,33 @@ if __name__ == '__main__':
             cumAllStr += aStr
             cumSumStr += sStr
 
+            if False:
             #if puzzlesDict[pNme]['end0s'] != 0:
-            #    print(pNme)
-            #    input()
-            #    tryDict, tryValsLst = \
-            #    getGuesses(puzzlesDict[pNme]['solution'])
-            #    #pp.pprint(tryDict)
-            #    #pp.pprint(tryValsLst)
-            #
-            #    for tVals in tryValsLst:
-            #        for ii,k in enumerate(tryDict):
-            #            puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = tVals[ii]
-            #
-            #        puzzlesDict[pNme] = solvePuzzle(pDat, args)
-            #        aStr, sStr = pr.printResults(pNme, pDat)
-            #        if puzzlesDict[pNme]['end0s'] == 0:
-            #            cumAllStr += aStr
-            #            cumSumStr += sStr
-            #    print(cumAllStr)
-            #    print(cumSumStr)
-            #    exit()
+                print(pNme)
+                input()
+                tryCords, tryVals = \
+                getGuesses(puzzlesDict[pNme]['solution'])
+                print('tryCords')
+                pp.pprint(tryCords)
+                print()
+                print('tryVals')
+                pp.pprint(tryVals)
+                print()
+                input()
+            
+                for tVals in tryVals:
+                    for ii,k in enumerate(tryCords):
+                        puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = tVals[ii]
+            
+                    puzzlesDict[pNme] = solvePuzzle(pDat, args)
+                    aStr, sStr = pr.printResults(pNme, pDat)
+                    cumAllStr += aStr
+                    cumSumStr += sStr
+                print(cumAllStr)
+                print(cumSumStr)
+                exit()
 
-    print(cumAllStr)
+    #print(cumAllStr)
     print(cumSumStr)
 
     if characterize:

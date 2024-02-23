@@ -49,8 +49,9 @@ def printResults(pNme, apDict):
     sumStr = ''
     allStr = ''
 
-    pf      = 'FAIL' if apDict['end0s'] else 'PASS'
-    sumStr += ' {:9} {} {}\n'.format( pNme, pf, apDict['prunes'] )
+    pf1     = 'FAIL' if apDict['end0s'] else 'PASS'
+    pf2     = 'fail' if not apDict['passed'] else 'pass'
+    sumStr += ' {:9} {} {} {}\n'.format( pNme, pf1, pf2, apDict['prunes'] )
 
     allStr = '\n' + sumStr[:] + '\n'
     for ii in range(len(apDict['puzzle'])):
