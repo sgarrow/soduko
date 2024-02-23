@@ -201,7 +201,7 @@ def checkStatus(sln):
     cumPassed = True
     for k,v in cpyDic.items():
         s = v(sln)
-        pp.pprint(s)
+        #pp.pprint(s)
         for rIdx,row in enumerate(s):
             myCnt  = [ row.count(x) for x in row ]
             passed = not(any( x != 1 for x  in myCnt))
@@ -439,22 +439,23 @@ if __name__ == '__main__':
         for args in clArgs:
             puzzlesDict[pNme] = solvePuzzle(pDat, args)
             aStr, sStr = pr.printResults(pNme, pDat)
-            cumAllStr += aStr
-            cumSumStr += sStr
+            if puzzlesDict[pNme]['passed']:
+                cumAllStr += aStr
+                cumSumStr += sStr
 
-            if False:
-            #if puzzlesDict[pNme]['end0s'] != 0:
+            #if False:
+            if puzzlesDict[pNme]['end0s'] != 0:
                 print(pNme)
-                input()
+                #input()
                 tryCords, tryVals = \
                 getGuesses(puzzlesDict[pNme]['solution'])
-                print('tryCords')
-                pp.pprint(tryCords)
-                print()
-                print('tryVals')
-                pp.pprint(tryVals)
-                print()
-                input()
+                #print('tryCords')
+                #pp.pprint(tryCords)
+                #print()
+                #print('tryVals')
+                #pp.pprint(tryVals)
+                #print()
+                #input()
             
                 for tVals in tryVals:
                     for ii,k in enumerate(tryCords):
@@ -462,13 +463,17 @@ if __name__ == '__main__':
             
                     puzzlesDict[pNme] = solvePuzzle(pDat, args)
                     aStr, sStr = pr.printResults(pNme, pDat)
-                    cumAllStr += aStr
-                    cumSumStr += sStr
-                print(cumAllStr)
-                print(cumSumStr)
-                exit()
+                    if puzzlesDict[pNme]['passed']:
+                        cumAllStr += aStr
+                        cumSumStr += sStr
 
-    #print(cumAllStr)
+                    if puzzlesDict[pNme]['passed']: break
+                #print(cumAllStr)
+                #print(cumSumStr)
+                #exit()
+
+#    input()
+    print(cumAllStr)
     print(cumSumStr)
 
     if characterize:
