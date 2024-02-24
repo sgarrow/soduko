@@ -314,39 +314,58 @@ def getGuesses(lclSolution):
     tryLstNo0 = []
     for el in tryLst:
         tryLstNo0.append([ x for x in el if 0 not in x ])
-    #pp.pprint(tryLstNo0)
-    #print()
 
-    tryAbsCoord = []
-    for ii,rowOfSqrsTLst in enumerate(tryLstNo0):
-        for TryEl in rowOfSqrsTLst:
-            c02 = [ii*3+0, lenCanRows[ii*3+0].index(TryEl[0])]
-            c35 = [ii*3+1, lenCanRows[ii*3+1].index(TryEl[1])]
-            c68 = [ii*3+2, lenCanRows[ii*3+2].index(TryEl[2])]
-            tryAbsCoord.append([c02,c35,c68])
+    numManuallyAdded = 0
+    if tryLstNo0 == [[],[],[]]:
+        print('manually adding')
+        firstTryCoord = []
+        canVals  = []
+        for rIdx,row in enumerate(lclCanidates):
+            for cIdx,possibleCanidate in enumerate(row):
+                if possibleCanidate != 0:
+                    firstTryCoord.append([rIdx,cIdx])
+                    canVals.append(possibleCanidate)
+                    numManuallyAdded += 1
+                    if numManuallyAdded == 3:
+                        break
+            if numManuallyAdded == 3:
+                break
 
-    tryAbsCoordUniqueSqrs = []
-    for threeCoords in tryAbsCoord:
-        s1 = threeCoords[0][1]//3
-        s2 = threeCoords[1][1]//3
-        s3 = threeCoords[2][1]//3
-        sSet = set([s1,s2,s3])
-        if len(sSet) == 3:
-            tryAbsCoordUniqueSqrs.append(threeCoords)
-
-    canVals  = []
-    firstTryCoord = []
-    if len(tryAbsCoordUniqueSqrs) > 0:
-        firstTryCoord = tryAbsCoordUniqueSqrs[0]
-        for coord in tryAbsCoordUniqueSqrs[0]:
-            canVals.append([ x for x in lclCanidates[coord[0] ][coord[1]]])
-
-    canValsLst = []
-    for x in canVals[0]:
-        for y in canVals[1]:
-            for z in canVals[2]:
-                canValsLst.append([x,y,z])
-
+        canValsLst = []
+        for x in canVals[0]:
+            for y in canVals[1]:
+                for z in canVals[2]:
+                    canValsLst.append([x,y,z])
+    else:
+        tryAbsCoord = []
+        for ii,rowOfSqrsTLst in enumerate(tryLstNo0):
+            for TryEl in rowOfSqrsTLst:
+                c02 = [ii*3+0, lenCanRows[ii*3+0].index(TryEl[0])]
+                c35 = [ii*3+1, lenCanRows[ii*3+1].index(TryEl[1])]
+                c68 = [ii*3+2, lenCanRows[ii*3+2].index(TryEl[2])]
+                tryAbsCoord.append([c02,c35,c68])
+    
+        tryAbsCoordUniqueSqrs = []
+        for threeCoords in tryAbsCoord:
+            s1 = threeCoords[0][1]//3
+            s2 = threeCoords[1][1]//3
+            s3 = threeCoords[2][1]//3
+            sSet = set([s1,s2,s3])
+            if len(sSet) == 3:
+                tryAbsCoordUniqueSqrs.append(threeCoords)
+    
+        canVals  = []
+        firstTryCoord = []
+        if len(tryAbsCoordUniqueSqrs) > 0:
+            firstTryCoord = tryAbsCoordUniqueSqrs[0]
+            for coord in tryAbsCoordUniqueSqrs[0]:
+                canVals.append([ x for x in lclCanidates[coord[0] ][coord[1]]])
+    
+        canValsLst = []
+        for x in canVals[0]:
+            for y in canVals[1]:
+                for z in canVals[2]:
+                    canValsLst.append([x,y,z])
 
     #print()
     #print('canidates')
@@ -367,24 +386,28 @@ def getGuesses(lclSolution):
     #print('tryLst No zeros for 3 rows of squares')
     #pp.pprint(tryLstNo0)
     #print()
-    #print('tryAbsCoord')
-    #pp.pprint(tryAbsCoord)
-    #print()
-    #print('tryAbsCoordUnique Squares')
-    #for x in tryAbsCoordUniqueSqrs:
-    #    print(x)
-    #print()
-    #print('firstTryCoord')
-    #pp.pprint(firstTryCoord)
-    #print()
-    #print('canVals')
-    #pp.pprint(canVals)
-    #print()
-    #print('canValsLst')
-    #pp.pprint(canValsLst)
-    #print()
     #
-    #input()
+    #if numManuallyAdded == 0:
+    #    print('tryAbsCoord')
+    #    pp.pprint(tryAbsCoord)
+    #    print()
+    #    print('tryAbsCoordUnique Squares')
+    #    for x in tryAbsCoordUniqueSqrs:
+    #        print(x)
+
+    print()
+    print('canVals')
+    pp.pprint(canVals)
+    print()
+    
+    print('firstTryCoord')
+    pp.pprint(firstTryCoord)
+    print()
+    print('canValsLst')
+    pp.pprint(canValsLst)
+    print()
+    
+    #exit()
     return firstTryCoord, canValsLst
 #############################################################################
 
@@ -439,23 +462,13 @@ if __name__ == '__main__':
         for args in clArgs:
             puzzlesDict[pNme] = solvePuzzle(pDat, args)
             aStr, sStr = pr.printResults(pNme, pDat)
-            if puzzlesDict[pNme]['passed']:
-                cumAllStr += aStr
-                cumSumStr += sStr
+            cumAllStr += aStr
+            cumSumStr += sStr
 
             #if False:
-            if puzzlesDict[pNme]['end0s'] != 0:
-                print(pNme)
-                #input()
+            if not puzzlesDict[pNme]['passed']:
                 tryCords, tryVals = \
                 getGuesses(puzzlesDict[pNme]['solution'])
-                #print('tryCords')
-                #pp.pprint(tryCords)
-                #print()
-                #print('tryVals')
-                #pp.pprint(tryVals)
-                #print()
-                #input()
             
                 for tVals in tryVals:
                     for ii,k in enumerate(tryCords):
@@ -463,16 +476,15 @@ if __name__ == '__main__':
             
                     puzzlesDict[pNme] = solvePuzzle(pDat, args)
                     aStr, sStr = pr.printResults(pNme, pDat)
-                    if puzzlesDict[pNme]['passed']:
-                        cumAllStr += aStr
-                        cumSumStr += sStr
+                    cumAllStr += aStr
+                    cumSumStr += sStr
 
-                    if puzzlesDict[pNme]['passed']: break
-                #print(cumAllStr)
-                #print(cumSumStr)
-                #exit()
+                    if puzzlesDict[pNme]['passed']: 
+                        for ii,k in enumerate(tryCords):
+                            puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = 0
+                        input()
+                        break
 
-#    input()
     print(cumAllStr)
     print(cumSumStr)
 
