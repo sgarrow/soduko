@@ -394,19 +394,19 @@ def getGuesses(lclSolution):
     #    print('tryAbsCoordUnique Squares')
     #    for x in tryAbsCoordUniqueSqrs:
     #        print(x)
-
-    print()
-    print('canVals')
-    pp.pprint(canVals)
-    print()
-    
-    print('firstTryCoord')
-    pp.pprint(firstTryCoord)
-    print()
-    print('canValsLst')
-    pp.pprint(canValsLst)
-    print()
-    
+    #
+    #print()
+    #print('canVals')
+    #pp.pprint(canVals)
+    #print()
+    #
+    #print('firstTryCoord')
+    #pp.pprint(firstTryCoord)
+    #print()
+    #print('canValsLst')
+    #pp.pprint(canValsLst)
+    #print()
+    #
     #exit()
     return firstTryCoord, canValsLst
 #############################################################################
@@ -415,6 +415,8 @@ def getGuesses(lclSolution):
 
 if __name__ == '__main__':
     from puzzles import puzzlesDict
+
+    startTime = time.time()
 
     puzDicKeys = [ k for k in puzzlesDict.keys() ]
     print()
@@ -448,6 +450,14 @@ if __name__ == '__main__':
     characterize = True
     characterize = False
 
+    guess = True
+    guess = False
+
+    if characterize and guess:
+        print('\n  ERROR. Can\'t characterize and guesss together.\n')
+        exit()
+
+
     if characterize: clArgs = allSets
     else: clArgs = [cmdLineArgs]
 
@@ -465,12 +475,14 @@ if __name__ == '__main__':
             cumAllStr += aStr
             cumSumStr += sStr
 
-            #if False:
-            if not puzzlesDict[pNme]['passed']:
+            if not puzzlesDict[pNme]['passed'] and guess == True:
+                print('{} guessing'.format(pNme))
+                input()
                 tryCords, tryVals = \
                 getGuesses(puzzlesDict[pNme]['solution'])
             
                 for tVals in tryVals:
+                    puzzlesDict[pNme]['guesses'] += 1
                     for ii,k in enumerate(tryCords):
                         puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = tVals[ii]
             
@@ -478,12 +490,11 @@ if __name__ == '__main__':
                     aStr, sStr = pr.printResults(pNme, pDat)
                     cumAllStr += aStr
                     cumSumStr += sStr
-
-                    if puzzlesDict[pNme]['passed']: 
-                        for ii,k in enumerate(tryCords):
-                            puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = 0
-                        input()
+                    if puzzlesDict[pNme]['passed']:
                         break
+
+                for ii,k in enumerate(tryCords):
+                    puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = 0
 
     print(cumAllStr)
     print(cumSumStr)
@@ -492,5 +503,8 @@ if __name__ == '__main__':
         with open('pData.txt', 'w', encoding='utf-8') as pFile:
             pFile.write(cumSumStr)
         an.analyze()
+
+    endTime = time.time()
+    print('{:7.2f}'.format(endTime-startTime))
 
 
