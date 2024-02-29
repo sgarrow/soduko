@@ -416,6 +416,8 @@ if __name__ == '__main__':
     from puzzles import puzzlesDict
 
     startTime = time.time()
+     cumAllStr = ''
+    cumSumStr = ''
     ###########################################################
 
     with open('cfgFile.txt', encoding='utf-8') as cfgFile:
@@ -425,16 +427,17 @@ if __name__ == '__main__':
     pruneLst = ['nhOn','xwOn','ppOn','ywOn']
     for option in options:
         if len(option) == 2:
-            if option[0] == 'nhOn'  : nhOn   = int(option[1])
-            if option[0] == 'xwOn'  : xwOn   = int(option[1]) 
-            if option[0] == 'ppOn'  : ppOn   = int(option[1]) 
-            if option[0] == 'ywOn'  : ywOn   = int(option[1]) 
-                                      
-            if option[0] == 'nhtPrn': nhtPrn = int(option[1]) 
-            if option[0] == 'xwPrn' : xwPrn  = int(option[1]) 
-            if option[0] == 'ppPrn' : ppPrn  = int(option[1]) 
-            if option[0] == 'ywPrn' : ywPrn  = int(option[1]) 
-            if option[0] == 'ss'    : ss     = int(option[1]) 
+            if option[0] == 'nhOn' : nhOn  = int(option[1])
+            if option[0] == 'xwOn' : xwOn  = int(option[1]) 
+            if option[0] == 'ppOn' : ppOn  = int(option[1]) 
+            if option[0] == 'ywOn' : ywOn  = int(option[1]) 
+                                     
+            if option[0] == 'nhPrn': nhPrn = int(option[1]) 
+            if option[0] == 'xwPrn': xwPrn = int(option[1]) 
+            if option[0] == 'ppPrn': ppPrn = int(option[1]) 
+            if option[0] == 'ywPrn': ywPrn = int(option[1]) 
+
+            if option[0] == 'ss'   : ss    = int(option[1]) 
 
     if not nhOn: pruneLst.remove('nhOn')
     if not xwOn: pruneLst.remove('xwOn')
@@ -447,6 +450,13 @@ if __name__ == '__main__':
     pruneSet3 = set(combinations(pruneLst, 3))
     pruneSet4 = set(combinations(pruneLst, 4))
     allSets   = set.union(pruneSet0,pruneSet1,pruneSet2,pruneSet3,pruneSet4)
+
+    prnDic['nhPrn'] = nhPrn
+    prnDic['xwPrn'] = xwPrn
+    prnDic['ppPrn'] = ppPrn
+    prnDic['ywPrn'] = ywPrn
+    pp.pprint(prnDic)
+    input()
     ###########################################################
 
     puzDicKeys = [ k for k in puzzlesDict.keys() ]
@@ -478,9 +488,6 @@ if __name__ == '__main__':
 
     if characterize: clArgs = allSets
     else: clArgs = [pruneLst]
-
-    cumAllStr = ''
-    cumSumStr = ''
     ###########################################################
 
     for pNme in dsrdKeys:

@@ -57,7 +57,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
 
             if hIsHidden and hiddenOrNaked == 'hidden':
                 myD = {'row': idx, 'tripVals': lstHmG, 'tripIdxs': comIdx }
-                if 'nhtPrn' in clArgs:
+                if 'nhPrn' in clArgs:
                     myDstr = pp.pformat(myD)
                     print('   Hidden ({}) \n      {}'.format(house, myDstr))
 
@@ -67,7 +67,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
                     diff  = set(rOrCOrS[tripIdx]) - set.intersection( rOrCOrS[tripIdx], set(temp) )
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        if 'nhtPrn' in clArgs:
+                        if 'nhPrn' in clArgs:
                             pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
                             alreadyPrinted = True
                             print( '      remove {} from ({},{})'.format(diff,myD['row'],tripIdx))
@@ -77,7 +77,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
 
             if hIsNaked and hiddenOrNaked == 'naked':
                 myD   = {'row': idx, 'tripVals': setH, 'tripIdxs': comIdx }
-                if 'nhtPrn' in clArgs:
+                if 'nhPrn' in clArgs:
                     myDstr = pp.pformat(myD)
                     print('   Naked ({}) \n      {}'.format(house, myDstr))
 
@@ -90,7 +90,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
                     diff  = elem - set.intersection( elem, set(temp[idx]) )
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        if 'nhtPrn' in clArgs:
+                        if 'nhPrn' in clArgs:
                             pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
                             alreadyPrinted = True
                             print( '      remove {} from ({},{})'.format(diff,  myD['row'], idx) )
