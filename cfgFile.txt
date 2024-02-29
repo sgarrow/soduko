@@ -1,12 +1,12 @@
-nhOn
-xwOn
-ppOn
-ywOn
+nhOn    0
+xwOn    0
+ppOn    0
+ywOn    0
 
-#nhtPrn
-#xwPrn
-#ppPrn
-#ywPrn
-#ss
+nhtPrn  0
+xwPrn   0
+ppPrn   0
+ywPrn   0
+ss      0
 
 

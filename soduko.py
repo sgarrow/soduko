@@ -1,6 +1,5 @@
 #  C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
 
-#from __future__ import print_function
 import pprint        as pp
 import sys
 import time
@@ -417,6 +416,38 @@ if __name__ == '__main__':
     from puzzles import puzzlesDict
 
     startTime = time.time()
+    ###########################################################
+
+    with open('cfgFile.txt', encoding='utf-8') as cfgFile:
+        rawOptions = cfgFile.readlines()
+    options = [ x.split() for x in rawOptions ]
+
+    pruneLst = ['nhOn','xwOn','ppOn','ywOn']
+    for option in options:
+        if len(option) == 2:
+            if option[0] == 'nhOn'  : nhOn   = int(option[1])
+            if option[0] == 'xwOn'  : xwOn   = int(option[1]) 
+            if option[0] == 'ppOn'  : ppOn   = int(option[1]) 
+            if option[0] == 'ywOn'  : ywOn   = int(option[1]) 
+                                      
+            if option[0] == 'nhtPrn': nhtPrn = int(option[1]) 
+            if option[0] == 'xwPrn' : xwPrn  = int(option[1]) 
+            if option[0] == 'ppPrn' : ppPrn  = int(option[1]) 
+            if option[0] == 'ywPrn' : ywPrn  = int(option[1]) 
+            if option[0] == 'ss'    : ss     = int(option[1]) 
+
+    if not nhOn: pruneLst.remove('nhOn')
+    if not xwOn: pruneLst.remove('xwOn')
+    if not ppOn: pruneLst.remove('ppOn')
+    if not ywOn: pruneLst.remove('ywOn')
+
+    pruneSet0 = set(combinations(pruneLst, 0))
+    pruneSet1 = set(combinations(pruneLst, 1))
+    pruneSet2 = set(combinations(pruneLst, 2))
+    pruneSet3 = set(combinations(pruneLst, 3))
+    pruneSet4 = set(combinations(pruneLst, 4))
+    allSets   = set.union(pruneSet0,pruneSet1,pruneSet2,pruneSet3,pruneSet4)
+    ###########################################################
 
     puzDicKeys = [ k for k in puzzlesDict.keys() ]
     print()
@@ -435,34 +466,19 @@ if __name__ == '__main__':
         dsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs]
     ###########################################################
 
-    with open('cfgFile.txt', encoding='utf-8') as cfgFile:
-        rawCmdLineArgs  = cfgFile.read().split()
-    cmdLineArgs = [x for x in rawCmdLineArgs if not x.startswith('#')]
-    ###########################################################
-
-    pruneSet0 = set(combinations(cmdLineArgs, 0))
-    pruneSet1 = set(combinations(cmdLineArgs, 1))
-    pruneSet2 = set(combinations(cmdLineArgs, 2))
-    pruneSet3 = set(combinations(cmdLineArgs, 3))
-    pruneSet4 = set(combinations(cmdLineArgs, 4))
-    allSets = set.union(pruneSet0, pruneSet1, pruneSet2, pruneSet3, pruneSet4)
-
     characterize = True
     characterize = False
 
     guess = True
-    guess = False
+    #guess = False
 
     if characterize and guess:
         print('\n  ERROR. Can\'t characterize and guesss together.\n')
         exit()
 
-
     if characterize: clArgs = allSets
-    else: clArgs = [cmdLineArgs]
+    else: clArgs = [pruneLst]
 
-    guessDict ={}
-    tryLst    = []
     cumAllStr = ''
     cumSumStr = ''
     ###########################################################
@@ -505,6 +521,6 @@ if __name__ == '__main__':
         an.analyze()
 
     endTime = time.time()
-    print('{:7.2f}'.format(endTime-startTime))
+    print('Execution time = {:7.2f} seconds.'.format(endTime-startTime))
 
 
