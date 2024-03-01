@@ -13,7 +13,6 @@ import ana           as an
 import fillRoutines  as fr
 
 NEWLINE = '\n'
-STARS44 = 44*'*'
 POUND62 = 62*'#'
 #############################################################################
 
@@ -76,7 +75,7 @@ def pruneNht(lclCanidates, lclPrintDic):
                 rr.pruneNakedAndHiddenTuples(lclCanidates, house, hideNkd, tupSize, lclPrintDic)
                 totNumPruned += numPruned
 
-                if numPruned:
+                if lclPrintDic['nhPrn'] > 0 and numPruned > 0:
                     print(f'    Prunned {numPruned:2} RE: {hideNkd:6} {tupSize}-tuples in {house}s')
 
     return totNumPruned, lclCanidates
@@ -89,7 +88,7 @@ def pruneXw(lclCanidates, lclPrintDic):
         numPruned, lclCanidates = rr.pruneXwings(lclCanidates, house, lclPrintDic)
         totNumPruned += numPruned
 
-        if numPruned:
+        if lclPrintDic['xwPrn'] > 0 and numPruned > 0:
             print(f'    Prunned {numPruned:2} lclCanidates RE: X-Wings in {house}s')
 
     return totNumPruned, lclCanidates
@@ -100,7 +99,7 @@ def pruneYw(lclCanidates, lclPrintDic):
     numPruned, lclCanidates = rr.pruneyWings(lclCanidates, lclPrintDic)
     totNumPruned += numPruned
 
-    if numPruned:
+    if lclPrintDic['ywPrn'] > 0 and numPruned > 0:
         print(f'    Prunned {numPruned:2} lclCanidates RE: Y-Wings.')
 
     return totNumPruned, lclCanidates
@@ -114,7 +113,7 @@ def prunePp(lclCanidates, lclPrintDic):
         numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates, house, lclPrintDic)
         totNumPruned += numPruned
 
-        if numPruned:
+        if lclPrintDic['ppPrn'] > 0 and numPruned > 0:
             print(f'    Prunned {numPruned:2} lclCanidates RE: Pointing Pairs in {house}')
 
     return totNumPruned, lclCanidates
@@ -171,18 +170,19 @@ def pruneCanidates(lclCanidates, lclPruneSet, lclPruneDicOfFuncs, lclPrintDic):
     return lclPruneDicOfFuncs, lclCanidates
 #############################################################################
 
-def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, clArgs ):
+def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, lclPrintDic):
     totalNumFilled = 0
 
     print('\nFilling in solution cells')
     for theK in lclfillDicOfFuncs:
-        numFilled, lclSolution = lclfillDicOfFuncs[theK]['func'](lclSolution,lclCanidates)
+        numFilled, lclSolution = lclfillDicOfFuncs[theK]['func'](lclSolution,lclCanidates,lclPrintDic)
         totalNumFilled  += numFilled
         lclfillDicOfFuncs[theK]['calls']   += 1
         lclfillDicOfFuncs[theK]['replace'] += numFilled
-    print(f'{NEWLINE}  Total filled {totalNumFilled:2d} {STARS44}')
+        if sum(x.count(0) for x in lclSolution)==0: break
+    print(f'{NEWLINE}  Total filled {totalNumFilled:2d}')
     print(62*'*')
-    if 'ss' in clArgs: input('Return to continue')
+    #if 'ss' in clArgs: input('Return to continue')
 
     return totalNumFilled, lclSolution, lclfillDicOfFuncs
 #############################################################################
@@ -246,7 +246,7 @@ def solvePuzzle(lclPuzzleDict, lclPruneSet, lclPrintDic):
             pruneDicOfFuncs,canidates = \
                 pruneCanidates(canidates, lclPruneSet, pruneDicOfFuncs, lclPrintDic )
             numberFilled, solution, fillDicOfFuncs = \
-                fillSolution(solution, canidates, fillDicOfFuncs, lclPruneSet)
+                fillSolution(solution, canidates, fillDicOfFuncs, lclPrintDic)
 
         numZerosAfterAllFill = sum(x.count(0) for x in solution)
         if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
@@ -434,6 +434,7 @@ if __name__ == '__main__':
             if option[0] == 'xwPrn': printDic['xwPrn'] = int(option[1]) 
             if option[0] == 'ppPrn': printDic['ppPrn'] = int(option[1]) 
             if option[0] == 'ywPrn': printDic['ywPrn'] = int(option[1]) 
+            if option[0] == 'flPrn': printDic['flPrn'] = int(option[1]) 
 
             if option[0] == 'ss': ss = int(option[1]) 
 
@@ -442,8 +443,9 @@ if __name__ == '__main__':
     for ii in range(0,len(pruneLst)+1):
         allSets = set.union(allSets,set(combinations(pruneLst, ii)))
 
-    ppLst = [allSets,pruneDic,pruneLst,printDic]
+    #ppLst = [allSets,pruneDic,pruneLst,printDic]
     #[pp.pprint(x) for x in ppLst]
+    #exit()
     ###########################################################
 
     puzDicKeys = [ k for k in puzzlesDict.keys() ]
@@ -467,7 +469,7 @@ if __name__ == '__main__':
     characterize = False
 
     guess = True
-    #guess = False
+    guess = False
 
     if characterize and guess:
         print('\n  ERROR. Can\'t characterize and guesss together.\n')
@@ -489,7 +491,7 @@ if __name__ == '__main__':
 
             if not puzzlesDict[pNme]['passed'] and guess == True:
                 print('{} guessing'.format(pNme))
-                input()
+                #input()
                 tryCords, tryVals = \
                 getGuesses(puzzlesDict[pNme]['solution'])
             

@@ -23,7 +23,7 @@ def genHistogram(inLst):
     return hist
 #############################################################################
 
-def fillViaOneCanidate(solution, canidates):
+def fillViaOneCanidate(solution, canidates, lclPrintDic):
     print('\n  Filling solution cells that have only 1 canidate')
     numFilled = 0
     #pr.printCanidates(canidates)
@@ -31,19 +31,20 @@ def fillViaOneCanidate(solution, canidates):
         for cIdx in range(len(row)):
             if canidates[rIdx][cIdx] != 0 and len(canidates[rIdx][cIdx]) == 1:
                 if solution[rIdx][cIdx] == 0:
-                    print(f'    Placing {canidates[rIdx][cIdx][0]} at {rIdx},{cIdx}', end = '')
+                    if lclPrintDic['flPrn'] == 1:
+                        print(f'    Placing {canidates[rIdx][cIdx][0]} at {rIdx},{cIdx}', end = '')
                     solution[rIdx][cIdx] = canidates[rIdx][cIdx][0]
                     numFilled += 1
-                    if numFilled%3 == 0:
-                        print()
-    if numFilled != 0:
-        numZeros = sum(x.count(0) for x in solution)
-        print(f'{NEWLINE}    NumZeros = {numZeros}.')
+                    if lclPrintDic['flPrn'] == 1:
+                        if numFilled%3 == 0:
+                            print()
+    numZeros = sum(x.count(0) for x in solution)
+    print(f'{NEWLINE}    numFilled = {numFilled}. NumZeros = {numZeros}.')
     return numFilled,solution
 #############################################################################
 
-def fillViaRowHistAnal(solution, canidates):
-    print('\n  Filling solution cells thru Row Hist Analysis')
+def fillViaRowHistAnal(solution, canidates, lclPrintDic):
+    print('  Filling solution cells thru Row Hist Analysis')
     numFilled = 0
 
     #pr.printCanidates(canidates)
@@ -60,18 +61,17 @@ def fillViaRowHistAnal(solution, canidates):
                 [ x for x in row if x != 0 and valOfBinHeight1 in x]
             idxOfSubLst =  row.index(subListContainingThatVal[0])
             if solution[rIdx][idxOfSubLst] == 0:
-                print(f'    Placing {valOfBinHeight1} at {rIdx},{idxOfSubLst}')
-                #print()
+                if lclPrintDic['flPrn'] == 1:
+                    print(f'    Placing {valOfBinHeight1} at {rIdx},{idxOfSubLst}')
                 solution[rIdx][idxOfSubLst] = valOfBinHeight1
                 numFilled += 1
-    if numFilled != 0:
-        numZeros = sum(x.count(0) for x in solution)
-        print(f'{NEWLINE}    NumZeros = {numZeros}.')
+    numZeros = sum(x.count(0) for x in solution)
+    print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.')
     return numFilled,solution
 #############################################################################
 
-def fillViaColHistAnal(solution, canidates):
-    print('\n  Filling solution cells thru Col Hist Analysis')
+def fillViaColHistAnal(solution, canidates, lclPrintDic):
+    print('  Filling solution cells thru Col Hist Analysis')
     numFilled = 0
     #pr.printCanidates(canidates)
     xPos = [[row[i] for row in canidates] for i in range(len(canidates[0]))]
@@ -89,17 +89,17 @@ def fillViaColHistAnal(solution, canidates):
                 [ x for x in col if x != 0 and valOfBinHeight1 in x]
             idxOfSubLst =  col.index(subListContainingThatVal[0])
             if solution[idxOfSubLst][cIdx] == 0:
-                print(f'    Placing {valOfBinHeight1} at {idxOfSubLst},{cIdx}')
+                if lclPrintDic['flPrn'] == 1:
+                    print(f'    Placing {valOfBinHeight1} at {idxOfSubLst},{cIdx}')
                 solution[idxOfSubLst][cIdx] = valOfBinHeight1
                 numFilled += 1
-    if numFilled != 0:
-        numZeros = sum(x.count(0) for x in solution)
-        print(f'{NEWLINE}    NumZeros = {numZeros}.')
+    numZeros = sum(x.count(0) for x in solution)
+    print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.')
     return numFilled,solution
 #############################################################################
 
-def fillViaSqrHistAnal(solution, canidates):
-    print('\n  Filling solution cells thru Sqr Hist Analysis')
+def fillViaSqrHistAnal(solution, canidates, lclPrintDic):
+    print('  Filling solution cells thru Sqr Hist Analysis')
     numFilled = 0
     #pr.printCanidates(canidates)
     squareNums = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]]
@@ -125,11 +125,11 @@ def fillViaSqrHistAnal(solution, canidates):
             col = colsInSq[(idxOfSubLst %  3)]
 
             if solution[row][col] == 0:
-                print(f'    Placing {valOfBinHeight1} at {row},{col}')
+                if lclPrintDic['flPrn'] == 1:
+                    print(f'    Placing {valOfBinHeight1} at {row},{col}')
                 solution[row][col] = valOfBinHeight1
                 numFilled += 1
-    if numFilled != 0:
-        numZeros = sum(x.count(0) for x in solution)
-        print(f'{NEWLINE}    NumZeros = {numZeros}.')
+    numZeros = sum(x.count(0) for x in solution)
+    print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.')
     return numFilled,solution
 #############################################################################
