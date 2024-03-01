@@ -55,7 +55,7 @@ def updateCanidatesList(lclSolution,lclCanidates):
     return lclCanidates
 #############################################################################
 
-def pruneNht(lclCanidates, clArgs):
+def pruneNht(lclCanidates, lclPrintDic):
 
     hiddenNakedLst = [ 'hidden', 'naked' ]
     #hiddenNakedLst = [ 'hidden']
@@ -73,7 +73,7 @@ def pruneNht(lclCanidates, clArgs):
             for house in houseLst:
                 #print('Pruning {:6} {}-tuples in {}s'.format(hn,N,h))
                 numPruned, lclCanidates = \
-                rr.pruneNakedAndHiddenTuples(lclCanidates, house, hideNkd, tupSize, clArgs)
+                rr.pruneNakedAndHiddenTuples(lclCanidates, house, hideNkd, tupSize, lclPrintDic)
                 totNumPruned += numPruned
 
                 if numPruned:
@@ -82,11 +82,11 @@ def pruneNht(lclCanidates, clArgs):
     return totNumPruned, lclCanidates
 #############################################################################
 
-def pruneXw(lclCanidates, clArgs):
+def pruneXw(lclCanidates, lclPrintDic):
     totNumPruned = 0
     houseLst = [ 'row','col' ]
     for house in houseLst:
-        numPruned, lclCanidates = rr.pruneXwings(lclCanidates, house, clArgs)
+        numPruned, lclCanidates = rr.pruneXwings(lclCanidates, house, lclPrintDic)
         totNumPruned += numPruned
 
         if numPruned:
@@ -95,9 +95,9 @@ def pruneXw(lclCanidates, clArgs):
     return totNumPruned, lclCanidates
 #############################################################################
 
-def pruneYw(lclCanidates, clArgs):
+def pruneYw(lclCanidates, lclPrintDic):
     totNumPruned = 0
-    numPruned, lclCanidates = rr.pruneyWings(lclCanidates, clArgs)
+    numPruned, lclCanidates = rr.pruneyWings(lclCanidates, lclPrintDic)
     totNumPruned += numPruned
 
     if numPruned:
@@ -106,12 +106,12 @@ def pruneYw(lclCanidates, clArgs):
     return totNumPruned, lclCanidates
 #############################################################################
 
-def prunePp(lclCanidates, clArgs):
+def prunePp(lclCanidates, lclPrintDic):
     totNumPruned = 0
     houseLst = [ 'row','col' ]
     #houseLst = [ 'row']
     for house in houseLst:
-        numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates, house, clArgs)
+        numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates, house, lclPrintDic)
         totNumPruned += numPruned
 
         if numPruned:
@@ -120,8 +120,8 @@ def prunePp(lclCanidates, clArgs):
     return totNumPruned, lclCanidates
 #############################################################################
 
-def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
-    if len(clArgs) == 0:
+def pruneCanidates(lclCanidates, lclPruneSet, lclPruneDicOfFuncs, lclPrintDic):
+    if len(lclPruneSet) == 0:
         return lclPruneDicOfFuncs, lclCanidates
 
     print('\nPruning canidates list')
@@ -134,10 +134,10 @@ def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
 
         for theKey,v in lclPruneDicOfFuncs.items():   # Loop over each function.
 
-            if v['func'] is pruneXw  and not 'xwOn' in clArgs: continue
-            if v['func'] is pruneNht and not 'nhOn' in clArgs: continue
-            if v['func'] is prunePp  and not 'ppOn' in clArgs: continue
-            if v['func'] is pruneYw  and not 'ywOn' in clArgs: continue
+            if v['func'] is pruneXw  and not 'xwOn' in lclPruneSet: continue
+            if v['func'] is pruneNht and not 'nhOn' in lclPruneSet: continue
+            if v['func'] is prunePp  and not 'ppOn' in lclPruneSet: continue
+            if v['func'] is pruneYw  and not 'ywOn' in lclPruneSet: continue
 
             passNum            = 0
             numPrunnedThisPass = 0
@@ -146,13 +146,13 @@ def pruneCanidates(clArgs, lclPruneDicOfFuncs, lclCanidates):
             while True:                          # Loop over one function.
 
                 print('  {:9} pass {}'.format(theKey, passNum))
-                numPrunnedThisPass, lclCanidates = v['func'](lclCanidates, clArgs)
+                numPrunnedThisPass, lclCanidates = v['func'](lclCanidates, lclPrintDic)
                 numPrunnedThisLoop.append(numPrunnedThisPass)
                 if numPrunnedThisPass != 0:
                     cumStr += (f'  {theKey:9} prunned {numPrunnedThisPass}{NEWLINE}')
                 passNum += 1
 
-                if 'ss' in clArgs: input('Return to continue')
+                #if 'ss' in clArgs: input('Return to continue')
 
                 if numPrunnedThisPass > 0:
                     prunedAtLeastOne = True
@@ -211,7 +211,7 @@ def checkStatus(sln):
     return cumPassed
 #############################################################################
 
-def solvePuzzle(aPuzzleDict, lclCmdLineArgs):
+def solvePuzzle(lclPuzzleDict, lclPruneSet, lclPrintDic):
 
     fillDicOfFuncs = {
     'one': { 'func': fr.fillViaOneCanidate, 'calls': 0, 'replace': 0 },
@@ -226,8 +226,8 @@ def solvePuzzle(aPuzzleDict, lclCmdLineArgs):
     'prune_YW' : { 'func': pruneYw,  'numPrunned': []}}
     ###########################################################
 
-    solution = [x[:] for x in aPuzzleDict['puzzle'] ]
-    aPuzzleDict['start0s'] = sum(x.count(0) for x in solution)
+    solution = [x[:] for x in lclPuzzleDict['puzzle'] ]
+    lclPuzzleDict['start0s'] = sum(x.count(0) for x in solution)
     fillDicOfFuncs = initfillDicOfFuncsCntrs(fillDicOfFuncs)
 
     while True:
@@ -244,9 +244,9 @@ def solvePuzzle(aPuzzleDict, lclCmdLineArgs):
             canidates = updateCanidatesList(solution, canidates)
 
             pruneDicOfFuncs,canidates = \
-                pruneCanidates(lclCmdLineArgs, pruneDicOfFuncs, canidates)
+                pruneCanidates(canidates, lclPruneSet, pruneDicOfFuncs, lclPrintDic )
             numberFilled, solution, fillDicOfFuncs = \
-                fillSolution(solution, canidates, fillDicOfFuncs, lclCmdLineArgs)
+                fillSolution(solution, canidates, fillDicOfFuncs, lclPruneSet)
 
         numZerosAfterAllFill = sum(x.count(0) for x in solution)
         if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
@@ -255,26 +255,26 @@ def solvePuzzle(aPuzzleDict, lclCmdLineArgs):
     # end while loop for this puzzle
 
     if numZerosAfterAllFill != 0:
-        aPuzzleDict['passed'] = False
+        lclPuzzleDict['passed'] = False
     else:
         status = checkStatus(solution)
-        aPuzzleDict['passed'] = status
+        lclPuzzleDict['passed'] = status
 
 
-    aPuzzleDict['end0s']    = numZerosAfterAllFill
-    aPuzzleDict['solution'] = solution
-    aPuzzleDict['prunes']   = lclCmdLineArgs
-    aPuzzleDict['oC']       = fillDicOfFuncs['one']['calls'  ]
-    aPuzzleDict['oR']       = fillDicOfFuncs['one']['replace']
-    aPuzzleDict['rC']       = fillDicOfFuncs['row']['calls'  ]
-    aPuzzleDict['rR']       = fillDicOfFuncs['row']['replace']
-    aPuzzleDict['cC']       = fillDicOfFuncs['col']['calls'  ]
-    aPuzzleDict['cR']       = fillDicOfFuncs['col']['replace']
-    aPuzzleDict['sC']       = fillDicOfFuncs['sqr']['calls'  ]
-    aPuzzleDict['sR']       = fillDicOfFuncs['sqr']['replace']
+    lclPuzzleDict['end0s']    = numZerosAfterAllFill
+    lclPuzzleDict['solution'] = solution
+    lclPuzzleDict['prunes']   = lclPruneSet
+    lclPuzzleDict['oC']       = fillDicOfFuncs['one']['calls'  ]
+    lclPuzzleDict['oR']       = fillDicOfFuncs['one']['replace']
+    lclPuzzleDict['rC']       = fillDicOfFuncs['row']['calls'  ]
+    lclPuzzleDict['rR']       = fillDicOfFuncs['row']['replace']
+    lclPuzzleDict['cC']       = fillDicOfFuncs['col']['calls'  ]
+    lclPuzzleDict['cR']       = fillDicOfFuncs['col']['replace']
+    lclPuzzleDict['sC']       = fillDicOfFuncs['sqr']['calls'  ]
+    lclPuzzleDict['sR']       = fillDicOfFuncs['sqr']['replace']
 
     print(f'{POUND62}')
-    return aPuzzleDict
+    return lclPuzzleDict
 #############################################################################
 
 
@@ -410,12 +410,9 @@ def getGuesses(lclSolution):
     return firstTryCoord, canValsLst
 #############################################################################
 
-
-
 if __name__ == '__main__':
     from puzzles import puzzlesDict
 
-    startTime = time.time()
     cumAllStr = ''
     cumSumStr = ''
     ###########################################################
@@ -470,20 +467,22 @@ if __name__ == '__main__':
     characterize = False
 
     guess = True
-    guess = False
+    #guess = False
 
     if characterize and guess:
         print('\n  ERROR. Can\'t characterize and guesss together.\n')
         exit()
 
-    if characterize: clArgs = allSets
-    else: clArgs = [pruneLst]
+    if characterize: pruneSets = allSets
+    else: pruneSets = [pruneLst]
     ###########################################################
 
+    # allSets,pruneDic,pruneLst,printDic 
+    startTime = time.time()
     for pNme in dsrdKeys:
         pDat = puzzlesDict[pNme]
-        for args in clArgs:
-            puzzlesDict[pNme] = solvePuzzle(pDat, args)
+        for pruneSet in pruneSets:
+            puzzlesDict[pNme] = solvePuzzle(pDat, pruneSet, printDic)
             aStr, sStr = pr.printResults(pNme, pDat)
             cumAllStr += aStr
             cumSumStr += sStr
@@ -499,7 +498,7 @@ if __name__ == '__main__':
                     for ii,k in enumerate(tryCords):
                         puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = tVals[ii]
             
-                    puzzlesDict[pNme] = solvePuzzle(pDat, args)
+                    puzzlesDict[pNme] = solvePuzzle(pDat, pruneSet, printDic)
                     aStr, sStr = pr.printResults(pNme, pDat)
                     cumAllStr += aStr
                     cumSumStr += sStr

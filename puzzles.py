@@ -130,6 +130,18 @@ puzYW_2= [ '007 000 400',
            '070 020 090',
            '001 000 500' ]
 
+puzImp_28=['601 080 092',
+           '900 000 410',
+           '080 009 700',
+
+           '006 002 000',
+           '500 000 001',
+           '000 400 500',
+
+           '032 600 050',
+           '890 000 006',
+           '100 030 204' ]
+
 puzUsr = [ '000 320 100',
            '800 706 000',
            '700 090 500',
@@ -215,6 +227,12 @@ puzzlesDict = {
                     'prunes': None, 'passed': None, 'guesses': 0},
 
     'puzYW_26'  : { 'puzzle' : convert(puzYW_2),  'solution' : [],
+                    'start0s' : 0, 'end0s' : 0,
+                    'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
+                    'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0,
+                    'prunes': None, 'passed': None, 'guesses': 0},
+
+    'puzImp_28' : { 'puzzle' : convert(puzImp_28),'solution' : [],
                     'start0s' : 0, 'end0s' : 0,
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0,

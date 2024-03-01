@@ -3,7 +3,7 @@ xwOn  1
 ppOn  1
 ywOn  1
 
-nhPrn 1
+nhPrn 0
 xwPrn 0
 ppPrn 0
 ywPrn 0

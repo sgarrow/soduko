@@ -24,7 +24,7 @@ def getComIdxs(rOrCOrS, tupSiz):
             combinations(enumerate(rOrCOrS), tupSiz))
     return combIdxs
 ############################################################################
-def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
+def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintDic):
     #pr.printCanidates(canidates)
 
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
@@ -57,7 +57,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
 
             if hIsHidden and hiddenOrNaked == 'hidden':
                 myD = {'row': idx, 'tripVals': lstHmG, 'tripIdxs': comIdx }
-                if 'nhPrn' in clArgs:
+                if lclPrintDic['nhPrn'] == 1:
                     myDstr = pp.pformat(myD)
                     print('   Hidden ({}) \n      {}'.format(house, myDstr))
 
@@ -67,7 +67,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
                     diff  = set(rOrCOrS[tripIdx]) - set.intersection( rOrCOrS[tripIdx], set(temp) )
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        if 'nhPrn' in clArgs:
+                        if lclPrintDic['nhPrn'] == 1:
                             pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
                             alreadyPrinted = True
                             print( '      remove {} from ({},{})'.format(diff,myD['row'],tripIdx))
@@ -77,7 +77,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
 
             if hIsNaked and hiddenOrNaked == 'naked':
                 myD   = {'row': idx, 'tripVals': setH, 'tripIdxs': comIdx }
-                if 'nhPrn' in clArgs:
+                if lclPrintDic['nhPrn'] == 1:
                     myDstr = pp.pformat(myD)
                     print('   Naked ({}) \n      {}'.format(house, myDstr))
 
@@ -90,7 +90,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
                     diff  = elem - set.intersection( elem, set(temp[idx]) )
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        if 'nhPrn' in clArgs:
+                        if lclPrintDic['nhPrn'] == 1:
                             pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
                             alreadyPrinted = True
                             print( '      remove {} from ({},{})'.format(diff,  myD['row'], idx) )
@@ -106,7 +106,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, clArgs):
     return(numPruned, canidates)
 ############################################################################
 
-def pruneXwings(canidates, house, clArgs):
+def pruneXwings(canidates, house, lclPrintDic):
 
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
@@ -152,7 +152,7 @@ def pruneXwings(canidates, house, clArgs):
                     (xWing['C_val'] in row[cIdx]):
                     xCanidates[rIdx][cIdx].remove(xWing['C_val'])
 
-                    if 'xwPrn' in clArgs:
+                    if lclPrintDic['xwPrn'] ==1:
                         pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
                         print({True: '', False: '   {}'.format(xWing)} [alreadyPrinted])
                         alreadyPrinted = True
@@ -179,7 +179,7 @@ def pruneXwings(canidates, house, clArgs):
 #
 # process the pointing pairs in canidates.
 
-def prunePointingPairs(canidates, house, clArgs):
+def prunePointingPairs(canidates, house, lclPrintDic):
 
     xCanidates = mp.mapSrqsToRows(canidates)
     numPruned  = 0
@@ -237,7 +237,7 @@ def prunePointingPairs(canidates, house, clArgs):
     ####################################################################################
 
     # debug prints
-    if 'ppPrn' in clArgs:
+    if lclPrintDic['ppPrn'] ==1:
         thingsPprint = { #'allBinsHeightTwo':allBinsHeightTwo,
                          #'allBinsHeightTwoD':allBinsHeightTwoD,
                          #'ppRowD':ppRowD,
@@ -264,30 +264,30 @@ def prunePointingPairs(canidates, house, clArgs):
     rowsProcessed = []
     for val in ppRowAbsCoordD.values():
         if val['aRow'] not in rowsProcessed:
-            if 'ppPrn' in clArgs: print( f'     Processing {val}')
+            if lclPrintDic['ppPrn'] == 1: print( f'     Processing {val}')
             cols = [ x for x in range(9) if x not in val['bCols'] ]
             for cIdx in cols:
                 if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
                     canidates[val['aRow']][cIdx].remove(val['cVal'])
                     numPruned += 1
 
-                    if 'ppPrn' in clArgs:
+                    if lclPrintDic['ppPrn'] == 1:
                         print('       remove {} from ({},{})'.format(val['cVal'],val['aRow'],cIdx))
 
     colsProcessed = []
     for val in ppColAbsCoordD.values():
         if val['aCol'] not in colsProcessed:
-            if 'ppPrn' in clArgs: print( f'     Processing {val}')
+            if lclPrintDic['ppPrn'] == 1: print( f'     Processing {val}')
             rows = [ x for x in range(9) if x not in val['bRows'] ]
             for rIdx in rows:
                 if canidates[rIdx][val['aCol']]!=0 and val['cVal'] in canidates[rIdx][val['aCol']]:
                     canidates[rIdx][val['aCol']].remove(val['cVal'])
                     numPruned += 1
 
-                    if 'ppPrn' in clArgs:
+                    if lclPrintDic['ppPrn'] == 1:
                         print('       remove {} from ({},{})'.format(val['cVal'],rIdx,val['aCol']))
 
-    if 'ppPrn' in clArgs:
+    if lclPrintDic['ppPrn'] == 1:
         print()
         #pr.printCanidates(canidates)
     ####################################################################################
@@ -332,7 +332,7 @@ def prYWingDict(aDict):
 #############################################################################
 
 
-def pruneyWings (lclCanidates, clArgs):
+def pruneyWings (lclCanidates, lclPrintDic):
     numPruned = 0
     coordsOfAllPairs  = [ [r,c] for r in range(9) for c in range(9) \
         if lclCanidates[r][c] != 0 and len(lclCanidates[r][c]) == 2]
@@ -407,7 +407,7 @@ def pruneyWings (lclCanidates, clArgs):
             yWingDict2[k]['Z']      = Z       # Val to del.
             yWingDict2[k]['rmvIdx'] = rmvIdx  # Where to del from.
 
-    if 'ywPrn' in clArgs:
+    if lclPrintDic['ywPrn'] == 1:
         prYWingDict(yWingDict2)
     alreadyPrinted = False
     for k,v in yWingDict2.items():
@@ -416,7 +416,7 @@ def pruneyWings (lclCanidates, clArgs):
             if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
                 lclCanidates[cord[0]][cord[1]].remove(v['Z'])
                 numPruned += 1
-                if 'ywPrn' in clArgs:
+                if lclPrintDic['ywPrn'] == 1:
                     pr.printCanidates(lclCanidates, alreadyPrn = alreadyPrinted)
                     alreadyPrinted = True
                     print('     remove {} from ({},{})'.format(v['Z'], cord[0],cord[1]))
