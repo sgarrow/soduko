@@ -143,7 +143,11 @@ def pruneXwings(canidates, house, lclPrintDic):
                           'B_cols':   comb[0]['B_cols'],
                           'C_val' :   comb[0]['C_val']  }
             k += 1
-    #pp.pprint(xWingD)
+    if lclPrintDic['xwPrn'] >= 1:
+        for k,v in xWingD.items():
+            myDstr = pp.pformat(v)
+            print('\n    {} {}'.format(house, myDstr), end = '')
+        print()
 
     alreadyPrinted = False
     for xWing in xWingD.values():
@@ -153,13 +157,15 @@ def pruneXwings(canidates, house, lclPrintDic):
                     (row[cIdx] != 0) and \
                     (xWing['C_val'] in row[cIdx]):
                     xCanidates[rIdx][cIdx].remove(xWing['C_val'])
-
-                    if lclPrintDic['xwPrn'] ==1:
-                        pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
-                        print({True: '', False: '   {}'.format(xWing)} [alreadyPrinted])
-                        alreadyPrinted = True
-                        print('      remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))
                     numPruned += 1
+
+                    if lclPrintDic['xwPrn'] >= 2:
+                        pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
+                        #print({True: '', False: '   {}'.format(xWing)} [alreadyPrinted])
+                        alreadyPrinted = True
+
+                    if lclPrintDic['xwPrn'] >= 1:
+                        print('      remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))
 
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
     canidates = cpyDic[house](xCanidates)

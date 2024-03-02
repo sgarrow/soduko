@@ -39,7 +39,7 @@ def fillViaOneCanidate(solution, canidates, lclPrintDic):
                         if numFilled%3 == 0:
                             print()
     numZeros = sum(x.count(0) for x in solution)
-    print(f'{NEWLINE}    numFilled = {numFilled}. NumZeros = {numZeros}.')
+    print(f'{NEWLINE}    numFilled = {numFilled}. NumZeros = {numZeros}.\n')
     return numFilled,solution
 #############################################################################
 
@@ -66,7 +66,7 @@ def fillViaRowHistAnal(solution, canidates, lclPrintDic):
                 solution[rIdx][idxOfSubLst] = valOfBinHeight1
                 numFilled += 1
     numZeros = sum(x.count(0) for x in solution)
-    print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.')
+    print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.\n')
     return numFilled,solution
 #############################################################################
 
@@ -94,7 +94,7 @@ def fillViaColHistAnal(solution, canidates, lclPrintDic):
                 solution[idxOfSubLst][cIdx] = valOfBinHeight1
                 numFilled += 1
     numZeros = sum(x.count(0) for x in solution)
-    print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.')
+    print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.\n')
     return numFilled,solution
 #############################################################################
 
@@ -130,6 +130,6 @@ def fillViaSqrHistAnal(solution, canidates, lclPrintDic):
                 solution[row][col] = valOfBinHeight1
                 numFilled += 1
     numZeros = sum(x.count(0) for x in solution)
-    print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.')
+    print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.\n')
     return numFilled,solution
 #############################################################################
