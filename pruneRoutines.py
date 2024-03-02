@@ -57,9 +57,9 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
 
             if hIsHidden and hiddenOrNaked == 'hidden':
                 myD = {'row': idx, 'tripVals': lstHmG, 'tripIdxs': comIdx }
-                if lclPrintDic['nhPrn'] == 1:
+                if lclPrintDic['nhPrn'] >= 1:
                     myDstr = pp.pformat(myD)
-                    print('   Hidden ({}) \n      {}'.format(house, myDstr))
+                    print('\n   Hidden ({}) \n      {}'.format(house, myDstr))
 
                 alreadyPrinted = False
                 for tripIdx in myD['tripIdxs']:
@@ -67,19 +67,20 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                     diff  = set(rOrCOrS[tripIdx]) - set.intersection( rOrCOrS[tripIdx], set(temp) )
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        if lclPrintDic['nhPrn'] == 1:
+                        if lclPrintDic['nhPrn'] >= 2:
                             pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
                             alreadyPrinted = True
-                            print( '      remove {} from ({},{})'.format(diff,myD['row'],tripIdx))
+                        if lclPrintDic['nhPrn'] >= 1:
+                            print( '        remove {:>8} from ({},{})'.format(str(diff),myD['row'],tripIdx))
 
                     xCanidates[myD['row']][tripIdx] = temp
                 break
 
             if hIsNaked and hiddenOrNaked == 'naked':
                 myD   = {'row': idx, 'tripVals': setH, 'tripIdxs': comIdx }
-                if lclPrintDic['nhPrn'] == 1:
+                if lclPrintDic['nhPrn'] >= 1:
                     myDstr = pp.pformat(myD)
-                    print('   Naked ({}) \n      {}'.format(house, myDstr))
+                    print('\n   Naked ({}) \n      {}'.format(house, myDstr))
 
                 temp  = [ list(x) if kk in myD['tripIdxs'] else \
                           list(x-myD['tripVals']) for kk,x in enumerate(rOrCOrS) ]
@@ -90,10 +91,11 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                     diff  = elem - set.intersection( elem, set(temp[idx]) )
                     if len(diff) != 0:
                         numPruned += len(diff)
-                        if lclPrintDic['nhPrn'] == 1:
+                        if lclPrintDic['nhPrn'] >= 2:
                             pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
                             alreadyPrinted = True
-                            print( '      remove {} from ({},{})'.format(diff,  myD['row'], idx) )
+                        if lclPrintDic['nhPrn'] >= 1:
+                            print( '        remove {:>8} from ({},{})'.format(str(diff), myD['row'], idx) )
 
                 xCanidates[myD['row']] = temp2
                 break

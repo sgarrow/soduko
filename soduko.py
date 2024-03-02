@@ -424,7 +424,7 @@ if __name__ == '__main__':
     pruneDic = {}
     printDic = {}
     for option in options:
-        if len(option) == 2:
+        if len(option) > 1:
             if option[0] == 'nhOn' : pruneDic['nhOn']  = int(option[1])
             if option[0] == 'xwOn' : pruneDic['xwOn']  = int(option[1]) 
             if option[0] == 'ppOn' : pruneDic['ppOn']  = int(option[1]) 

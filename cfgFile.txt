@@ -1,13 +1,14 @@
-nhOn  1
-xwOn  1
-ppOn  1
-ywOn  1
+nhOn  1  # 0-disable. 1-enable.
+xwOn  1  # 0-disable. 1-enable.
+ppOn  1  # 0-disable. 1-enable.
+ywOn  1  # 0-disable. 1-enable.
 
-nhPrn 0
-xwPrn 0
-ppPrn 0
-ywPrn 0
-flPrn 0
+
+nhPrn 0  # 0-quiet. 1-Dicts,removed 2-canidates.
+xwPrn 0  # 0-quiet.
+ppPrn 0  # 0-quiet.
+ywPrn 0  # 0-quiet.
+flPrn 0  # 0-quiet.
 
 ss    0
 
