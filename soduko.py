@@ -50,7 +50,9 @@ def updateCanidatesList(lclSolution,lclCanidates):
         for cIdx,elem in enumerate(row):
             if lclCanidates[rIdx][cIdx] != 0:
                 totSum += sum(lclCanidates[rIdx][cIdx])
-    #print('totSum = ', totSum)
+                #print('totSum = ', totSum)
+
+    print(62*'*')
     return lclCanidates
 #############################################################################
 
@@ -180,7 +182,7 @@ def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, lclPrintDic):
         lclfillDicOfFuncs[theK]['calls']   += 1
         lclfillDicOfFuncs[theK]['replace'] += numFilled
         if sum(x.count(0) for x in lclSolution)==0: break
-    print(f'{NEWLINE}  Total filled {totalNumFilled:2d}')
+    print(f'  Total filled {totalNumFilled:2d}')
     print(62*'*')
     #if 'ss' in clArgs: input('Return to continue')
 

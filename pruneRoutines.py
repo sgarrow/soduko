@@ -103,8 +103,6 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
     canidates = cpyDic[house](xCanidates)
 
-    #pr.printCanidates(canidates)
-
     return(numPruned, canidates)
 ############################################################################
 
@@ -245,13 +243,13 @@ def prunePointingPairs(canidates, house, lclPrintDic):
     ####################################################################################
 
     # debug prints
-    if lclPrintDic['ppPrn'] ==1:
-        thingsPprint = { #'allBinsHeightTwo':allBinsHeightTwo,
-                         #'allBinsHeightTwoD':allBinsHeightTwoD,
-                         #'ppRowD':ppRowD,
-                         #'ppColD':ppColD,
-                         #'ppRowAbsCoordD':ppRowAbsCoordD,
-                         #'ppColAbsCoordD':ppColAbsCoordD 
+    if lclPrintDic['ppPrn'] >= 3:
+        thingsPprint = { 'allBinsHeightTwo':allBinsHeightTwo,
+                         'allBinsHeightTwoD':allBinsHeightTwoD,
+                         'ppRowD':ppRowD,
+                         'ppColD':ppColD,
+                         'ppRowAbsCoordD':ppRowAbsCoordD,
+                         'ppColAbsCoordD':ppColAbsCoordD 
                          }
 
         pr.printCanidates(canidates)
@@ -260,44 +258,47 @@ def prunePointingPairs(canidates, house, lclPrintDic):
             myStr = ''
             if len(v) > 0:
                 print('     {} ({})'.format(k, house))
-                for el in v.values():
+                for el in v:
                     myStr = pp.pformat(el)
-                    print('    ',myStr)
+                    print('    ',myStr, end='')
                 print()
 
     ####################################################################################
 
     # perform associated removals Note only one of the 2 dicts looped through below will
     # have anything in it.
+    alreadyPrinted = False
     rowsProcessed = []
     for val in ppRowAbsCoordD.values():
         if val['aRow'] not in rowsProcessed:
-            if lclPrintDic['ppPrn'] == 1: print( f'     Processing {val}')
+            if lclPrintDic['ppPrn'] >= 1: print( f'     Processing {val}')
             cols = [ x for x in range(9) if x not in val['bCols'] ]
             for cIdx in cols:
                 if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
                     canidates[val['aRow']][cIdx].remove(val['cVal'])
                     numPruned += 1
 
-                    if lclPrintDic['ppPrn'] == 1:
+                    if lclPrintDic['ppPrn'] >= 2:
+                        pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
+                        alreadyPrinted = True
+                    if lclPrintDic['ppPrn'] >= 1:
                         print('       remove {} from ({},{})'.format(val['cVal'],val['aRow'],cIdx))
 
     colsProcessed = []
     for val in ppColAbsCoordD.values():
         if val['aCol'] not in colsProcessed:
-            if lclPrintDic['ppPrn'] == 1: print( f'     Processing {val}')
+            if lclPrintDic['ppPrn'] >= 1: print( f'     Processing {val}')
             rows = [ x for x in range(9) if x not in val['bRows'] ]
             for rIdx in rows:
                 if canidates[rIdx][val['aCol']]!=0 and val['cVal'] in canidates[rIdx][val['aCol']]:
                     canidates[rIdx][val['aCol']].remove(val['cVal'])
                     numPruned += 1
 
-                    if lclPrintDic['ppPrn'] == 1:
+                    if lclPrintDic['ppPrn'] >= 2:
+                        pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
+                        alreadyPrinted = True
+                    if lclPrintDic['ppPrn'] >= 1:
                         print('       remove {} from ({},{})'.format(val['cVal'],rIdx,val['aCol']))
-
-    if lclPrintDic['ppPrn'] == 1:
-        print()
-        #pr.printCanidates(canidates)
     ####################################################################################
 
     return numPruned,canidates
@@ -415,18 +416,18 @@ def pruneyWings (lclCanidates, lclPrintDic):
             yWingDict2[k]['Z']      = Z       # Val to del.
             yWingDict2[k]['rmvIdx'] = rmvIdx  # Where to del from.
 
-    if lclPrintDic['ywPrn'] == 1:
-        prYWingDict(yWingDict2)
     alreadyPrinted = False
     for k,v in yWingDict2.items():
-        print('  Processing {}'.format(k))
+        if lclPrintDic['ywPrn'] >= 1:
+            print('  Processing {}'.format(v))
         for cord in v['rmvIdx']:
             if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
                 lclCanidates[cord[0]][cord[1]].remove(v['Z'])
                 numPruned += 1
-                if lclPrintDic['ywPrn'] == 1:
+                if lclPrintDic['ywPrn'] >= 2:
                     pr.printCanidates(lclCanidates, alreadyPrn = alreadyPrinted)
                     alreadyPrinted = True
+                if lclPrintDic['ywPrn'] >= 1:
                     print('     remove {} from ({},{})'.format(v['Z'], cord[0],cord[1]))
 
     return numPruned,lclCanidates
