@@ -1,15 +1,15 @@
 nhOn  1  # 0-disable. 1-enable.
 xwOn  1  # 0-disable. 1-enable.
 ppOn  1  # 0-disable. 1-enable.
-ywOn  0  # 0-disable. 1-enable.
+ywOn  1  # 0-disable. 1-enable.
 
 
 nhPrn 0  # 0-quiet. 1-Dicts,removed. 2-canidates.
 xwPrn 0  # 0-quiet, 1-Dicts,removed. 2-canidates.
 ppPrn 0  # 0-quiet, 1-Dicts,removed. 2-canidates, 3-multi Dict. 
 ywPrn 0  # 0-quiet, 1-Dicts,removed. 2-canidates. 
-flPrn 1  # 0-quiet, 1-numFilled.     2-filled coords.
+flPrn 0  # 0-quiet, 1-numFilled.     2-filled coords.
 
-ss    0
+ss    0	 # NOP
 
 

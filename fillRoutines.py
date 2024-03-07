@@ -28,7 +28,7 @@ def fillViaOneCanidate(solution, canidates, lclPrintDic):
     numFilled = 0
     for rIdx,row in enumerate(solution):
         for cIdx in range(len(row)):
-            if canidates[rIdx][cIdx] != 0 and len(canidates[rIdx][cIdx]) == 1:
+            if canidates[rIdx][cIdx] != 0 and len(canidates[rIdx][cIdx])==1:
                 if solution[rIdx][cIdx] == 0:
                     if lclPrintDic['flPrn'] >= 2:
                         print(f'    Placing {canidates[rIdx][cIdx][0]} at {rIdx},{cIdx}', end = '')

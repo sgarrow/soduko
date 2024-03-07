@@ -15,7 +15,7 @@ import fillRoutines  as fr
 
 def updateCanidatesList(lclSolution,lclCanidates):
     print('\nUpdating Canidates list')
-    cols = [ [ row[i] for row in lclSolution] for i in range(len(lclSolution[0]))]
+    cols=[[row[i] for row in lclSolution] for i in range(len(lclSolution[0]))]
 
     for rIdx,row in enumerate(lclSolution):
         for cIdx,elem in enumerate(row):
@@ -27,7 +27,7 @@ def updateCanidatesList(lclSolution,lclCanidates):
             for num in [1,2,3,4,5,6,7,8,9]:
 
                 inSquare = False
-                rowsInSquare, colsInSquare = mp.findRowsColsInSquare(rIdx, cIdx)
+                rowsInSquare,colsInSquare= mp.findRowsColsInSquare(rIdx,cIdx)
 
                 for ris in rowsInSquare:
                     for cis in colsInSquare:
@@ -37,7 +37,7 @@ def updateCanidatesList(lclSolution,lclCanidates):
                     if inSquare:
                         break
 
-                if( row.count(num) == 0 and col.count(num) == 0 and not inSquare):
+                if( row.count(num)==0 and col.count(num)==0 and not inSquare):
                     if lclCanidates[rIdx][cIdx] != 0:
                         lclCanidates[rIdx][cIdx].append(num)
     totSum = 0
@@ -68,7 +68,8 @@ def pruneNht(lclCanidates, lclPrintDic):
             for house in houseLst:
                 #print('Pruning {:6} {}-tuples in {}s'.format(hn,N,h))
                 numPruned, lclCanidates = \
-                rr.pruneNakedAndHiddenTuples(lclCanidates, house, hideNkd, tupSize, lclPrintDic)
+                rr.pruneNakedAndHiddenTuples(lclCanidates, house, hideNkd,
+                                             tupSize, lclPrintDic)
                 totNumPruned += numPruned
 
                 if lclPrintDic['nhPrn'] > 0 and numPruned > 0:
@@ -81,7 +82,7 @@ def pruneXw(lclCanidates, lclPrintDic):
     totNumPruned = 0
     houseLst = [ 'row','col' ]
     for house in houseLst:
-        numPruned, lclCanidates = rr.pruneXwings(lclCanidates, house, lclPrintDic)
+        numPruned,lclCanidates=rr.pruneXwings(lclCanidates,house,lclPrintDic)
         totNumPruned += numPruned
 
         if lclPrintDic['xwPrn'] > 0 and numPruned > 0:
@@ -106,7 +107,8 @@ def prunePp(lclCanidates, lclPrintDic):
     houseLst = [ 'row','col' ]
     #houseLst = [ 'row']
     for house in houseLst:
-        numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates, house, lclPrintDic)
+        numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates, 
+                                                        house, lclPrintDic)
         totNumPruned += numPruned
 
         if lclPrintDic['ppPrn'] > 0 and numPruned > 0:
@@ -115,7 +117,7 @@ def prunePp(lclCanidates, lclPrintDic):
     return totNumPruned, lclCanidates
 #############################################################################
 
-def pruneCanidates(lclCanidates, lclPruneSet, lclPruneDicOfFuncs, lclPrintDic):
+def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,lclPrintDic):
     if len(lclPruneSet) == 0:
         return lclPruneDicOfFuncs, lclCanidates
 
@@ -127,7 +129,7 @@ def pruneCanidates(lclCanidates, lclPruneSet, lclPruneDicOfFuncs, lclPrintDic):
 
         prunedAtLeastOne   = False
 
-        for theKey,v in lclPruneDicOfFuncs.items():   # Loop over each function.
+        for theKey,v in lclPruneDicOfFuncs.items():   # Loop over each func.
 
             if v['func'] is pruneXw  and not 'xwOn' in lclPruneSet: continue
             if v['func'] is pruneNht and not 'nhOn' in lclPruneSet: continue
@@ -141,10 +143,12 @@ def pruneCanidates(lclCanidates, lclPruneSet, lclPruneDicOfFuncs, lclPrintDic):
             while True:                          # Loop over one function.
 
                 print('  {:9} pass {}'.format(theKey, passNum))
-                numPrunnedThisPass, lclCanidates = v['func'](lclCanidates, lclPrintDic)
+                numPrunnedThisPass, lclCanidates = v['func'](lclCanidates, 
+                                                             lclPrintDic)
                 numPrunnedThisLoop.append(numPrunnedThisPass)
                 if numPrunnedThisPass != 0:
-                    cumStr += '{:9} prunned {}\n'.format(theKey,numPrunnedThisPass)
+                    cumStr += '{:9} prunned {}\n'.\
+                        format(theKey,numPrunnedThisPass)
                 passNum += 1
 
                 #if 'ss' in clArgs: input('Return to continue')
@@ -155,7 +159,8 @@ def pruneCanidates(lclCanidates, lclPruneSet, lclPruneDicOfFuncs, lclPrintDic):
                     break
 
             v['numPrunned'].append(numPrunnedThisLoop)
-            print('  Total Prunned {:9} {}'.format(theKey, sum(v['numPrunned'][-1])))
+            print('  Total Prunned {:9} {}'.\
+                format(theKey, sum(v['numPrunned'][-1])))
             print(31*'*')
 
         print(31*'*')
@@ -171,7 +176,10 @@ def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, lclPrintDic):
 
     print('\nFilling in solution cells')
     for theK in lclfillDicOfFuncs:
-        numFilled, lclSolution = lclfillDicOfFuncs[theK]['func'](lclSolution,lclCanidates,lclPrintDic)
+
+        numFilled, lclSolution = \
+        lclfillDicOfFuncs[theK]['func'](lclSolution,lclCanidates,lclPrintDic)
+
         totalNumFilled  += numFilled
         lclfillDicOfFuncs[theK]['calls']   += 1
         lclfillDicOfFuncs[theK]['replace'] += numFilled
@@ -191,7 +199,7 @@ def initfillDicOfFuncsCntrs(lclfillDicOfFuncs):
 #############################################################################
 
 def checkStatus(sln):
-    cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
+    cpyDic={'row':copy.deepcopy,'col':mp.mapColsToRows,'sqr':mp.mapSrqsToRows}
 
     cumPassed = True
     for k,v in cpyDic.items():
@@ -238,9 +246,10 @@ def solvePuzzle(lclPuzzleDict, lclPruneSet, lclPrintDic):
             canidates = updateCanidatesList(solution, canidates)
 
             pruneDicOfFuncs,canidates = \
-                pruneCanidates(canidates, lclPruneSet, pruneDicOfFuncs, lclPrintDic )
+            pruneCanidates(canidates,lclPruneSet,pruneDicOfFuncs,lclPrintDic)
+
             numberFilled, solution, fillDicOfFuncs = \
-                fillSolution(solution, canidates, fillDicOfFuncs, lclPrintDic)
+            fillSolution(solution,canidates,fillDicOfFuncs,lclPrintDic)
 
         numZerosAfterAllFill = sum(x.count(0) for x in solution)
         if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
@@ -457,7 +466,7 @@ if __name__ == '__main__':
     characterize = False
 
     guess = True
-    guess = False
+    #guess = False
 
     if characterize and guess:
         print('\n  ERROR. Can\'t characterize and guesss together.\n')

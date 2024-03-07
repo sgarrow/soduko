@@ -11,7 +11,7 @@ def printCanidates(canidates,alreadyPrn = False):
 
             numPrintedThisLine = False
             lineToPrn = '  '
-            thingsToPrint = list(range( ii*3+1, ii*3+4 )) # 1,2,3; 4,5,6; 7,8,9
+            thingsToPrint = list(range(ii*3+1, ii*3+4)) # 1,2,3; 4,5,6; 7,8,9
             lineToPrn += '|'
             for cIdx,cell in enumerate(row):
                 for num in thingsToPrint:
@@ -53,7 +53,9 @@ def printResults(pNme, apDict):
 
     allStr = '\n' + sumStr[:] + '\n'
     for ii in range(len(apDict['puzzle'])):
-        allStr += ' {}   {}\n'.format(apDict['puzzle'][ii], apDict['solution'][ii])
+        allStr += ' {}   {}\n'.\
+            format(apDict['puzzle'][ii], apDict['solution'][ii])
+
     allStr += '\n'
 
     allStr += ' Start: filled-in + not-filled-in = {:2d}+{:2d} = {:2d}.\n'.\
@@ -64,10 +66,17 @@ def printResults(pNme, apDict):
               format( 81-apDict['end0s'],    apDict['end0s'],
                       81-apDict['end0s'] +   apDict['end0s']   )
 
-    allStr += ' fillOneCan  calls,fills = {:2d}, {:2d}.\n'.format(apDict['oC'], apDict['oR'])
-    allStr += ' fillRowHist calls,fills = {:2d}, {:2d}.\n'.format(apDict['rC'], apDict['rR'])
-    allStr += ' fillColHist calls,fills = {:2d}, {:2d}.\n'.format(apDict['cC'], apDict['cR'])
-    allStr += ' fillSqrHist calls,fills = {:2d}, {:2d}.\n'.format(apDict['sC'], apDict['sR'])
+    allStr += ' fillOneCan  calls,fills = {:2d}, {:2d}.\n'.\
+        format(apDict['oC'], apDict['oR'])
+
+    allStr += ' fillRowHist calls,fills = {:2d}, {:2d}.\n'.\
+        format(apDict['rC'], apDict['rR'])
+
+    allStr += ' fillColHist calls,fills = {:2d}, {:2d}.\n'.\
+        format(apDict['cC'], apDict['cR'])
+
+    allStr += ' fillSqrHist calls,fills = {:2d}, {:2d}.\n'.\
+        format(apDict['sC'], apDict['sR'])
 
     allStr += 62*'*' + '\n'
 
