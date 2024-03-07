@@ -11,9 +11,6 @@ import fillRoutines  as fr
 import pruneRoutines as rr
 import ana           as an
 import fillRoutines  as fr
-
-NEWLINE = '\n'
-POUND62 = 62*'#'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -40,9 +37,7 @@ def updateCanidatesList(lclSolution,lclCanidates):
                     if inSquare:
                         break
 
-                #print('   inSquare={}'.format(inSquare))
                 if( row.count(num) == 0 and col.count(num) == 0 and not inSquare):
-                    #print('   Adding {} as canidate for {},{}'.format(ii,rIdx,cIdx))
                     if lclCanidates[rIdx][cIdx] != 0:
                         lclCanidates[rIdx][cIdx].append(num)
     totSum = 0
@@ -50,7 +45,6 @@ def updateCanidatesList(lclSolution,lclCanidates):
         for cIdx,elem in enumerate(row):
             if lclCanidates[rIdx][cIdx] != 0:
                 totSum += sum(lclCanidates[rIdx][cIdx])
-                #print('totSum = ', totSum)
 
     print(62*'*')
     return lclCanidates
@@ -150,7 +144,7 @@ def pruneCanidates(lclCanidates, lclPruneSet, lclPruneDicOfFuncs, lclPrintDic):
                 numPrunnedThisPass, lclCanidates = v['func'](lclCanidates, lclPrintDic)
                 numPrunnedThisLoop.append(numPrunnedThisPass)
                 if numPrunnedThisPass != 0:
-                    cumStr += (f'  {theKey:9} prunned {numPrunnedThisPass}{NEWLINE}')
+                    cumStr += '{:9} prunned {}\n'.format(theKey,numPrunnedThisPass)
                 passNum += 1
 
                 #if 'ss' in clArgs: input('Return to continue')
@@ -202,14 +196,12 @@ def checkStatus(sln):
     cumPassed = True
     for k,v in cpyDic.items():
         s = v(sln)
-        #pp.pprint(s)
         for rIdx,row in enumerate(s):
             myCnt  = [ row.count(x) for x in row ]
             passed = not(any( x != 1 for x  in myCnt))
             #print('house-{} idx-{} sts-{}'.format(k,rIdx,passed))
             if not passed:
                 cumPassed = False
-        #input()
     return cumPassed
 #############################################################################
 
@@ -275,7 +267,7 @@ def solvePuzzle(lclPuzzleDict, lclPruneSet, lclPrintDic):
     lclPuzzleDict['sC']       = fillDicOfFuncs['sqr']['calls'  ]
     lclPuzzleDict['sR']       = fillDicOfFuncs['sqr']['replace']
 
-    print(f'{POUND62}')
+    print(62*'#')
     return lclPuzzleDict
 #############################################################################
 
@@ -407,8 +399,6 @@ def getGuesses(lclSolution):
     #print('canValsLst')
     #pp.pprint(canValsLst)
     #print()
-    #
-    #exit()
     return firstTryCoord, canValsLst
 #############################################################################
 
@@ -444,10 +434,6 @@ if __name__ == '__main__':
     allSets  = set()
     for ii in range(0,len(pruneLst)+1):
         allSets = set.union(allSets,set(combinations(pruneLst, ii)))
-
-    #ppLst = [allSets,pruneDic,pruneLst,printDic]
-    #[pp.pprint(x) for x in ppLst]
-    #exit()
     ###########################################################
 
     puzDicKeys = [ k for k in puzzlesDict.keys() ]

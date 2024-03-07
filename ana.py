@@ -24,7 +24,6 @@ def analyze():
             else:
                 subD[sts].append(prn)
 
-    #pp.pprint(mainD)
     print()
     for k,v in mainD.items():
         if 'PASS' in v:

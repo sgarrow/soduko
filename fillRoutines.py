@@ -1,6 +1,5 @@
 #import printRoutines as pr
 
-NEWLINE = '\n'
 #############################################################################
 
 def flatten(inLst):

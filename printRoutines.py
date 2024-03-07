@@ -12,7 +12,6 @@ def printCanidates(canidates,alreadyPrn = False):
             numPrintedThisLine = False
             lineToPrn = '  '
             thingsToPrint = list(range( ii*3+1, ii*3+4 )) # 1,2,3; 4,5,6; 7,8,9
-            #print(thingsToPrint)
             lineToPrn += '|'
             for cIdx,cell in enumerate(row):
                 for num in thingsToPrint:
