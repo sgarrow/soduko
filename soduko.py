@@ -1,6 +1,6 @@
 #  C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
 
-import pprint        as pp
+#import pprint        as pp
 import sys
 import time
 import copy
@@ -10,7 +10,6 @@ import mapping       as mp
 import fillRoutines  as fr
 import pruneRoutines as rr
 import ana           as an
-import fillRoutines  as fr
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -107,7 +106,7 @@ def prunePp(lclCanidates, lclPrintDic):
     houseLst = [ 'row','col' ]
     #houseLst = [ 'row']
     for house in houseLst:
-        numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates, 
+        numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates,
                                                         house, lclPrintDic)
         totNumPruned += numPruned
 
@@ -143,7 +142,7 @@ def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,lclPrintDic):
             while True:                          # Loop over one function.
 
                 print('  {:9} pass {}'.format(theKey, passNum))
-                numPrunnedThisPass, lclCanidates = v['func'](lclCanidates, 
+                numPrunnedThisPass, lclCanidates = v['func'](lclCanidates,
                                                              lclPrintDic)
                 numPrunnedThisLoop.append(numPrunnedThisPass)
                 if numPrunnedThisPass != 0:
@@ -202,11 +201,12 @@ def checkStatus(sln):
     cpyDic={'row':copy.deepcopy,'col':mp.mapColsToRows,'sqr':mp.mapSrqsToRows}
 
     cumPassed = True
-    for k,v in cpyDic.items():
+    for v in cpyDic.values():
         s = v(sln)
-        for rIdx,row in enumerate(s):
+        #for rIdx,row in enumerate(s):
+        for row in enumerate(s):
             myCnt  = [ row.count(x) for x in row ]
-            passed = not(any( x != 1 for x  in myCnt))
+            passed = not any( x != 1 for x  in myCnt)
             #print('house-{} idx-{} sts-{}'.format(k,rIdx,passed))
             if not passed:
                 cumPassed = False
@@ -280,7 +280,6 @@ def solvePuzzle(lclPuzzleDict, lclPruneSet, lclPrintDic):
     return lclPuzzleDict
 #############################################################################
 
-
 def getGuesses(lclSolution):
 
     lclCanidates = [[ [] for ii in range(9)] for jj in range(9)]
@@ -295,7 +294,7 @@ def getGuesses(lclSolution):
     for row in lenCanRows:
         twoD = [row[ii:ii+3] for ii in range(0,len(row),3)]
         lenCanRowsBySqr.append(twoD)
-        
+
     maxLenCanRowsBy3Cols = []
     for row in lenCanRowsBySqr:
         maxLenCanBySqr = [ max(el) for el in row ]
@@ -303,12 +302,12 @@ def getGuesses(lclSolution):
 
     possibleIdxs = [ [0,1,2], [0,2,1], [1,0,2], [1,2,0], [2,0,1], [2,1,0]]
     tryLst = []
-    for ii in range(3):
+    for jj in range(3):
         tryL = []
         for idxLst in possibleIdxs:
-            tLst = [ maxLenCanRowsBy3Cols[ii*3:(ii+1)*3][0][idxLst[0]], 
-                     maxLenCanRowsBy3Cols[ii*3:(ii+1)*3][1][idxLst[1]],
-                     maxLenCanRowsBy3Cols[ii*3:(ii+1)*3][2][idxLst[2]] 
+            tLst = [ maxLenCanRowsBy3Cols[jj*3:(jj+1)*3][0][idxLst[0]],
+                     maxLenCanRowsBy3Cols[jj*3:(jj+1)*3][1][idxLst[1]],
+                     maxLenCanRowsBy3Cols[jj*3:(jj+1)*3][2][idxLst[2]]
                    ]
             tryL.append(tLst)
         tryLst.append(tryL)
@@ -340,13 +339,13 @@ def getGuesses(lclSolution):
                     canValsLst.append([x,y,z])
     else:
         tryAbsCoord = []
-        for ii,rowOfSqrsTLst in enumerate(tryLstNo0):
-            for TryEl in rowOfSqrsTLst:
-                c02 = [ii*3+0, lenCanRows[ii*3+0].index(TryEl[0])]
-                c35 = [ii*3+1, lenCanRows[ii*3+1].index(TryEl[1])]
-                c68 = [ii*3+2, lenCanRows[ii*3+2].index(TryEl[2])]
+        for jj,rowOfSqrsTLst in enumerate(tryLstNo0):
+            for tryEl in rowOfSqrsTLst:
+                c02 = [jj*3+0, lenCanRows[jj*3+0].index(tryEl[0])]
+                c35 = [jj*3+1, lenCanRows[jj*3+1].index(tryEl[1])]
+                c68 = [jj*3+2, lenCanRows[jj*3+2].index(tryEl[2])]
                 tryAbsCoord.append([c02,c35,c68])
-    
+
         tryAbsCoordUniqueSqrs = []
         for threeCoords in tryAbsCoord:
             s1 = threeCoords[0][1]//3
@@ -355,14 +354,14 @@ def getGuesses(lclSolution):
             sSet = set([s1,s2,s3])
             if len(sSet) == 3:
                 tryAbsCoordUniqueSqrs.append(threeCoords)
-    
+
         canVals  = []
         firstTryCoord = []
         if len(tryAbsCoordUniqueSqrs) > 0:
             firstTryCoord = tryAbsCoordUniqueSqrs[0]
             for coord in tryAbsCoordUniqueSqrs[0]:
                 canVals.append([ x for x in lclCanidates[coord[0] ][coord[1]]])
-    
+
         canValsLst = []
         for x in canVals[0]:
             for y in canVals[1]:
@@ -427,17 +426,17 @@ if __name__ == '__main__':
     for option in options:
         if len(option) > 1:
             if option[0] == 'nhOn' : pruneDic['nhOn']  = int(option[1])
-            if option[0] == 'xwOn' : pruneDic['xwOn']  = int(option[1]) 
-            if option[0] == 'ppOn' : pruneDic['ppOn']  = int(option[1]) 
-            if option[0] == 'ywOn' : pruneDic['ywOn']  = int(option[1]) 
-                                     
-            if option[0] == 'nhPrn': printDic['nhPrn'] = int(option[1]) 
-            if option[0] == 'xwPrn': printDic['xwPrn'] = int(option[1]) 
-            if option[0] == 'ppPrn': printDic['ppPrn'] = int(option[1]) 
-            if option[0] == 'ywPrn': printDic['ywPrn'] = int(option[1]) 
-            if option[0] == 'flPrn': printDic['flPrn'] = int(option[1]) 
+            if option[0] == 'xwOn' : pruneDic['xwOn']  = int(option[1])
+            if option[0] == 'ppOn' : pruneDic['ppOn']  = int(option[1])
+            if option[0] == 'ywOn' : pruneDic['ywOn']  = int(option[1])
 
-            if option[0] == 'ss': ss = int(option[1]) 
+            if option[0] == 'nhPrn': printDic['nhPrn'] = int(option[1])
+            if option[0] == 'xwPrn': printDic['xwPrn'] = int(option[1])
+            if option[0] == 'ppPrn': printDic['ppPrn'] = int(option[1])
+            if option[0] == 'ywPrn': printDic['ywPrn'] = int(option[1])
+            if option[0] == 'flPrn': printDic['flPrn'] = int(option[1])
+
+            if option[0] == 'ss': ss = int(option[1])
 
     pruneLst = [ k for k,v in pruneDic.items() if v == 1 ]
     allSets  = set()
@@ -445,7 +444,7 @@ if __name__ == '__main__':
         allSets = set.union(allSets,set(combinations(pruneLst, ii)))
     ###########################################################
 
-    puzDicKeys = [ k for k in puzzlesDict.keys() ]
+    puzDicKeys = list(puzzlesDict.keys())
     print()
     for ii,k in enumerate(puzDicKeys):
         print('  {:2} - {}'.format( ii,k ))
@@ -466,17 +465,17 @@ if __name__ == '__main__':
     characterize = False
 
     guess = True
-    #guess = False
+    guess = False
 
     if characterize and guess:
         print('\n  ERROR. Can\'t characterize and guesss together.\n')
-        exit()
+        sys.exit()
 
     if characterize: pruneSets = allSets
     else: pruneSets = [pruneLst]
     ###########################################################
 
-    # allSets,pruneDic,pruneLst,printDic 
+    # allSets,pruneDic,pruneLst,printDic
     startTime = time.time()
     for pNme in dsrdKeys:
         pDat = puzzlesDict[pNme]
@@ -486,17 +485,17 @@ if __name__ == '__main__':
             cumAllStr += aStr
             cumSumStr += sStr
 
-            if not puzzlesDict[pNme]['passed'] and guess == True:
+            if not puzzlesDict[pNme]['passed'] and guess:
                 print('{} guessing'.format(pNme))
                 #input()
                 tryCords, tryVals = \
                 getGuesses(puzzlesDict[pNme]['solution'])
-            
+
                 for tVals in tryVals:
                     puzzlesDict[pNme]['guesses'] += 1
                     for ii,k in enumerate(tryCords):
                         puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = tVals[ii]
-            
+
                     puzzlesDict[pNme] = solvePuzzle(pDat, pruneSet, printDic)
                     aStr, sStr = pr.printResults(pNme, pDat)
                     cumAllStr += aStr
@@ -517,5 +516,3 @@ if __name__ == '__main__':
 
     endTime = time.time()
     print('Execution time = {:7.2f} seconds.'.format(endTime-startTime))
-
-

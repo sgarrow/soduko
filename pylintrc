@@ -10,6 +10,7 @@
 #    C0321  # multiple-statements
 #
 # Change all snake_case to camelCase
+# const-naming-style=UPPER_CASE to =camelCase
 #
 # Change good_names from:
 # good-names=i,
@@ -24,8 +25,9 @@
 #good-names=ii,
 #           jj,
 #           k,v,el,elem,
-#	   r,c,s,
-#	   Z,
+#	    r,c,s,
+#	    Z,
+#           x,y,z
 #           ex,
 #           Run,
 #           _
@@ -209,7 +211,7 @@ class-naming-style=PascalCase
 #class-rgx=
 
 # Naming style matching correct constant names.
-const-naming-style=UPPER_CASE
+const-naming-style=camelCase
 
 # Regular expression matching correct constant names. Overrides const-naming-
 # style. If left empty, constant names will be checked with the set naming
@@ -234,6 +236,7 @@ good-names=ii,
            k,v,el,elem,
 	   r,c,s,
 	   Z,
+	   x,y,z,
            ex,
            Run,
            _

@@ -244,7 +244,7 @@ def prunePointingPairs(canidates, house, lclPrintDic):
 
     # debug prints
     if lclPrintDic['ppPrn'] >= 3:
-        thingsPprint = { 'allBinsHeightTwo':allBinsHeightTwo,
+        thingsPprint = { #'allBinsHeightTwo':allBinsHeightTwo,
                          'allBinsHeightTwoD':allBinsHeightTwoD,
                          'ppRowD':ppRowD,
                          'ppColD':ppColD,
@@ -252,16 +252,13 @@ def prunePointingPairs(canidates, house, lclPrintDic):
                          'ppColAbsCoordD':ppColAbsCoordD 
                          }
 
-        pr.printCanidates(canidates)
-        print()
         for k,v in thingsPprint.items():
             myStr = ''
-            if len(v) > 0:
-                print('     {} ({})'.format(k, house))
-                for el in v:
-                    myStr = pp.pformat(el)
-                    print('    ',myStr, end='')
-                print()
+            print('     {} ({})'.format(k, house))
+            for ii in range(len(v)):
+                myStr = pp.pformat(v[ii])
+                print('    ',myStr)
+            print()
 
     ####################################################################################
 
@@ -275,15 +272,18 @@ def prunePointingPairs(canidates, house, lclPrintDic):
             cols = [ x for x in range(9) if x not in val['bCols'] ]
             for cIdx in cols:
                 if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
+
+                    if lclPrintDic['ppPrn'] >= 2:
+                        pr.printCanidates(canidates, alreadyPrn = alreadyPrinted)
+                        alreadyPrinted = True
+
                     canidates[val['aRow']][cIdx].remove(val['cVal'])
                     numPruned += 1
 
-                    if lclPrintDic['ppPrn'] >= 2:
-                        pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
-                        alreadyPrinted = True
                     if lclPrintDic['ppPrn'] >= 1:
                         print('       remove {} from ({},{})'.format(val['cVal'],val['aRow'],cIdx))
 
+    alreadyPrinted = False
     colsProcessed = []
     for val in ppColAbsCoordD.values():
         if val['aCol'] not in colsProcessed:
@@ -291,12 +291,14 @@ def prunePointingPairs(canidates, house, lclPrintDic):
             rows = [ x for x in range(9) if x not in val['bRows'] ]
             for rIdx in rows:
                 if canidates[rIdx][val['aCol']]!=0 and val['cVal'] in canidates[rIdx][val['aCol']]:
+
+                    if lclPrintDic['ppPrn'] >= 2:
+                        pr.printCanidates(canidates, alreadyPrn = alreadyPrinted)
+                        alreadyPrinted = True
+
                     canidates[rIdx][val['aCol']].remove(val['cVal'])
                     numPruned += 1
 
-                    if lclPrintDic['ppPrn'] >= 2:
-                        pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
-                        alreadyPrinted = True
                     if lclPrintDic['ppPrn'] >= 1:
                         print('       remove {} from ({},{})'.format(val['cVal'],rIdx,val['aCol']))
     ####################################################################################
@@ -314,7 +316,6 @@ def prYWingDict(v):
     print('    pIdx   = {}'.format(v[ 'pIdx'   ]))
     print('    Z      = {}'.format(v[ 'Z'      ]))
     print('    rmvIdx = {}'.format(v[ 'rmvIdx' ]))
-    print()
 
     #print('    rSee   = {}'.format(v['rSee'][0]))
     #print('             {}'.format(v['rSee'][1]))
@@ -331,11 +332,10 @@ def prYWingDict(v):
     #print('    aSee   = {}'.format(v['allSeeSet'][0]))
     #print('             {}'.format(v['allSeeSet'][1]))
     #print('             {}'.format(v['allSeeSet'][2]))
-    print('    ---------------')
+    print()
     return 0
 #############################################################################
-
-
+                                     #
 def pruneyWings (lclCanidates, lclPrintDic):
     numPruned = 0
     coordsOfAllPairs  = [ [r,c] for r in range(9) for c in range(9) \
@@ -416,11 +416,14 @@ def pruneyWings (lclCanidates, lclPrintDic):
             prYWingDict(v)
         for cord in v['rmvIdx']:
             if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
-                lclCanidates[cord[0]][cord[1]].remove(v['Z'])
-                numPruned += 1
+
                 if lclPrintDic['ywPrn'] >= 2:
                     pr.printCanidates(lclCanidates, alreadyPrn = alreadyPrinted)
                     alreadyPrinted = True
+
+                lclCanidates[cord[0]][cord[1]].remove(v['Z'])
+                numPruned += 1
+
                 if lclPrintDic['ywPrn'] >= 1:
                     print('     remove {} from ({},{})'.format(v['Z'], cord[0],cord[1]))
 

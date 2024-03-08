@@ -1,5 +1,5 @@
 def analyze():
-    import pprint        as pp
+    #import pprint        as pp
 
     with open('pData.txt', encoding='utf-8') as pFile:
         lines = [line.rstrip().split() for line in pFile]
