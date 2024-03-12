@@ -5,7 +5,7 @@ import pprint        as pp
 import fillRoutines  as fr
 import printRoutines as pr
 import mapping       as mp
-
+############################################################################
 
 def getComIdxs(rOrCOrS, tupSiz):
     if tupSiz == 2:
@@ -24,9 +24,8 @@ def getComIdxs(rOrCOrS, tupSiz):
             combinations(enumerate(rOrCOrS), tupSiz))
     return combIdxs
 ############################################################################
-def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintDic):
-    #pr.printCanidates(canidates)
 
+def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintDic):
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
 
@@ -107,7 +106,6 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
 ############################################################################
 
 def pruneXwings(canidates, house, lclPrintDic):
-
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
 
@@ -186,7 +184,6 @@ def pruneXwings(canidates, house, lclPrintDic):
 # process the pointing pairs in canidates.
 
 def prunePointingPairs(canidates, house, lclPrintDic):
-
     xCanidates = mp.mapSrqsToRows(canidates)
     numPruned  = 0
 
@@ -307,7 +304,6 @@ def prunePointingPairs(canidates, house, lclPrintDic):
 ############################################################################
 
 def prYWingDict(v):
-
     print('    cord   = {}'.format(v[ 'cord'   ]))
     print('    sqrs   = {}'.format(v[ 'sqrs'   ]))
     print('    vals   = {}'.format(v[ 'vals'   ]))
@@ -378,9 +374,8 @@ def pruneyWings (lclCanidates, lclPrintDic):
                              'rSee':   rSee, 'cSee': cSee, 'sSee': sSee,
                              'allSeeSet': aSet}
 
-    # Wings 1&2 must be in the same r or c or s as the pivot.
-    # Wings 1&2 must not be in the same r or c or s.
-    #prYWingDict(yWingDict)
+    # Wings must     be in the same r or c or s as the pivot.
+    # Wings must not be in the same r or c or s as each other.
     yWingDict2 = {}
     for k,v in yWingDict.items():
         aSeesB = v['cord'][0][0] == v['cord'][1][0] or \

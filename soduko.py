@@ -1,6 +1,6 @@
 #  C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
 
-#import pprint        as pp
+import pprint        as pp
 import sys
 import time
 import copy
@@ -50,7 +50,6 @@ def updateCanidatesList(lclSolution,lclCanidates):
 #############################################################################
 
 def pruneNht(lclCanidates, lclPrintDic):
-
     hiddenNakedLst = [ 'hidden', 'naked' ]
     #hiddenNakedLst = [ 'hidden']
 
@@ -177,7 +176,7 @@ def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, lclPrintDic):
     for theK in lclfillDicOfFuncs:
 
         numFilled, lclSolution = \
-        lclfillDicOfFuncs[theK]['func'](lclSolution,lclCanidates,lclPrintDic)
+        lclfillDicOfFuncs[theK]['func'](lclSolution,lclCanidates,lclPrintDic,theK)
 
         totalNumFilled  += numFilled
         lclfillDicOfFuncs[theK]['calls']   += 1
@@ -214,11 +213,10 @@ def checkStatus(sln):
 #############################################################################
 
 def solvePuzzle(lclPuzzleDict, lclPruneSet, lclPrintDic):
-
     fillDicOfFuncs = {
     'one': { 'func': fr.fillViaOneCanidate, 'calls': 0, 'replace': 0 },
-    'row': { 'func': fr.fillViaRowHistAnal, 'calls': 0, 'replace': 0 },
-    'col': { 'func': fr.fillViaColHistAnal, 'calls': 0, 'replace': 0 },
+    'row': { 'func': fr.fillViaRCHistAnal,  'calls': 0, 'replace': 0 },
+    'col': { 'func': fr.fillViaRCHistAnal,  'calls': 0, 'replace': 0 },
     'sqr': { 'func': fr.fillViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
 
     pruneDicOfFuncs = {
@@ -277,11 +275,11 @@ def solvePuzzle(lclPuzzleDict, lclPruneSet, lclPrintDic):
     lclPuzzleDict['sR']       = fillDicOfFuncs['sqr']['replace']
 
     print(62*'#')
+    #pp.pprint(canidates)
     return lclPuzzleDict
 #############################################################################
 
 def getGuesses(lclSolution):
-
     lclCanidates = [[ [] for ii in range(9)] for jj in range(9)]
     lclCanidates = updateCanidatesList(lclSolution, lclCanidates)
 
@@ -475,7 +473,6 @@ if __name__ == '__main__':
     else: pruneSets = [pruneLst]
     ###########################################################
 
-    # allSets,pruneDic,pruneLst,printDic
     startTime = time.time()
     for pNme in dsrdKeys:
         pDat = puzzlesDict[pNme]
