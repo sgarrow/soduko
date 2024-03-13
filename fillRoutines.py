@@ -54,13 +54,10 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
     xCanidates = cpyDic[house](lclCanidates)
 
-    #pr.printCanidates(lclCanidates,  alreadyPrn = False)
-    #pr.printCanidates(xCanidates, alreadyPrn = False)
-
     numFilled = 0
-    for rc_Idx,rowOrCol in enumerate(xCanidates):
+    for rcs_Idx,rowColOrSqr in enumerate(xCanidates):
 
-        flatRow            = flatten(rowOrCol)
+        flatRow            = flatten(rowColOrSqr)
         valsOfCntOne       = []
         idxsOfValsOfCntOne = []
         for val in range(1,10):
@@ -70,28 +67,31 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
                 valsOfCntOne.append(val)
 
                 idxsOfValsOfCntOne.\
-                append([ii for ii,cans in enumerate(rowOrCol)\
+                append([ii for ii,cans in enumerate(rowColOrSqr)\
                 if cans !=0 and val in cans][0])
 
-        #print('rowOrCol           ', rowOrCol)
-        #print('\nvalsOfCntOne       ', valsOfCntOne)
-        #print('idxsOfValsOfCntOne ', idxsOfValsOfCntOne)
-
         for idx,val in zip(idxsOfValsOfCntOne,valsOfCntOne):
-            #print(idx,val)
 
             if house == 'row':
-                if lclSolution[rc_Idx][idx] == 0:
+                if lclSolution[rcs_Idx][idx] == 0:
                     if lclPrintDic['flPrn'] >= 2:
-                        print(f'    Placing {val} at {rc_Idx},{idx}')
-                    lclSolution[rc_Idx][idx] = val
+                        print(f'    Placing {val} at {rcs_Idx},{idx}')
+                    lclSolution[rcs_Idx][idx] = val
                     numFilled += 1
 
             if house == 'col':
-                if lclSolution[idx][rc_Idx] == 0:
+                if lclSolution[idx][rcs_Idx] == 0:
                     if lclPrintDic['flPrn'] >= 2:
-                        print(f'    Placing {val} at {idx},{rc_Idx}') 
-                    lclSolution[idx][rc_Idx] = val
+                        print(f'    Placing {val} at {idx},{rcs_Idx}') 
+                    lclSolution[idx][rcs_Idx] = val
+                    numFilled += 1
+
+            if house == 'sqr':
+                rIdx,cIdx = mp.getRowColFromSqrOffset(rcs_Idx,idx)
+                if lclSolution[rIdx][cIdx] == 0:
+                    if lclPrintDic['flPrn'] >= 2:
+                        print(f'    Placing {val} at {rIdx},{cIdx}') 
+                    lclSolution[rIdx][cIdx] = val
                     numFilled += 1
 
     numZeros = sum(x.count(0) for x in lclSolution)
@@ -101,42 +101,5 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
     cpyDic = {'row':copy.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
     canidates = cpyDic[house](xCanidates)
 
-    #input()
     return numFilled,lclSolution
-#############################################################################
-
-def fillViaSqrHistAnal(solution, lclCanidates, lclPrintDic,house):
-    if lclPrintDic['flPrn'] >= 1:
-        print('  Filling solution cells thru Sqr Hist Analysis')
-    numFilled = 0
-    squareNums = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]]
-
-    for squareNum in squareNums:
-        rowsInSq = [ x+squareNum[0]*3 for x in [0,1,2] ]
-        colsInSq = [ x+squareNum[1]*3 for x in [0,1,2] ]
-
-        coordsInSq = [ [row,col] for row in rowsInSq for col in colsInSq ]
-        canidatesSq = [ lclCanidates[x[0]][x[1]] for x in coordsInSq ]
-
-        flatSq = flatten(canidatesSq)
-        histSq = genHistogram(flatSq)
-        binsHeightOne = [ x[0] for x in histSq if x[1] == 1 and x[0] != 0]
-
-        if len(binsHeightOne) > 0:
-            valOfBinHeight1 = binsHeightOne[0]
-            subListContainingThatVal = \
-                [ x for x in canidatesSq if x != 0 and valOfBinHeight1 in x]
-            idxOfSubLst =  canidatesSq.index(subListContainingThatVal[0])
-            row = rowsInSq[(idxOfSubLst // 3)]
-            col = colsInSq[(idxOfSubLst %  3)]
-
-            if solution[row][col] == 0:
-                if lclPrintDic['flPrn'] >= 2:
-                    print(f'    Placing {valOfBinHeight1} at {row},{col}')
-                solution[row][col] = valOfBinHeight1
-                numFilled += 1
-    numZeros = sum(x.count(0) for x in solution)
-    if lclPrintDic['flPrn'] >= 1:
-        print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.\n')
-    return numFilled,solution
 #############################################################################

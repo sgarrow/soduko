@@ -217,7 +217,8 @@ def solvePuzzle(lclPuzzleDict, lclPruneSet, lclPrintDic):
     'one': { 'func': fr.fillViaOneCanidate, 'calls': 0, 'replace': 0 },
     'row': { 'func': fr.fillViaRCHistAnal,  'calls': 0, 'replace': 0 },
     'col': { 'func': fr.fillViaRCHistAnal,  'calls': 0, 'replace': 0 },
-    'sqr': { 'func': fr.fillViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
+    #'sqr': { 'func': fr.fillViaSqrHistAnal, 'calls': 0, 'replace': 0 }}
+    'sqr': { 'func': fr.fillViaRCHistAnal, 'calls': 0, 'replace': 0 }}
 
     pruneDicOfFuncs = {
     'prune_XW' : { 'func': pruneXw,  'numPrunned': []},
