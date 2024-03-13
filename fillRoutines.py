@@ -40,9 +40,10 @@ def fillViaOneCanidate(solution, canidates, lclPrintDic, house):
                     if lclPrintDic['flPrn'] >= 2:
                         if numFilled%3 == 0:
                             print()
+    if numFilled%3 != 0: print()
     numZeros = sum(x.count(0) for x in solution)
     if lclPrintDic['flPrn'] >= 1:
-        print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.\n')
+        print(f'  numFilled = {numFilled}. NumZeros = {numZeros}.\n')
     return numFilled,solution
 #############################################################################
 
@@ -78,13 +79,17 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
 
             if lclSolution[rIdx][cIdx] == 0:
                 if lclPrintDic['flPrn'] >= 2:
-                    print(f'    Placing {val} at {rIdx},{cIdx}')
+                    print(f'    Placing {val} at {rIdx},{cIdx}', end = '')
                 lclSolution[rIdx][cIdx] = val
                 numFilled += 1
+                if lclPrintDic['flPrn'] >= 2:
+                    if numFilled%3 == 0:
+                        print()
 
+    if numFilled%3 != 0: print()
     numZeros = sum(x.count(0) for x in lclSolution)
     if lclPrintDic['flPrn'] >= 1:
-        print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.\n')
+        print(f'  numFilled = {numFilled}. NumZeros = {numZeros}.\n')
 
     return numFilled,lclSolution
 #############################################################################
