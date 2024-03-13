@@ -321,35 +321,6 @@ def prunePointingPairs(canidates, house, lclPrintDic):
     return numPruned,canidates
 ############################################################################
 
-def prYWingDict(v):
-    print('    cord   = {}'.format(v[ 'cord'   ]))
-    print('    sqrs   = {}'.format(v[ 'sqrs'   ]))
-    print('    vals   = {}'.format(v[ 'vals'   ]))
-    print()
-
-    print('    pIdx   = {}'.format(v[ 'pIdx'   ]))
-    print('    Z      = {}'.format(v[ 'Z'      ]))
-    print('    rmvIdx = {}'.format(v[ 'rmvIdx' ]))
-
-    #print('    rSee   = {}'.format(v['rSee'][0]))
-    #print('             {}'.format(v['rSee'][1]))
-    #print('             {}'.format(v['rSee'][2]))
-
-    #print('    cSee   = {}'.format(v['cSee'][0]))
-    #print('             {}'.format(v['cSee'][1]))
-    #print('             {}'.format(v['cSee'][2]))
-
-    #print('    sSee   = {}'.format(v['sSee'][0]))
-    #print('             {}'.format(v['sSee'][1]))
-    #print('             {}'.format(v['sSee'][2]))
-
-    #print('    aSee   = {}'.format(v['allSeeSet'][0]))
-    #print('             {}'.format(v['allSeeSet'][1]))
-    #print('             {}'.format(v['allSeeSet'][2]))
-    print()
-    return 0
-#############################################################################
-                                     #
 def pruneyWings (lclCanidates, lclPrintDic):
     numPruned = 0
     coordsOfAllPairs  = [ [r,c] for r in range(9) for c in range(9) \
@@ -426,7 +397,7 @@ def pruneyWings (lclCanidates, lclPrintDic):
     for k,v in yWingDict2.items():
         if lclPrintDic['ywPrn'] >= 1:
             print('\n  Processing key {}'.format(k))
-            prYWingDict(v)
+            pr.prYWingDict(v)
         for cord in v['rmvIdx']:
             if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
 

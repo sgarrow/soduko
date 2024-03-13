@@ -43,6 +43,35 @@ def prettyPrint3DArray(array):
     print()
 #############################################################################
 
+def prYWingDict(v):
+    print('    cord   = {}'.format(v[ 'cord'   ]))
+    print('    sqrs   = {}'.format(v[ 'sqrs'   ]))
+    print('    vals   = {}'.format(v[ 'vals'   ]))
+    print()
+
+    print('    pIdx   = {}'.format(v[ 'pIdx'   ]))
+    print('    Z      = {}'.format(v[ 'Z'      ]))
+    print('    rmvIdx = {}'.format(v[ 'rmvIdx' ]))
+
+    #print('    rSee   = {}'.format(v['rSee'][0]))
+    #print('             {}'.format(v['rSee'][1]))
+    #print('             {}'.format(v['rSee'][2]))
+
+    #print('    cSee   = {}'.format(v['cSee'][0]))
+    #print('             {}'.format(v['cSee'][1]))
+    #print('             {}'.format(v['cSee'][2]))
+
+    #print('    sSee   = {}'.format(v['sSee'][0]))
+    #print('             {}'.format(v['sSee'][1]))
+    #print('             {}'.format(v['sSee'][2]))
+
+    #print('    aSee   = {}'.format(v['allSeeSet'][0]))
+    #print('             {}'.format(v['allSeeSet'][1]))
+    #print('             {}'.format(v['allSeeSet'][2]))
+    print()
+    return 0
+#############################################################################
+                                     #
 def printResults(pNme, apDict):
 
     sumStr = ''
