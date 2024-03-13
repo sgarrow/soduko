@@ -72,34 +72,19 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
 
         for idx,val in zip(idxsOfValsOfCntOne,valsOfCntOne):
 
-            if house == 'row':
-                if lclSolution[rcs_Idx][idx] == 0:
-                    if lclPrintDic['flPrn'] >= 2:
-                        print(f'    Placing {val} at {rcs_Idx},{idx}')
-                    lclSolution[rcs_Idx][idx] = val
-                    numFilled += 1
+            if house == 'row': rIdx,cIdx = rcs_Idx,idx
+            if house == 'col': rIdx,cIdx = idx, rcs_Idx
+            if house == 'sqr': rIdx,cIdx = mp.getRowColFromSqrOffset(rcs_Idx,idx)
 
-            if house == 'col':
-                if lclSolution[idx][rcs_Idx] == 0:
-                    if lclPrintDic['flPrn'] >= 2:
-                        print(f'    Placing {val} at {idx},{rcs_Idx}') 
-                    lclSolution[idx][rcs_Idx] = val
-                    numFilled += 1
-
-            if house == 'sqr':
-                rIdx,cIdx = mp.getRowColFromSqrOffset(rcs_Idx,idx)
-                if lclSolution[rIdx][cIdx] == 0:
-                    if lclPrintDic['flPrn'] >= 2:
-                        print(f'    Placing {val} at {rIdx},{cIdx}') 
-                    lclSolution[rIdx][cIdx] = val
-                    numFilled += 1
+            if lclSolution[rIdx][cIdx] == 0:
+                if lclPrintDic['flPrn'] >= 2:
+                    print(f'    Placing {val} at {rIdx},{cIdx}')
+                lclSolution[rIdx][cIdx] = val
+                numFilled += 1
 
     numZeros = sum(x.count(0) for x in lclSolution)
     if lclPrintDic['flPrn'] >= 1:
         print(f'    numFilled = {numFilled}. NumZeros = {numZeros}.\n')
-
-    cpyDic = {'row':copy.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
-    canidates = cpyDic[house](xCanidates)
 
     return numFilled,lclSolution
 #############################################################################
