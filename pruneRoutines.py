@@ -1,11 +1,29 @@
-#import sys
 import copy
 from itertools import combinations
 import pprint        as pp
-import fillRoutines  as fr
 import printRoutines as pr
 import mapping       as mp
 ############################################################################
+
+def flatten(inLst):
+    outLst = []
+    for elem in inLst:
+        try:
+            for subEl in elem:
+                outLst.append(subEl)
+        except TypeError:
+            outLst.append(elem)
+    return outLst
+#############################################################################
+
+def genHistogram(inLst):
+    hist = []
+    for histBin in range(min(inLst), max(inLst)+1):
+        binHeight = len([1 for x in inLst if x==histBin])
+        if binHeight > 0:
+            hist.append((histBin, binHeight))
+    return hist
+#############################################################################
 
 def getComIdxs(rOrCOrS, tupSiz):
     if tupSiz == 2:
@@ -41,7 +59,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
 
             comIdxC = [ x for x in range(0,len(rOrCOrS)) if x not in comIdx ]
             setH    = set.union(*comb)
-            setG    = set(fr.flatten([ rOrCOrS[ii] for ii in comIdxC if rOrCOrS[ii] != [0]]))
+            setG    = set(flatten([ rOrCOrS[ii] for ii in comIdxC if rOrCOrS[ii] != [0]]))
             lstHmG  = list(setH - setG)
 
             hIsNaked = len(setH) == tupSiz
@@ -113,8 +131,8 @@ def pruneXwings(canidates, house, lclPrintDic):
 
     allBinsHeightTwo = []
     for row in xCanidates:
-        flatRow = fr.flatten(row)
-        histRow = fr.genHistogram(flatRow)
+        flatRow = flatten(row)
+        histRow = genHistogram(flatRow)
         allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
     #pp.pprint(allBinsHeightTwo)
 
@@ -190,8 +208,8 @@ def prunePointingPairs(canidates, house, lclPrintDic):
     # find all nums in rows of xCanidates (sqrs of canidates) that appear exactly twice
     allBinsHeightTwo = []
     for row in xCanidates:
-        flatRow = fr.flatten(row)
-        histRow = fr.genHistogram(flatRow)
+        flatRow = flatten(row)
+        histRow = genHistogram(flatRow)
         allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
     ####################################################################################
 
@@ -361,7 +379,7 @@ def pruneyWings (lclCanidates, lclPrintDic):
             aSet.append(aS)
 
         noValDups = list(map(list, set(map(tuple, map(set, vals)))))
-        histFlat  = fr.genHistogram(fr.flatten(vals))
+        histFlat  = genHistogram(flatten(vals))
 
         # Do the 3 cells look like [a,b] [a,z] [b,z]? Yes, potential Y-Wing.
         if len(noValDups) == 3 and len(histFlat) == 3:

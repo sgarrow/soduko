@@ -1,8 +1,5 @@
-#import printRoutines as pr
 import copy
-import pprint  as pp
 import mapping as mp
-import printRoutines as pr
 #############################################################################
 
 def flatten(inLst):
@@ -14,15 +11,6 @@ def flatten(inLst):
         except TypeError:
             outLst.append(elem)
     return outLst
-#############################################################################
-
-def genHistogram(inLst):
-    hist = []
-    for histBin in range(min(inLst), max(inLst)+1):
-        binHeight = len([1 for x in inLst if x==histBin])
-        if binHeight > 0:
-            hist.append((histBin, binHeight))
-    return hist
 #############################################################################
 
 def fillViaOneCanidate(solution, canidates, lclPrintDic, house):
@@ -52,7 +40,7 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
     if lclPrintDic['flPrn'] >= 1:
         print('  Filling solution cells thru {} Hist Analysis'.format(house))
 
-    cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
+    cpyDic={'row':copy.deepcopy,'col':mp.mapColsToRows,'sqr':mp.mapSrqsToRows}
     xCanidates = cpyDic[house](lclCanidates)
 
     numFilled = 0
