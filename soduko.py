@@ -506,6 +506,10 @@ if __name__ == '__main__':
     print(cumAllStr)
     print(cumSumStr)
 
+    for k in puzzlesDict.keys:
+        if puzzlesDict[k]['guesses'] > 0:
+            print(' Made {} guesses on puzzle {}'.format(puzzlesDict[k]['guesses'],k))
+
     if characterize:
         with open('pData.txt', 'w', encoding='utf-8') as pFile:
             pFile.write(cumSumStr)
