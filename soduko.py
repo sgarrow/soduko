@@ -463,7 +463,7 @@ if __name__ == '__main__':
     characterize = False
 
     guess = True
-    #guess = False
+    guess = False
 
     if characterize and guess:
         print('\n  ERROR. Can\'t characterize and guesss together.\n')
@@ -506,9 +506,9 @@ if __name__ == '__main__':
     print(cumAllStr)
     print(cumSumStr)
 
-    for k in puzzlesDict.keys:
+    for k in puzzlesDict.keys():
         if puzzlesDict[k]['guesses'] > 0:
-            print(' Made {} guesses on puzzle {}'.format(puzzlesDict[k]['guesses'],k))
+            print(' Made {:3} guesses on puzzle {}'.format(puzzlesDict[k]['guesses'],k))
 
     if characterize:
         with open('pData.txt', 'w', encoding='utf-8') as pFile:
@@ -516,4 +516,4 @@ if __name__ == '__main__':
         an.analyze()
 
     endTime = time.time()
-    print('Execution time = {:7.2f} seconds.'.format(endTime-startTime))
+    print('\n Execution time = {:7.2f} seconds.'.format(endTime-startTime))
