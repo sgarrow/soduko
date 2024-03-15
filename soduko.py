@@ -202,8 +202,7 @@ def checkStatus(sln):
     cumPassed = True
     for v in cpyDic.values():
         s = v(sln)
-        #for rIdx,row in enumerate(s):
-        for row in enumerate(s):
+        for rIdx,row in enumerate(s):
             myCnt  = [ row.count(x) for x in row ]
             passed = not any( x != 1 for x  in myCnt)
             #print('house-{} idx-{} sts-{}'.format(k,rIdx,passed))
@@ -464,7 +463,7 @@ if __name__ == '__main__':
     characterize = False
 
     guess = True
-    guess = False
+    #guess = False
 
     if characterize and guess:
         print('\n  ERROR. Can\'t characterize and guesss together.\n')

@@ -1,5 +1,5 @@
-import copy
 from itertools import combinations
+import copy          as cp
 import pprint        as pp
 import printRoutines as pr
 import mapping       as mp
@@ -28,23 +28,25 @@ def genHistogram(inLst):
 def getComIdxs(rOrCOrS, tupSiz):
     if tupSiz == 2:
         combIdxs = \
-        list((i,j) for ((i,_),(j,_)) in combinations(enumerate(rOrCOrS), tupSiz))
+        list((i,j) for ((i,_),(j,_)) in \
+        combinations(enumerate(rOrCOrS), tupSiz))
     elif tupSiz == 3:
         combIdxs = \
-        list((i,j,k) for ((i,_),(j,_),(k,_)) in combinations(enumerate(rOrCOrS), tupSiz))
+        list((i,j,k) for ((i,_),(j,_),(k,_)) in \
+        combinations(enumerate(rOrCOrS), tupSiz))
     elif tupSiz == 4:
         combIdxs = \
         list((i,j,k,l) for ((i,_),(j,_),(k,_),(l,_)) in \
-            combinations(enumerate(rOrCOrS), tupSiz))
+        combinations(enumerate(rOrCOrS), tupSiz))
     elif tupSiz == 5:
         combIdxs = \
         list((i,j,k,l,m) for ((i,_),(j,_),(k,_),(l,_),(m,_)) in \
-            combinations(enumerate(rOrCOrS), tupSiz))
+        combinations(enumerate(rOrCOrS), tupSiz))
     return combIdxs
 ############################################################################
 
 def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintDic):
-    cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
+    cpyDic = {'row':cp.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
 
     numPruned = 0
@@ -117,14 +119,14 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                 xCanidates[myD['row']] = temp2
                 break
 
-    cpyDic = {'row':copy.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
+    cpyDic = {'row':cp.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
     canidates = cpyDic[house](xCanidates)
 
     return(numPruned, canidates)
 ############################################################################
 
 def pruneXwings(canidates, house, lclPrintDic):
-    cpyDic = {'row':copy.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
+    cpyDic = {'row':cp.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
 
     numPruned = 0
@@ -181,7 +183,7 @@ def pruneXwings(canidates, house, lclPrintDic):
                     if lclPrintDic['xwPrn'] >= 1:
                         print('      remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))
 
-    cpyDic = {'row':copy.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
+    cpyDic = {'row':cp.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
     canidates = cpyDic[house](xCanidates)
 
     return(numPruned, canidates)
