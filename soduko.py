@@ -421,6 +421,7 @@ if __name__ == '__main__':
 
     pruneDic = {}
     printDic = {}
+    optDic   = {}
     for option in options:
         if len(option) > 1:
             if option[0] == 'nhOn' : pruneDic['nhOn']  = int(option[1])
@@ -434,7 +435,9 @@ if __name__ == '__main__':
             if option[0] == 'ywPrn': printDic['ywPrn'] = int(option[1])
             if option[0] == 'flPrn': printDic['flPrn'] = int(option[1])
 
-            if option[0] == 'ss': ss = int(option[1])
+            if option[0] == 'analyze': optDic['analyze'] = int(option[1])
+            if option[0] == 'guess':   optDic['guess'  ] = int(option[1])
+            if option[0] == 'ss':      optDic['ss'     ] = int(option[1])
 
     pruneLst = [ k for k,v in pruneDic.items() if v == 1 ]
     allSets  = set()
@@ -459,17 +462,11 @@ if __name__ == '__main__':
         dsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs]
     ###########################################################
 
-    characterize = True
-    characterize = False
-
-    guess = True
-    guess = False
-
-    if characterize and guess:
-        print('\n  ERROR. Can\'t characterize and guesss together.\n')
+    if optDic['analyze'] == 1 and optDic['guess'] == 1:
+        print('\n  ERROR. Can\'t analyze and guesss together.\n')
         sys.exit()
 
-    if characterize: pruneSets = allSets
+    if optDic['analyze'] == 1: pruneSets = allSets
     else: pruneSets = [pruneLst]
     ###########################################################
 
@@ -482,7 +479,7 @@ if __name__ == '__main__':
             cumAllStr += aStr
             cumSumStr += sStr
 
-            if not puzzlesDict[pNme]['passed'] and guess:
+            if not puzzlesDict[pNme]['passed'] and optDic['guess'] == 1:
                 print('{} guessing'.format(pNme))
                 #input()
                 tryCords, tryVals = \
@@ -510,7 +507,7 @@ if __name__ == '__main__':
         if puzzlesDict[k]['guesses'] > 0:
             print(' Made {:3} guesses on puzzle {}'.format(puzzlesDict[k]['guesses'],k))
 
-    if characterize:
+    if optDic['analyze'] == 1:
         with open('pData.txt', 'w', encoding='utf-8') as pFile:
             pFile.write(cumSumStr)
         an.analyze()
