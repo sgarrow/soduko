@@ -72,13 +72,13 @@ def prYWingDict(v):
     return 0
 #############################################################################
                                      #
-def printResults(pNme, apDict):
+def printResults(pNme, pIdx, apDict):
 
     sumStr = ''
     allStr = ''
 
     pf     = 'FAIL' if not apDict['passed'] else 'PASS'
-    sumStr += ' {:9} {} {}\n'.format( pNme, pf, apDict['prunes'] )
+    sumStr += ' {:2} - {:9} {} {}\n'.format( pIdx, pNme, pf, apDict['prunes'] )
 
     allStr = '\n' + sumStr[:] + '\n'
     for ii in range(len(apDict['puzzle'])):

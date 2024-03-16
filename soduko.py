@@ -457,9 +457,8 @@ if __name__ == '__main__':
         sys.exit()
 
     if 'a' in puzIdxs:
-        dsrdKeys = [ puzDicKeys[    x ] for x in range(len(puzDicKeys))]
-    else:
-        dsrdKeys = [ puzDicKeys[int(x)] for x in puzIdxs]
+        puzIdxs = [ii for ii,k in enumerate(puzDicKeys)]
+    dsrdKeys = [puzDicKeys[int(x)] for x in puzIdxs]
     ###########################################################
 
     if optDic['analyze'] == 1 and optDic['guess'] == 1:
@@ -471,11 +470,11 @@ if __name__ == '__main__':
     ###########################################################
 
     startTime = time.time()
-    for pNme in dsrdKeys:
+    for pNme,pIdx in zip(dsrdKeys,puzIdxs):
         pDat = puzzlesDict[pNme]
         for pruneSet in pruneSets:
             puzzlesDict[pNme] = solvePuzzle(pDat, pruneSet, printDic)
-            aStr, sStr = pr.printResults(pNme, pDat)
+            aStr, sStr = pr.printResults(pNme, pIdx, pDat)
             cumAllStr += aStr
             cumSumStr += sStr
 
@@ -491,7 +490,7 @@ if __name__ == '__main__':
                         puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = tVals[ii]
 
                     puzzlesDict[pNme] = solvePuzzle(pDat, pruneSet, printDic)
-                    aStr, sStr = pr.printResults(pNme, pDat)
+                    aStr, sStr = pr.printResults(pNme, pIdx, pDat)
                     cumAllStr += aStr
                     cumSumStr += sStr
                     if puzzlesDict[pNme]['passed']:
