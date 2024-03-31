@@ -11,7 +11,7 @@ ywPrn 0  # 0-quiet, 1-Dicts,removed. 2-canidates.
 flPrn 0  # 0-quiet, 1-numFilled.     2-filled coords.
 
 analyze  0	 # 0-disable. 1-enable.
-guess    0	 # 0-disable. 1-enable.
+guess    1	 # 0-disable. 1-enable.
 ss       0	 # 0-disable. 1-enable.
 
 
