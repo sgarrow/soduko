@@ -4,13 +4,14 @@ def analyze():
     with open('pData.txt', encoding='utf-8') as pFile:
         lines = [line.rstrip().split() for line in pFile]
     #[print(line) for line in lines]
+    
 
     mainD = {}
     for aLine in lines:
-        puz  = aLine[0]
-        sts  = aLine[1]
+        puz  = aLine[2]
+        sts  = aLine[3]
 
-        prn1 = aLine[2:]
+        prn1 = aLine[4:]
         prn2 = [ x.strip('\',()') for x in prn1 ]
         prn  = '_'.join(x for x in sorted(prn2))
         if prn == '': prn = '0'
