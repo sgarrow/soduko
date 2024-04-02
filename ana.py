@@ -4,7 +4,6 @@ def analyze():
     with open('pData.txt', encoding='utf-8') as pFile:
         lines = [line.rstrip().split() for line in pFile]
     #[print(line) for line in lines]
-    
 
     mainD = {}
     for aLine in lines:
@@ -28,7 +27,7 @@ def analyze():
     print()
     for k,v in mainD.items():
         if 'PASS' in v:
-            minLen = (min([ len(x) for x in v['PASS']]))
+            minLen = min([ len(x) for x in v['PASS']])
             print(' {:9} can PASS w/ :'.format(k),end='')
             print([ x for x in v['PASS'] if len(x) == minLen])
         else:
