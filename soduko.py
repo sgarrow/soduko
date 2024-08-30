@@ -399,7 +399,7 @@ def getGuesses(lclSolution):
     #print()
     #
     #print('firstTryCoord')
-    #pp.pprint(firstTryCoord)
+    #pp.pprint( firstTryCoord)
     #print()
     #print('canValsLst')
     #pp.pprint(canValsLst)

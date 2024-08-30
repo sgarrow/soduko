@@ -330,6 +330,12 @@ def pruneyWings (lclCanidates, lclPrintDic):
     combSet3pairsCord = combinations(coordsOfAllPairs, 3)
     combLst3pairsCord = list(combSet3pairsCord)
 
+    #print( '  coordinates of all cells with only two canidates:' )
+    #[ print(c,' =',lclCanidates[c[0]][c[1]]) for c in coordsOfAllPairs ]
+    #print( '  all combinations of above coordinates:' )
+    #[ print(c) for c in combLst3pairsCord ]
+    #input()
+
     yWingDict = {}
     for ii,comb in enumerate(combLst3pairsCord):
 
