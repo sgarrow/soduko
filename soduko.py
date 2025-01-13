@@ -1,4 +1,5 @@
 #C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
+ver = ' v1.0.0 - 12-Jan-2025'
 
 import pprint        as pp
 import sys
@@ -409,7 +410,7 @@ def getGuesses(lclSolution):
 
 if __name__ == '__main__':
     from puzzles import puzzlesDict
-
+    print(ver)
     cumAllStr = ''
     cumSumStr = ''
     ###########################################################
