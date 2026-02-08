@@ -1,5 +1,5 @@
 #C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
-ver = ' v1.0.1 - 07-Feb-2026'
+ver = ' v1.0.2 - 07-Feb-2026'
 
 import pprint        as pp
 import sys
