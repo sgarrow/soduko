@@ -4,12 +4,12 @@ ppOn  1  # 0-disable. 1-enable.
 ywOn  1  # 0-disable. 1-enable.
 
 
-nhPrn 0  # 0-quiet. 1-Dicts,removed. 2-canidates.
-xwPrn 0  # 0-quiet, 1-Dicts,removed. 2-canidates.
-ppPrn 0  # 0-quiet, 1-Dicts,removed. 2-canidates, 3-multi Dict.
-ywPrn 0  # 0-quiet, 1-Dicts,removed. 2-canidates.
-flPrn 0  # 0-quiet, 1-numFilled.     2-filled coords.
+nhPrn 1  # 0-quiet. 1-Dicts,removed. 2-canidates.
+xwPrn 1  # 0-quiet, 1-Dicts,removed. 2-canidates.
+ppPrn 1  # 0-quiet, 1-Dicts,removed. 2-canidates, 3-multi Dict.
+ywPrn 1  # 0-quiet, 1-Dicts,removed. 2-canidates.
+flPrn 1  # 0-quiet, 1-numFilled.     2-filled coords.
 
 analyze  0	 # 0-disable. 1-enable.
-guess    0	 # 0-disable. 1-enable.
+guess    1	 # 0-disable. 1-enable.
 ss       0	 # 0-disable. 1-enable.
