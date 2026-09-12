@@ -1,6 +1,3 @@
-#C:\Users\bendr\AppData\Roaming\Python\Python311\Scripts\pylint.exe  .\soduko.py
-VER = 'v1.0.4 - 07-Mar-2026'
-
 import pprint        as pp
 import sys
 import time
@@ -11,6 +8,13 @@ import mapping       as mp
 import fillRoutines  as fr
 import pruneRoutines as rr
 import ana           as an
+
+import prune.nakedHiddenTups as nht
+import prune.xWing           as xw
+import prune.yWing           as yw
+import prune.pointingPair    as pnp
+
+VER = 'v1.1.0 - 11-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -67,7 +71,7 @@ def pruneNht(lclCanidates, lclPrintDic):
             for house in houseLst:
                 #print('Pruning {:6} {}-tuples in {}s'.format(hn,N,h))
                 numPruned, lclCanidates = \
-                rr.pruneNakedAndHiddenTuples(lclCanidates, house, hideNkd,
+                nht.pruneNakedAndHiddenTuples(lclCanidates, house, hideNkd,
                                              tupSize, lclPrintDic)
                 totNumPruned += numPruned
 
@@ -81,7 +85,7 @@ def pruneXw(lclCanidates, lclPrintDic):
     totNumPruned = 0
     houseLst = [ 'row','col' ]
     for house in houseLst:
-        numPruned,lclCanidates=rr.pruneXwings(lclCanidates,house,lclPrintDic)
+        numPruned,lclCanidates=xw.pruneXwings(lclCanidates,house,lclPrintDic)
         totNumPruned += numPruned
 
         if lclPrintDic['xwPrn'] > 0 and numPruned > 0:
@@ -92,7 +96,7 @@ def pruneXw(lclCanidates, lclPrintDic):
 
 def pruneYw(lclCanidates, lclPrintDic):
     totNumPruned = 0
-    numPruned, lclCanidates = rr.pruneyWings(lclCanidates, lclPrintDic)
+    numPruned, lclCanidates = yw.pruneyWings(lclCanidates, lclPrintDic)
     totNumPruned += numPruned
 
     if lclPrintDic['ywPrn'] > 0 and numPruned > 0:
@@ -106,7 +110,7 @@ def prunePp(lclCanidates, lclPrintDic):
     houseLst = [ 'row','col' ]
     #houseLst = [ 'row']
     for house in houseLst:
-        numPruned, lclCanidates = rr.prunePointingPairs(lclCanidates,
+        numPruned, lclCanidates = pnp.prunePointingPairs(lclCanidates,
                                                         house, lclPrintDic)
         totNumPruned += numPruned
 
@@ -410,7 +414,7 @@ def getGuesses(lclSolution):
 
 if __name__ == '__main__':
     from puzzles import puzzlesDict
-    print(ver)
+    print(VER)
     cumAllStr = ''
     cumSumStr = ''
     ###########################################################
@@ -471,6 +475,7 @@ if __name__ == '__main__':
 
     startTime = time.time()
     for pNme,pIdx in zip(dsrdKeys,puzIdxs):
+        print(' ### Start {} ###'.format(pNme))
         pDat = puzzlesDict[pNme]
         for pruneSet in pruneSets:
             puzzlesDict[pNme] = solvePuzzle(pDat, pruneSet, printDic)
@@ -499,6 +504,7 @@ if __name__ == '__main__':
                 for ii,k in enumerate(tryCords):
                     puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = 0
 
+        print(' ### End   {} ###'.format(pNme))
     print(cumAllStr)
     print(cumSumStr)
 

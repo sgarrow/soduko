@@ -14,6 +14,8 @@ def flatten(inLst):
 #############################################################################
 
 def fillViaOneCanidate(solution, canidates, lclPrintDic, house):
+    if house:
+        pass # Unused arg warning.
     if lclPrintDic['flPrn'] >= 1:
         print('\n  Filling solution cells that have only 1 canidate')
     numFilled = 0
@@ -45,7 +47,7 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
     xCanidates = cpyDic[house](lclCanidates)
     numFilled  = 0
 
-    for rcs_Idx,rowColOrSqr in enumerate(xCanidates):
+    for rcsIdx,rowColOrSqr in enumerate(xCanidates):
 
         flatRow            = flatten(rowColOrSqr)
         valsOfCntOne       = []
@@ -63,9 +65,10 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
 
         for idx,val in zip(idxsOfValsOfCntOne,valsOfCntOne):
 
-            if house == 'row': rIdx,cIdx = rcs_Idx,idx
-            if house == 'col': rIdx,cIdx = idx, rcs_Idx
-            if house == 'sqr': rIdx,cIdx = mp.getRowColFromSqrOffset(rcs_Idx,idx)
+            rIdx,cIdx = 0,0
+            if house == 'row': rIdx,cIdx = rcsIdx,idx
+            if house == 'col': rIdx,cIdx = idx, rcsIdx
+            if house == 'sqr': rIdx,cIdx = mp.getRowColFromSqrOffset(rcsIdx,idx)
 
             if lclSolution[rIdx][cIdx] == 0:
                 lclSolution[rIdx][cIdx] = val

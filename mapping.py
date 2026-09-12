@@ -45,6 +45,10 @@ def getRowColFromSqrOffset(sqr,ofst):
 #############################################################################
 # HUGE BUG!!!
 def findRowsColsInSquare(rIdx, cIdx):
+
+    rOffsets = []
+    cOffsets = []
+
     if rIdx % 3 == 0:
         rOffsets = [ 1, 2]
     if rIdx % 3 == 1:
