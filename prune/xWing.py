@@ -1,6 +1,6 @@
 from itertools import combinations
-import copy          as cp
-import mapping       as mp
+import copy  as cp
+import utils as ut
 #############################################################################
 
 def flatten(inLst):
@@ -24,7 +24,7 @@ def genHistogram(inLst):
 #############################################################################
 
 def pruneXwings(canidates, house, lclPrintDic):
-    cpyDic = {'row':cp.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
+    cpyDic = {'row':cp.deepcopy, 'col':ut.mapColsToRows, 'sqr':ut.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
 
     numPruned = 0
@@ -81,7 +81,7 @@ def pruneXwings(canidates, house, lclPrintDic):
                     if lclPrintDic['xwPrn'] >= 1:
                         print('      remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))
 
-    cpyDic = {'row':cp.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
+    cpyDic = {'row':cp.deepcopy, 'col':ut.mapRowsToCols, 'sqr':ut.mapRowsToSqrs}
     canidates = cpyDic[house](xCanidates)
 
     return(numPruned, canidates)

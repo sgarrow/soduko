@@ -2,7 +2,7 @@ from itertools import combinations
 import copy          as cp
 import pprint        as pp
 import printRoutines as pr
-import mapping       as mp
+import utils         as ut
 ############################################################################
 
 def flatten(inLst):
@@ -38,7 +38,7 @@ def getComIdxs(rOrCOrS, tupSiz):
 ############################################################################
 
 def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintDic):
-    cpyDic = {'row':cp.deepcopy, 'col':mp.mapColsToRows, 'sqr':mp.mapSrqsToRows}
+    cpyDic = {'row':cp.deepcopy, 'col':ut.mapColsToRows, 'sqr':ut.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
 
     numPruned = 0
@@ -113,7 +113,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                 xCanidates[myD['row']] = temp2
                 break
 
-    cpyDic = {'row':cp.deepcopy, 'col':mp.mapRowsToCols, 'sqr':mp.mapRowsToSqrs}
+    cpyDic = {'row':cp.deepcopy, 'col':ut.mapRowsToCols, 'sqr':ut.mapRowsToSqrs}
     canidates = cpyDic[house](xCanidates)
 
     return(numPruned, canidates)

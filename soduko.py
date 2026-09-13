@@ -1,12 +1,12 @@
-import pprint        as pp
+from itertools import combinations
 import sys
 import time
 import copy
-from itertools import combinations
+import pprint        as pp
+
 import printRoutines as pr
-import mapping       as mp
+import utils         as ut
 import fillRoutines  as fr
-import pruneRoutines as rr
 import ana           as an
 
 import prune.nakedHiddenTups as nht
@@ -14,7 +14,7 @@ import prune.xWing           as xw
 import prune.yWing           as yw
 import prune.pointingPair    as pnp
 
-VER = 'v1.1.0 - 11-Sep-2026'
+VER = 'v1.2.0 - 12-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -31,7 +31,7 @@ def updateCanidatesList(lclSolution,lclCanidates):
             for num in [1,2,3,4,5,6,7,8,9]:
 
                 inSquare = False
-                rowsInSquare,colsInSquare= mp.findRowsColsInSquare(rIdx,cIdx)
+                rowsInSquare,colsInSquare= ut.findRowsColsInSquare(rIdx,cIdx)
 
                 for ris in rowsInSquare:
                     for cis in colsInSquare:
@@ -202,7 +202,7 @@ def initfillDicOfFuncsCntrs(lclfillDicOfFuncs):
 #############################################################################
 
 def checkStatus(sln):
-    cpyDic={'row':copy.deepcopy,'col':mp.mapColsToRows,'sqr':mp.mapSrqsToRows}
+    cpyDic={'row':copy.deepcopy,'col':ut.mapColsToRows,'sqr':ut.mapSrqsToRows}
 
     cumPassed = True
     for v in cpyDic.values():

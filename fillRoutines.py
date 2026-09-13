@@ -1,5 +1,5 @@
 import copy
-import mapping as mp
+import utils as ut
 #############################################################################
 
 def flatten(inLst):
@@ -43,7 +43,7 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
     if lclPrintDic['flPrn'] >= 1:
         print('  Filling solution cells thru {} Hist Analysis'.format(house))
 
-    cpyDic={'row':copy.deepcopy,'col':mp.mapColsToRows,'sqr':mp.mapSrqsToRows}
+    cpyDic={'row':copy.deepcopy,'col':ut.mapColsToRows,'sqr':ut.mapSrqsToRows}
     xCanidates = cpyDic[house](lclCanidates)
     numFilled  = 0
 
@@ -68,7 +68,7 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
             rIdx,cIdx = 0,0
             if house == 'row': rIdx,cIdx = rcsIdx,idx
             if house == 'col': rIdx,cIdx = idx, rcsIdx
-            if house == 'sqr': rIdx,cIdx = mp.getRowColFromSqrOffset(rcsIdx,idx)
+            if house == 'sqr': rIdx,cIdx = ut.getRowColFromSqrOffset(rcsIdx,idx)
 
             if lclSolution[rIdx][cIdx] == 0:
                 lclSolution[rIdx][cIdx] = val

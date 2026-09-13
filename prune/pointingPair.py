@@ -1,4 +1,4 @@
-import mapping       as mp
+import utils as ut
 #############################################################################
 
 def flatten(inLst):
@@ -36,7 +36,7 @@ def genHistogram(inLst):
 # process the pointing pairs in canidates.
 
 def prunePointingPairs(canidates, house, lclPrintDic):
-    xCanidates = mp.mapSrqsToRows(canidates)
+    xCanidates = ut.mapSrqsToRows(canidates)
     numPruned  = 0
 
     # find all nums in rows of xCanidates (sqrs of canidates) that appear exactly twice
@@ -84,8 +84,8 @@ def prunePointingPairs(canidates, house, lclPrintDic):
     if house == 'row': ppD = ppRowD
     if house == 'col': ppD = ppColD
     for val in ppD.values():
-        row0,col0= mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][0])
-        row1,col1= mp.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][1])
+        row0,col0= ut.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][0])
+        row1,col1= ut.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][1])
         if house == 'row': ppRowAbsCoordD[k]= {'aRow':row0,'bCols':[col0,col1],'cVal':val['C_val']}
         if house == 'col': ppColAbsCoordD[k]= {'aCol':col0,'bRows':[row0,row1],'cVal':val['C_val']}
         k += 1

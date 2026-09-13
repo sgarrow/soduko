@@ -1,5 +1,5 @@
 from itertools import combinations
-import mapping       as mp
+import utils as ut
 ############################################################################
 
 def genHistogram(inLst):
@@ -40,7 +40,7 @@ def pruneyWings (lclCanidates, lclPrintDic):
 
         vals,rSee,cSee,sSee,aSet,sqrs = [],[],[],[],[],[]
         for cord in comb:
-            rowsInSq, colsInSq = mp.findRowsColsInSquare(cord[0], cord[1])
+            rowsInSq, colsInSq = ut.findRowsColsInSquare(cord[0], cord[1])
 
             sqr = cord[0]//3*3 + cord[1]//3
             v   = lclCanidates[cord[0]][cord[1]]
