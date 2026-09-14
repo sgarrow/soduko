@@ -2,7 +2,7 @@ from itertools import combinations
 import sys
 import time
 import copy
-import pprint        as pp
+#import pprint        as pp
 
 import printRoutines as pr
 import utils         as ut
@@ -14,7 +14,7 @@ import prune.xWing           as xw
 import prune.yWing           as yw
 import prune.pointingPair    as pnp
 
-VER = 'v1.2.0 - 12-Sep-2026'
+VER = 'v2.0.0 - 13-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -55,13 +55,13 @@ def updateCanidatesList(lclSolution,lclCanidates):
 #############################################################################
 
 def pruneNht(lclCanidates, lclPrintDic):
+
     hiddenNakedLst = [ 'hidden', 'naked' ]
-    #hiddenNakedLst = [ 'hidden']
-
     houseLst       = [ 'row','col','sqr' ]
-    #houseLst       = [ 'row' ]
-
     tupSizeLst     = [4,3,2]
+
+    #hiddenNakedLst = [ 'hidden']
+    #houseLst       = [ 'row' ]
     #tupSizeLst     = [3]
 
     totNumPruned   = 0
@@ -207,7 +207,7 @@ def checkStatus(sln):
     cumPassed = True
     for v in cpyDic.values():
         s = v(sln)
-        for rIdx,row in enumerate(s):
+        for row in s:
             myCnt  = [ row.count(x) for x in row ]
             passed = not any( x != 1 for x  in myCnt)
             #print('house-{} idx-{} sts-{}'.format(k,rIdx,passed))

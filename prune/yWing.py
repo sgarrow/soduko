@@ -1,26 +1,7 @@
 from itertools import combinations
-import utils as ut
+import utils         as ut
+import printRoutines as pr
 ############################################################################
-
-def genHistogram(inLst):
-    hist = []
-    for histBin in range(min(inLst), max(inLst)+1):
-        binHeight = len([1 for x in inLst if x==histBin])
-        if binHeight > 0:
-            hist.append((histBin, binHeight))
-    return hist
-#############################################################################
-
-def flatten(inLst):
-    outLst = []
-    for elem in inLst:
-        try:
-            for subEl in elem:
-                outLst.append(subEl)
-        except TypeError:
-            outLst.append(elem)
-    return outLst
-#############################################################################
 
 def pruneyWings (lclCanidates, lclPrintDic):
     numPruned = 0
@@ -57,7 +38,7 @@ def pruneyWings (lclCanidates, lclPrintDic):
             aSet.append(aS)
 
         noValDups = list(map(list, set(map(tuple, map(set, vals)))))
-        histFlat  = genHistogram(flatten(vals))
+        histFlat  = ut.genHistogram(ut.flatten(vals))
 
         # Do the 3 cells look like [a,b] [a,z] [b,z]? Yes, potential Y-Wing.
         if len(noValDups) == 3 and len(histFlat) == 3:
@@ -90,14 +71,14 @@ def pruneyWings (lclCanidates, lclPrintDic):
         if seesLst.count(False) == 1: # This is one!
             pIdx = 2- seesLst.index(False)
             notP = [i for i in range(3) if i != pIdx]
-            Z    = [ x for x in v['vals'][notP[0]] if x not in v['vals'][pIdx] ][0]
+            z    = [ x for x in v['vals'][notP[0]] if x not in v['vals'][pIdx] ][0]
 
             delCrds = set.intersection( v['allSeeSet'][notP[0]], v['allSeeSet'][notP[1]] )
             rmvIdx  = [ x for x in delCrds if x!= (v['cord'][pIdx][0], v['cord'][pIdx][1]) ]
 
             yWingDict2[k]           = v
             yWingDict2[k]['pIdx']   = pIdx    # pivot.
-            yWingDict2[k]['Z']      = Z       # Val to del.
+            yWingDict2[k]['Z']      = z       # Val to del.
             yWingDict2[k]['rmvIdx'] = rmvIdx  # Where to del from.
 
     alreadyPrinted = False

@@ -132,7 +132,7 @@ puzUsr = [ '000 320 100',
            '030 070 000',
            '005 008 001' ]
 
-puzImp_28=['601 080 092',
+puzImp28= ['601 080 092',
            '900 000 410',
            '080 009 700',
 
@@ -237,7 +237,7 @@ puzzlesDict = {
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0,
                     'prunes': None, 'passed': None, 'guesses': 0},
 
-    'puzImp_28' : { 'puzzle' : convert(puzImp_28),'solution' : [],
+    'puzImp_28' : { 'puzzle' : convert(puzImp28), 'solution' : [],
                     'start0s' : 0, 'end0s' : 0,
                     'oC' : 0, 'oR' : 0, 'rC' : 0, 'rR' : 0,
                     'cC' : 0, 'cR' : 0, 'sC' : 0, 'sR' : 0,

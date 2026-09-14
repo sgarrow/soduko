@@ -1,20 +1,11 @@
 from itertools import combinations
+
 import copy          as cp
 import pprint        as pp
+
 import printRoutines as pr
 import utils         as ut
 ############################################################################
-
-def flatten(inLst):
-    outLst = []
-    for elem in inLst:
-        try:
-            for subEl in elem:
-                outLst.append(subEl)
-        except TypeError:
-            outLst.append(elem)
-    return outLst
-#############################################################################
 
 def getComIdxs(rOrCOrS, tupSiz):
     combIdxs = 0
@@ -53,7 +44,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
 
             comIdxC = [ x for x in range(0,len(rOrCOrS)) if x not in comIdx ]
             setH    = set.union(*comb)
-            setG    = set(flatten([ rOrCOrS[ii] for ii in comIdxC if rOrCOrS[ii] != [0]]))
+            setG    = set(ut.flatten([ rOrCOrS[ii] for ii in comIdxC if rOrCOrS[ii] != [0]]))
             lstHmG  = list(setH - setG)
 
             hIsNaked = len(setH) == tupSiz

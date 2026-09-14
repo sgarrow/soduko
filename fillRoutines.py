@@ -2,17 +2,6 @@ import copy
 import utils as ut
 #############################################################################
 
-def flatten(inLst):
-    outLst = []
-    for elem in inLst:
-        try:
-            for subEl in elem:
-                outLst.append(subEl)
-        except TypeError:
-            outLst.append(elem)
-    return outLst
-#############################################################################
-
 def fillViaOneCanidate(solution, canidates, lclPrintDic, house):
     if house:
         pass # Unused arg warning.
@@ -23,13 +12,15 @@ def fillViaOneCanidate(solution, canidates, lclPrintDic, house):
     for rIdx,row in enumerate(solution):
         for cIdx in range(len(row)):
 
-            if canidates[rIdx][cIdx] != 0 and len(canidates[rIdx][cIdx])==1:
-                if solution[rIdx][cIdx] == 0:
-                    solution[rIdx][cIdx] = canidates[rIdx][cIdx][0]
-                    numFilled += 1
-                    if lclPrintDic['flPrn'] >= 2:
-                        print(f'    Placing {canidates[rIdx][cIdx][0]} at {rIdx},{cIdx}', end = '')
-                        if numFilled%3 == 0: print()
+            if  canidates[rIdx][cIdx]      != 0  and \
+                len(canidates[rIdx][cIdx]) == 1  and \
+                solution[rIdx][cIdx]       == 0:
+
+                solution[rIdx][cIdx] = canidates[rIdx][cIdx][0]
+                numFilled += 1
+                if lclPrintDic['flPrn'] >= 2:
+                    print(f'    Placing {canidates[rIdx][cIdx][0]} at {rIdx},{cIdx}', end = '')
+                    if numFilled%3 == 0: print()
 
     if numFilled%3 != 0: print()
     numZeros = sum(x.count(0) for x in solution)
@@ -49,7 +40,7 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
 
     for rcsIdx,rowColOrSqr in enumerate(xCanidates):
 
-        flatRow            = flatten(rowColOrSqr)
+        flatRow            = ut.flatten(rowColOrSqr)
         valsOfCntOne       = []
         idxsOfValsOfCntOne = []
         for val in range(1,10):

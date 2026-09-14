@@ -1,24 +1,7 @@
-import utils as ut
-#############################################################################
+import pprint        as pp
 
-def flatten(inLst):
-    outLst = []
-    for elem in inLst:
-        try:
-            for subEl in elem:
-                outLst.append(subEl)
-        except TypeError:
-            outLst.append(elem)
-    return outLst
-#############################################################################
-
-def genHistogram(inLst):
-    hist = []
-    for histBin in range(min(inLst), max(inLst)+1):
-        binHeight = len([1 for x in inLst if x==histBin])
-        if binHeight > 0:
-            hist.append((histBin, binHeight))
-    return hist
+import utils         as ut
+import printRoutines as pr
 #############################################################################
 
 # map sqrs to rows -> xCanidates
@@ -40,12 +23,7 @@ def prunePointingPairs(canidates, house, lclPrintDic):
     numPruned  = 0
 
     # find all nums in rows of xCanidates (sqrs of canidates) that appear exactly twice
-    allBinsHeightTwo = []
-    for row in xCanidates:
-        flatRow = flatten(row)
-        histRow = genHistogram(flatRow)
-        allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
-    ####################################################################################
+    allBinsHeightTwo = ut.getAllBinsHeightTwo(xCanidates)
 
     # Place above data in a dict and add to data the two offset within the square
     # where the two nums appear. Note that pair may not be on the same row/col ...
@@ -66,6 +44,7 @@ def prunePointingPairs(canidates, house, lclPrintDic):
     ppColRqmt = [[0,3,6],[1,4,7],[2,5,8]]
     ppRowD = {}
     ppColD = {}
+    rqmt = None
     if house == 'row': rqmt = ppRowRqmt
     if house == 'col': rqmt = ppColRqmt
     for val in allBinsHeightTwoD.values():
@@ -81,6 +60,7 @@ def prunePointingPairs(canidates, house, lclPrintDic):
     k = 0
     ppRowAbsCoordD = {}
     ppColAbsCoordD = {}
+    ppD = None
     if house == 'row': ppD = ppRowD
     if house == 'col': ppD = ppColD
     for val in ppD.values():

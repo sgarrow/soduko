@@ -87,3 +87,12 @@ def genHistogram(inLst):
             hist.append((histBin, binHeight))
     return hist
 #############################################################################
+
+def getAllBinsHeightTwo(xCanidates):
+    allBinsHeightTwo = []
+    for row in xCanidates:
+        flatRow = flatten(row)
+        histRow = genHistogram(flatRow)
+        allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
+    return allBinsHeightTwo
+#############################################################################

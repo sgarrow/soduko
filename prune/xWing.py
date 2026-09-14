@@ -1,26 +1,9 @@
 from itertools import combinations
-import copy  as cp
-import utils as ut
-#############################################################################
+import copy          as cp
+import pprint        as pp
 
-def flatten(inLst):
-    outLst = []
-    for elem in inLst:
-        try:
-            for subEl in elem:
-                outLst.append(subEl)
-        except TypeError:
-            outLst.append(elem)
-    return outLst
-#############################################################################
-
-def genHistogram(inLst):
-    hist = []
-    for histBin in range(min(inLst), max(inLst)+1):
-        binHeight = len([1 for x in inLst if x==histBin])
-        if binHeight > 0:
-            hist.append((histBin, binHeight))
-    return hist
+import printRoutines as pr
+import utils         as ut
 #############################################################################
 
 def pruneXwings(canidates, house, lclPrintDic):
@@ -29,12 +12,7 @@ def pruneXwings(canidates, house, lclPrintDic):
 
     numPruned = 0
 
-    allBinsHeightTwo = []
-    for row in xCanidates:
-        flatRow = flatten(row)
-        histRow = genHistogram(flatRow)
-        allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
-    #pp.pprint(allBinsHeightTwo)
+    allBinsHeightTwo = ut.getAllBinsHeightTwo(xCanidates)
 
     k = 0
     myD = {}
