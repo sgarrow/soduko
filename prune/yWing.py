@@ -81,7 +81,6 @@ def pruneyWings (lclCanidates, lclPrintDic):
             yWingDict2[k]['Z']      = z       # Val to del.
             yWingDict2[k]['rmvIdx'] = rmvIdx  # Where to del from.
 
-    alreadyPrinted = False
     for k,v in yWingDict2.items():
         if lclPrintDic['ywPrn'] >= 1:
             print('\n  Processing key {}'.format(k))
@@ -90,8 +89,7 @@ def pruneyWings (lclCanidates, lclPrintDic):
             if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
 
                 if lclPrintDic['ywPrn'] >= 2:
-                    pr.printCanidates(lclCanidates, alreadyPrn = alreadyPrinted)
-                    alreadyPrinted = True
+                    pr.printCanidates(lclCanidates, {})
 
                 lclCanidates[cord[0]][cord[1]].remove(v['Z'])
                 numPruned += 1

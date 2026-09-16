@@ -1,7 +1,46 @@
-def printCanidates(canidates,alreadyPrn = False):
+import pprint as pp
+import asciiColorCodes as ACC
+print( '{}{}{}'.format( ACC.RED_BOLD, 'hello', ACC.OFF ))
 
-    if alreadyPrn:
-        return
+def charShouldBeRed( redDict, rIdx, cIdx, num ):
+    shouldBeRed = False
+    for v in redDict.values():
+        if v['coord'] == [rIdx, cIdx] and v['val'] == num:
+            shouldBeRed = True
+            break
+    return shouldBeRed
+############################################################################
+
+def charShouldBeGrn( grnDict, rIdx, cIdx, num ):
+    shouldBeGrn = False
+    for v in grnDict.values():
+        if v['coord'] == [rIdx, cIdx] and v['val'] == num:
+            shouldBeGrn = True
+            break
+    return shouldBeGrn
+############################################################################
+
+def printCanidates(canidates, colorDict):
+
+    redKeys = [ kk for kk in colorDict if "RED" in colorDict[kk] ]
+    grnKeys = [ kk for kk in colorDict if "GRN" in colorDict[kk] ]
+    redDict = {}
+    grnDict = {}
+    for ii,idx in enumerate(redKeys):
+        redDict[ii] = colorDict[idx]['RED']
+    for ii,idx in enumerate(grnKeys):
+        grnDict[ii] = colorDict[idx]['GRN']
+
+    #print()
+    #pp.pprint(colorDict)
+    #print()
+    #print('redDict =')
+    #pp.pprint(redDict)
+    #print()
+    #print('grnDict =')
+    #pp.pprint(grnDict)
+    #print()
+
 
     print('     c0  c1  c2   c3  c4  c5   c6  c7  c8  ')
     for rIdx,row in enumerate(canidates):     # for each row
@@ -18,7 +57,14 @@ def printCanidates(canidates,alreadyPrn = False):
                     if (num-1)%3 == 0:
                         lineToPrn += '|'
                     if cell != 0 and num in cell:
-                        lineToPrn += f'{num:1}'
+
+                        if charShouldBeRed( redDict, rIdx, cIdx, num ):
+                            lineToPrn += '{}{:1}{}'.format(ACC.RED_BOLD, num, ACC.OFF)
+                        elif charShouldBeGrn( grnDict, rIdx, cIdx, num ):
+                            lineToPrn += '{}{:1}{}'.format(ACC.GRN_BOLD, num, ACC.OFF)
+                        else:
+                            lineToPrn += '{:1}'.format(num)
+
                         numPrintedThisLine = True
                         numPrintedThisRow  = True
                     else:

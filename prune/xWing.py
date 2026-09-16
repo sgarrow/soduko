@@ -41,7 +41,6 @@ def pruneXwings(canidates, house, lclPrintDic):
             print('\n    {} {}'.format(house, myDstr), end = '')
         print()
 
-    alreadyPrinted = False
     for xWing in xWingD.values():
         for rIdx,row in enumerate(xCanidates):
             for cIdx in xWing['B_cols']:
@@ -52,9 +51,8 @@ def pruneXwings(canidates, house, lclPrintDic):
                     numPruned += 1
 
                     if lclPrintDic['xwPrn'] >= 2:
-                        pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
+                        pr.printCanidates(xCanidates, {})
                         #print({True: '', False: '   {}'.format(xWing)} [alreadyPrinted])
-                        alreadyPrinted = True
 
                     if lclPrintDic['xwPrn'] >= 1:
                         print('      remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))

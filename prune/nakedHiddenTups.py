@@ -34,6 +34,10 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
 
     numPruned = 0
     for idx, rowOrColOrSqrWithZeros in enumerate(xCanidates):
+
+        colorCordAndValDict = {}
+        colorDictCurrKey    = 0
+
         rOrCOrS = [set(x) if x != 0 else set([0]) for x in rowOrColOrSqrWithZeros]
         combSet = combinations(rOrCOrS, tupSiz)  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3)=84.
         combIdxs = getComIdxs(rOrCOrS, tupSiz)
@@ -58,50 +62,85 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                         break
 
             if hIsHidden and hiddenOrNaked == 'hidden':
-                myD = {'row': idx, 'tripVals': lstHmG, 'tripIdxs': comIdx }
-                if lclPrintDic['nhPrn'] >= 1:
-                    myDstr = pp.pformat(myD)
-                    print('\n   Hidden ({}) \n      {}'.format(house, myDstr))
 
-                alreadyPrinted = False
+                myD = {'row': idx, 'tripVals': lstHmG, 'tripIdxs': comIdx }
+                for tripIdx in myD['tripIdxs']:
+                    for val in myD['tripVals']:
+                        colorCordAndValDict[colorDictCurrKey] = \
+                            {'GRN': {'coord': [myD['row'], tripIdx], 'val': val}}
+                        colorDictCurrKey += 1
+
+                noRemoveStr = '        Nothing to remove'
+                removeStr   = noRemoveStr
                 for tripIdx in myD['tripIdxs']:
                     temp  = [ x for x in rOrCOrS[tripIdx] if x in myD['tripVals'] ]
                     diff  = set(rOrCOrS[tripIdx]) - set.intersection( rOrCOrS[tripIdx], set(temp) )
-                    if len(diff) != 0:
-                        numPruned += len(diff)
-                        if lclPrintDic['nhPrn'] >= 2:
-                            pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
-                            alreadyPrinted = True
-                        if lclPrintDic['nhPrn'] >= 1:
-                            print( '        remove {:>8} from ({},{})'.\
-                                format(str(diff),myD['row'],tripIdx))
 
-                    xCanidates[myD['row']][tripIdx] = temp
+                    if len(diff) != 0:
+                        removeStr = ''
+                        numPruned += len(diff)
+                        for ii in range(len(diff)):
+                            colorCordAndValDict[colorDictCurrKey] = \
+                            { 'RED': { 'coord' : [myD['row'], tripIdx],
+                                       'val'   : list(diff)[ii] }}
+                            colorDictCurrKey += 1
+
+                        if lclPrintDic['nhPrn'] >= 1:
+                            removeStr += '        remove {:>8} from ({},{})'.\
+                                format(str(diff),myD['row'],tripIdx)
+
+                    if lclPrintDic['nhPrn'] >= 1:
+                        myDstr = pp.pformat(myD)
+                        print('\n   Hidden ({}) \n      {}'.format(house, myDstr))
+                        print(removeStr)
+
+                    if lclPrintDic['nhPrn'] >= 2 and removeStr != noRemoveStr:
+                        pr.printCanidates(xCanidates, colorCordAndValDict)
+
+                    xCanidates[myD['row']][tripIdx] = temp # Now actually remove them. 
                 break
 
             if hIsNaked and hiddenOrNaked == 'naked':
+
                 myD   = {'row': idx, 'tripVals': setH, 'tripIdxs': comIdx }
-                if lclPrintDic['nhPrn'] >= 1:
-                    myDstr = pp.pformat(myD)
-                    print('\n   Naked ({}) \n      {}'.format(house, myDstr))
+                for tripIdx in myD['tripIdxs']:
+                    for val in myD['tripVals']:
+                        colorCordAndValDict[colorDictCurrKey] = \
+                            {'GRN': {'coord': [myD['row'], tripIdx], 'val': val}}
+                        colorDictCurrKey += 1
+
 
                 temp  = [ list(x) if kk in myD['tripIdxs'] else \
                           list(x-myD['tripVals']) for kk,x in enumerate(rOrCOrS) ]
                 temp2 = [ x if x != [0] else 0 for x in temp]
 
-                alreadyPrinted = False
+                noRemoveStr = '        Nothing to remove'
+                removeStr   = noRemoveStr
                 for idx, elem in enumerate(rOrCOrS):
                     diff  = elem - set.intersection( elem, set(temp[idx]) )
-                    if len(diff) != 0:
-                        numPruned += len(diff)
-                        if lclPrintDic['nhPrn'] >= 2:
-                            pr.printCanidates(xCanidates, alreadyPrn = alreadyPrinted)
-                            alreadyPrinted = True
-                        if lclPrintDic['nhPrn'] >= 1:
-                            print( '        remove {:>8} from ({},{})'.\
-                                format(str(diff), myD['row'], idx) )
 
-                xCanidates[myD['row']] = temp2
+                    if len(diff) != 0:
+                        removeStr = ''
+                        numPruned += len(diff)
+                        for ii in range(len(diff)):
+                            colorCordAndValDict[colorDictCurrKey] = \
+                            { 
+                                'RED': { 'coord': [myD['row'], idx], 'val': list(diff)[ii] },
+                            }
+                            colorDictCurrKey += 1
+
+                        removeStr += '        remove {:>8} from ({},{})'.\
+                            format(str(diff), myD['row'], idx)
+
+                if lclPrintDic['nhPrn'] >= 1:
+                    myDstr = pp.pformat(myD)
+                    print('\n   Naked ({}) \n      {}'.format(house, myDstr))
+                    print(removeStr)
+
+                if lclPrintDic['nhPrn'] >= 2 and removeStr != noRemoveStr:
+                    pr.printCanidates(xCanidates, colorCordAndValDict)
+
+                xCanidates[myD['row']] = temp2 # Now actually remove them.
                 break
 
     cpyDic = {'row':cp.deepcopy, 'col':ut.mapRowsToCols, 'sqr':ut.mapRowsToSqrs}

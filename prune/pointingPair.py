@@ -93,7 +93,6 @@ def prunePointingPairs(canidates, house, lclPrintDic):
 
     # perform associated removals Note only one of the 2 dicts looped through below will
     # have anything in it.
-    alreadyPrinted = False
     rowsProcessed = []
     for val in ppRowAbsCoordD.values():
         if val['aRow'] not in rowsProcessed:
@@ -103,8 +102,7 @@ def prunePointingPairs(canidates, house, lclPrintDic):
                 if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
 
                     if lclPrintDic['ppPrn'] >= 2:
-                        pr.printCanidates(canidates, alreadyPrn = alreadyPrinted)
-                        alreadyPrinted = True
+                        pr.printCanidates(canidates, {})
 
                     canidates[val['aRow']][cIdx].remove(val['cVal'])
                     numPruned += 1
@@ -112,7 +110,6 @@ def prunePointingPairs(canidates, house, lclPrintDic):
                     if lclPrintDic['ppPrn'] >= 1:
                         print('       remove {} from ({},{})'.format(val['cVal'],val['aRow'],cIdx))
 
-    alreadyPrinted = False
     colsProcessed = []
     for val in ppColAbsCoordD.values():
         if val['aCol'] not in colsProcessed:
@@ -122,8 +119,7 @@ def prunePointingPairs(canidates, house, lclPrintDic):
                 if canidates[rIdx][val['aCol']]!=0 and val['cVal'] in canidates[rIdx][val['aCol']]:
 
                     if lclPrintDic['ppPrn'] >= 2:
-                        pr.printCanidates(canidates, alreadyPrn = alreadyPrinted)
-                        alreadyPrinted = True
+                        pr.printCanidates(canidates, {})
 
                     canidates[rIdx][val['aCol']].remove(val['cVal'])
                     numPruned += 1
