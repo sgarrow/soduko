@@ -14,7 +14,7 @@ import prune.xWing           as xw
 import prune.yWing           as yw
 import prune.pointingPair    as pnp
 
-VER = 'v2.1.0 - 15-Sep-2026'
+VER = 'v2.1.1 - 17-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -63,7 +63,7 @@ def pruneNht(lclCanidates, lclPrintDic):
     #hiddenNakedLst = [ 'hidden']
     #hiddenNakedLst = [ 'naked']
     #houseLst       = [ 'row' ]
-    #tupSizeLst     = [2]
+    #tupSizeLst     = [2,3]
 
     totNumPruned   = 0
 

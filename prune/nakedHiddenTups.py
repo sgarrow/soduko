@@ -29,14 +29,15 @@ def getComIdxs(rOrCOrS, tupSiz):
 ############################################################################
 
 def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintDic):
+    #print('enter')
     cpyDic = {'row':cp.deepcopy, 'col':ut.mapColsToRows, 'sqr':ut.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
 
     numPruned = 0
     for idx, rowOrColOrSqrWithZeros in enumerate(xCanidates):
+        #print(idx)
 
         colorCordAndValDict = {}
-        colorDictCurrKey    = 0
 
         rOrCOrS = [set(x) if x != 0 else set([0]) for x in rowOrColOrSqrWithZeros]
         combSet = combinations(rOrCOrS, tupSiz)  # C(n,r) = n! / ( r! * (n-r)! ). C(9,3)=84.
@@ -51,8 +52,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
             setG    = set(ut.flatten([ rOrCOrS[ii] for ii in comIdxC if rOrCOrS[ii] != [0]]))
             lstHmG  = list(setH - setG)
 
-            hIsNaked = len(setH) == tupSiz
-
+            hIsNaked  = len(setH) == tupSiz
             hIsHidden = False
             if (len(setH) > tupSiz) and (len(lstHmG) == tupSiz):
                 hIsHidden = True
@@ -61,17 +61,17 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                         hIsHidden = False
                         break
 
-            if hIsHidden and hiddenOrNaked == 'hidden':
+            noRemoveStr = '        Nothing to remove'
+            removeStr   = noRemoveStr
 
+            if hIsHidden and hiddenOrNaked == 'hidden':
+                # Process a naked tuple in this single row (or col or square).
                 myD = {'row': idx, 'tripVals': lstHmG, 'tripIdxs': comIdx }
                 for tripIdx in myD['tripIdxs']:
                     for val in myD['tripVals']:
-                        colorCordAndValDict[colorDictCurrKey] = \
+                        colorCordAndValDict[len(colorCordAndValDict)] = \
                             {'GRN': {'coord': [myD['row'], tripIdx], 'val': val}}
-                        colorDictCurrKey += 1
 
-                noRemoveStr = '        Nothing to remove'
-                removeStr   = noRemoveStr
                 for tripIdx in myD['tripIdxs']:
                     temp  = [ x for x in rOrCOrS[tripIdx] if x in myD['tripVals'] ]
                     diff  = set(rOrCOrS[tripIdx]) - set.intersection( rOrCOrS[tripIdx], set(temp) )
@@ -80,18 +80,14 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                         removeStr = ''
                         numPruned += len(diff)
                         for ii in range(len(diff)):
-                            colorCordAndValDict[colorDictCurrKey] = \
+                            colorCordAndValDict[len(colorCordAndValDict)] = \
                             { 'RED': { 'coord' : [myD['row'], tripIdx],
                                        'val'   : list(diff)[ii] }}
-                            colorDictCurrKey += 1
 
-                        if lclPrintDic['nhPrn'] >= 1:
-                            removeStr += '        remove {:>8} from ({},{})'.\
-                                format(str(diff),myD['row'],tripIdx)
+                        removeStr += '        remove {:>8} from ({},{})'.format(str(diff),myD['row'],tripIdx)
 
                     if lclPrintDic['nhPrn'] >= 1:
-                        myDstr = pp.pformat(myD)
-                        print('\n   Hidden ({}) \n      {}'.format(house, myDstr))
+                        print('\n   Hidden {}-tuple in {} \n      {}'.format(tupSiz, house, pp.pformat(myD)))
                         print(removeStr)
 
                     if lclPrintDic['nhPrn'] >= 2 and removeStr != noRemoveStr:
@@ -101,21 +97,18 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                 break
 
             if hIsNaked and hiddenOrNaked == 'naked':
-
+                # Process a naked tuple in this single row (or col or square).
                 myD   = {'row': idx, 'tripVals': setH, 'tripIdxs': comIdx }
                 for tripIdx in myD['tripIdxs']:
                     for val in myD['tripVals']:
-                        colorCordAndValDict[colorDictCurrKey] = \
+                        colorCordAndValDict[len(colorCordAndValDict)] = \
                             {'GRN': {'coord': [myD['row'], tripIdx], 'val': val}}
-                        colorDictCurrKey += 1
 
 
                 temp  = [ list(x) if kk in myD['tripIdxs'] else \
                           list(x-myD['tripVals']) for kk,x in enumerate(rOrCOrS) ]
                 temp2 = [ x if x != [0] else 0 for x in temp]
 
-                noRemoveStr = '        Nothing to remove'
-                removeStr   = noRemoveStr
                 for idx, elem in enumerate(rOrCOrS):
                     diff  = elem - set.intersection( elem, set(temp[idx]) )
 
@@ -123,18 +116,14 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                         removeStr = ''
                         numPruned += len(diff)
                         for ii in range(len(diff)):
-                            colorCordAndValDict[colorDictCurrKey] = \
-                            { 
-                                'RED': { 'coord': [myD['row'], idx], 'val': list(diff)[ii] },
-                            }
-                            colorDictCurrKey += 1
+                            colorCordAndValDict[len(colorCordAndValDict)] = \
+                            { 'RED': { 'coord': [myD['row'], idx],
+                                       'val': list(diff)[ii] }}
 
-                        removeStr += '        remove {:>8} from ({},{})'.\
-                            format(str(diff), myD['row'], idx)
+                        removeStr += '        remove {:>8} from ({},{})'.format(str(diff), myD['row'], idx)
 
                 if lclPrintDic['nhPrn'] >= 1:
-                    myDstr = pp.pformat(myD)
-                    print('\n   Naked ({}) \n      {}'.format(house, myDstr))
+                    print('\n   Naked {}-tuple in {} \n      {}'.format(tupSiz, house, pp.pformat(myD)))
                     print(removeStr)
 
                 if lclPrintDic['nhPrn'] >= 2 and removeStr != noRemoveStr:
@@ -146,5 +135,6 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
     cpyDic = {'row':cp.deepcopy, 'col':ut.mapRowsToCols, 'sqr':ut.mapRowsToSqrs}
     canidates = cpyDic[house](xCanidates)
 
+    #print('exit')
     return(numPruned, canidates)
 ############################################################################
