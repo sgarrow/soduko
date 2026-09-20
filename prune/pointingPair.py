@@ -93,40 +93,80 @@ def prunePointingPairs(canidates, house, lclPrintDic):
 
     # perform associated removals Note only one of the 2 dicts looped through below will
     # have anything in it.
-    rowsProcessed = []
+
+    #print('ppRowAbsCoordD')
+    #pp.pprint(ppRowAbsCoordD)
+    #print('ppColAbsCoordD')
+    #pp.pprint(ppColAbsCoordD)
+
+    colorCordAndValDict = {}
+
+    # Color code row pointing pairs. 
+    for dictVal in ppRowAbsCoordD.values():
+
+        for col in dictVal['bCols']:
+
+            colorCordAndValDict[len(colorCordAndValDict)] = \
+                {'GRN': {'coord': [dictVal['aRow'], col], 'val': dictVal['cVal']}}
+
+        cols = [ x for x in range(9) if x not in dictVal['bCols'] ]
+        for cIdx in cols:
+
+            if canidates[dictVal['aRow']][cIdx] != 0 and \
+               dictVal['cVal'] in canidates[dictVal['aRow']][cIdx]:
+
+                colorCordAndValDict[len(colorCordAndValDict)] = \
+                    {'RED': {'coord': [dictVal['aRow'], cIdx], 'val': dictVal['cVal']}}
+    ################################ 
+
+    # Color code col pointing pairs. 
+    for dictVal in ppColAbsCoordD.values():
+
+        for row in dictVal['bRows']:
+
+            colorCordAndValDict[len(colorCordAndValDict)] = \
+                {'GRN': {'coord': [row, dictVal['aCol']], 'val': dictVal['cVal']}}
+
+        rows = [ x for x in range(9) if x not in dictVal['bRows'] ]
+        for rIdx in rows:
+
+            if canidates[rIdx][dictVal['aCol']] != 0 and \
+            dictVal['cVal'] in canidates[rIdx][dictVal['aCol']]:
+
+                colorCordAndValDict[len(colorCordAndValDict)] = \
+                    {'RED': {'coord': [rIdx, dictVal['aCol']], 'val': dictVal['cVal']}}
+    ################################ 
+
+    if lclPrintDic['ppPrn'] >= 2:
+        pr.printCanidates(canidates, colorCordAndValDict)
+    if lclPrintDic['ppPrn'] >= 1:
+        if len(ppRowAbsCoordD):
+            pp.pprint(ppRowAbsCoordD)
+        if len(ppColAbsCoordD):
+            pp.pprint(ppColAbsCoordD)
+    ################################ 
+
+    removeStr = ''
     for val in ppRowAbsCoordD.values():
-        if val['aRow'] not in rowsProcessed:
-            if lclPrintDic['ppPrn'] >= 1: print( f'     Processing {val}')
-            cols = [ x for x in range(9) if x not in val['bCols'] ]
-            for cIdx in cols:
-                if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
+        cols = [ x for x in range(9) if x not in val['bCols'] ]
+        for cIdx in cols:
+            if canidates[val['aRow']][cIdx]!=0 and val['cVal'] in canidates[val['aRow']][cIdx]:
+                canidates[val['aRow']][cIdx].remove(val['cVal'])
+                numPruned += 1
+                removeStr += '       remove {} from ({},{})\n'.format(val['cVal'],val['aRow'],cIdx)
+    ################################ 
 
-                    if lclPrintDic['ppPrn'] >= 2:
-                        pr.printCanidates(canidates, {})
-
-                    canidates[val['aRow']][cIdx].remove(val['cVal'])
-                    numPruned += 1
-
-                    if lclPrintDic['ppPrn'] >= 1:
-                        print('       remove {} from ({},{})'.format(val['cVal'],val['aRow'],cIdx))
-
-    colsProcessed = []
     for val in ppColAbsCoordD.values():
-        if val['aCol'] not in colsProcessed:
-            if lclPrintDic['ppPrn'] >= 1: print( f'     Processing {val}')
-            rows = [ x for x in range(9) if x not in val['bRows'] ]
-            for rIdx in rows:
-                if canidates[rIdx][val['aCol']]!=0 and val['cVal'] in canidates[rIdx][val['aCol']]:
-
-                    if lclPrintDic['ppPrn'] >= 2:
-                        pr.printCanidates(canidates, {})
-
-                    canidates[rIdx][val['aCol']].remove(val['cVal'])
-                    numPruned += 1
-
-                    if lclPrintDic['ppPrn'] >= 1:
-                        print('       remove {} from ({},{})'.format(val['cVal'],rIdx,val['aCol']))
+        rows = [ x for x in range(9) if x not in val['bRows'] ]
+        for rIdx in rows:
+            if canidates[rIdx][val['aCol']]!=0 and val['cVal'] in canidates[rIdx][val['aCol']]:
+                canidates[rIdx][val['aCol']].remove(val['cVal'])
+                numPruned += 1
+                removeStr = '       remove {} from ({},{})'.format(val['cVal'],rIdx,val['aCol'])
     ####################################################################################
+
+    if lclPrintDic['ppPrn'] >= 1:
+        print(removeStr, end = '')
 
     return numPruned,canidates
 ############################################################################

@@ -1,4 +1,4 @@
-import pprint as pp
+#import pprint as pp
 import asciiColorCodes as ACC
 print( '{}{}{}'.format( ACC.RED_BOLD, 'hello', ACC.OFF ))
 
@@ -22,8 +22,8 @@ def charShouldBeGrn( grnDict, rIdx, cIdx, num ):
 
 def printCanidates(canidates, colorDict):
 
-    redKeys = [ kk for kk in colorDict if "RED" in colorDict[kk] ]
-    grnKeys = [ kk for kk in colorDict if "GRN" in colorDict[kk] ]
+    redKeys = [ kk for kk in colorDict if 'RED' in colorDict[kk] ]
+    grnKeys = [ kk for kk in colorDict if 'GRN' in colorDict[kk] ]
     redDict = {}
     grnDict = {}
     for ii,idx in enumerate(redKeys):

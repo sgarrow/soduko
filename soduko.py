@@ -14,7 +14,7 @@ import prune.xWing           as xw
 import prune.yWing           as yw
 import prune.pointingPair    as pnp
 
-VER = 'v2.1.1 - 17-Sep-2026'
+VER = 'v2.2.0 - 19-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -62,7 +62,7 @@ def pruneNht(lclCanidates, lclPrintDic):
 
     #hiddenNakedLst = [ 'hidden']
     #hiddenNakedLst = [ 'naked']
-    #houseLst       = [ 'row' ]
+    #houseLst       = [ 'row','col' ]
     #tupSizeLst     = [2,3]
 
     totNumPruned   = 0
@@ -109,14 +109,14 @@ def pruneYw(lclCanidates, lclPrintDic):
 def prunePp(lclCanidates, lclPrintDic):
     totNumPruned = 0
     houseLst = [ 'row','col' ]
-    #houseLst = [ 'row']
+    #houseLst = [ 'col']
     for house in houseLst:
         numPruned, lclCanidates = pnp.prunePointingPairs(lclCanidates,
                                                         house, lclPrintDic)
         totNumPruned += numPruned
 
-        if lclPrintDic['ppPrn'] > 0 and numPruned > 0:
-            print(f'    Prunned {numPruned:2} lclCanidates RE: Pointing Pairs in {house}')
+        if lclPrintDic['ppPrn'] > 0:
+            print(f'  Prunned {numPruned:2} canidates RE: Pointing Pairs in {house}\n')
 
     return totNumPruned, lclCanidates
 #############################################################################
