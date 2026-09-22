@@ -14,7 +14,7 @@ import prune.xWing           as xw
 import prune.yWing           as yw
 import prune.pointingPair    as pnp
 
-VER = 'v2.2.0 - 19-Sep-2026'
+VER = 'v2.2.1 - 21-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -85,11 +85,12 @@ def pruneNht(lclCanidates, lclPrintDic):
 def pruneXw(lclCanidates, lclPrintDic):
     totNumPruned = 0
     houseLst = [ 'row','col' ]
+    #houseLst = [ 'row' ]
     for house in houseLst:
         numPruned,lclCanidates=xw.pruneXwings(lclCanidates,house,lclPrintDic)
         totNumPruned += numPruned
 
-        if lclPrintDic['xwPrn'] > 0 and numPruned > 0:
+        if lclPrintDic['xwPrn'] > 0:# and numPruned > 0:
             print(f'    Prunned {numPruned:2} lclCanidates RE: X-Wings in {house}s')
 
     return totNumPruned, lclCanidates

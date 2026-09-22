@@ -10,52 +10,66 @@ def pruneXwings(canidates, house, lclPrintDic):
     cpyDic = {'row':cp.deepcopy, 'col':ut.mapColsToRows, 'sqr':ut.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
 
-    numPruned = 0
+    binsHeight2 = ut.getAllBinsHeightTwo(xCanidates)
+    numPruned   = 0
+    colorDict   = {}
+    xWingD      = {}
+    myD         = {}
 
-    allBinsHeightTwo = ut.getAllBinsHeightTwo(xCanidates)
-
-    k = 0
-    myD = {}
-    for idx,lstOfVals in enumerate(allBinsHeightTwo):
+    for idx,lstOfVals in enumerate(binsHeight2):
         for val in lstOfVals:
             cols = [ c for c,lst in enumerate(xCanidates[idx]) if lst != 0 and val in lst ]
             #print(' in row {}, {} appears exactly twice - cols {}'.format(idx, val, cols))
-            myD[k] = { 'A_row':idx, 'B_cols':cols, 'C_val':val,  }
-            k += 1
-    #pp.pprint(myD)
+            myD[len(myD)] = { 'A_row':idx, 'B_cols':cols, 'C_val':val,  }
 
-    k = 0
-    xWingD = {}
     combSet = combinations(myD.values(), 2)
+
     for comb in combSet:
         #print(comb)
         if comb[0]['C_val'] == comb[1]['C_val'] and comb[0]['B_cols'] == comb[1]['B_cols']:
 
-            xWingD[k] = { 'A_rows': [ comb[0]['A_row'], comb[1]['A_row'] ],
-                          'B_cols':   comb[0]['B_cols'],
-                          'C_val' :   comb[0]['C_val']  }
-            k += 1
-    if lclPrintDic['xwPrn'] >= 1:
-        for k,v in xWingD.items():
-            myDstr = pp.pformat(v)
-            print('\n    {} {}'.format(house, myDstr), end = '')
-        print()
+            xWingD[len(xWingD)] = \
+                { 'A_rows': [ comb[0]['A_row'], comb[1]['A_row'] ],
+                  'B_cols':   comb[0]['B_cols'],
+                  'C_val' :   comb[0]['C_val']  }
 
     for xWing in xWingD.values():
-        for rIdx,row in enumerate(xCanidates):
-            for cIdx in xWing['B_cols']:
-                if (rIdx not in xWing['A_rows'])  and \
-                    (row[cIdx] != 0) and \
-                    (xWing['C_val'] in row[cIdx]):
-                    xCanidates[rIdx][cIdx].remove(xWing['C_val'])
-                    numPruned += 1
 
-                    if lclPrintDic['xwPrn'] >= 2:
-                        pr.printCanidates(xCanidates, {})
-                        #print({True: '', False: '   {}'.format(xWing)} [alreadyPrinted])
+        if lclPrintDic['xwPrn'] >= 1:
+            print(xWing)
+
+        for row in xWing['A_rows']:
+            for col in xWing['B_cols']:
+                print('GRN', row,col, xWing['C_val'])
+
+                colorDict[len(colorDict)] = \
+                    {'GRN': {'coord': [row, col], 'val': xWing['C_val']}}
+
+        for row in range( 8 ):
+            for col in xWing['B_cols']:
+                if (xCanidates[row][col] != 0)  and \
+                    row not in xWing['A_rows']  and \
+                    (xWing['C_val'] in xCanidates[row][col]):
+
+                    colorDict[len(colorDict)] = \
+                        {'RED': {'coord': [row, col], 'val': xWing['C_val']}}
+
+    if len(xWingD) > 0:
+        if lclPrintDic['xwPrn'] >= 2:
+            pr.printCanidates(xCanidates, colorDict)
+
+    for xWing in xWingD.values():
+        for row in range( 8 ):
+            for col in xWing['B_cols']:
+                if (xCanidates[row][col] != 0)  and \
+                    row not in xWing['A_rows']  and \
+                    (xWing['C_val'] in xCanidates[row][col]):
 
                     if lclPrintDic['xwPrn'] >= 1:
-                        print('      remove {} from ({},{})'.format(xWing['C_val'], rIdx, cIdx))
+                        print('      remove {} from ({},{})'.format(xWing['C_val'], row, col))
+
+                    xCanidates[row][col].remove(xWing['C_val'])
+                    numPruned += 1
 
     cpyDic = {'row':cp.deepcopy, 'col':ut.mapRowsToCols, 'sqr':ut.mapRowsToSqrs}
     canidates = cpyDic[house](xCanidates)
