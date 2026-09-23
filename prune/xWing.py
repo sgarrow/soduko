@@ -40,7 +40,6 @@ def pruneXwings(canidates, house, lclPrintDic):
 
         for row in xWing['A_rows']:
             for col in xWing['B_cols']:
-                print('GRN', row,col, xWing['C_val'])
 
                 colorDict[len(colorDict)] = \
                     {'GRN': {'coord': [row, col], 'val': xWing['C_val']}}

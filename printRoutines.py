@@ -1,6 +1,6 @@
 #import pprint as pp
 import asciiColorCodes as ACC
-print( '{}{}{}'.format( ACC.RED_BOLD, 'hello', ACC.OFF ))
+#print( '{}{}{}'.format( ACC.RED_BOLD, 'hello', ACC.OFF ))
 
 def charShouldBeRed( redDict, rIdx, cIdx, num ):
     shouldBeRed = False
@@ -20,16 +20,31 @@ def charShouldBeGrn( grnDict, rIdx, cIdx, num ):
     return shouldBeGrn
 ############################################################################
 
+def charShouldBeYel( yelDict, rIdx, cIdx, num ):
+    shouldBeYel = False
+    for v in yelDict.values():
+        if v['coord'] == [rIdx, cIdx] and v['val'] == num:
+            shouldBeYel = True
+            break
+    return shouldBeYel
+############################################################################
+
 def printCanidates(canidates, colorDict):
 
     redKeys = [ kk for kk in colorDict if 'RED' in colorDict[kk] ]
     grnKeys = [ kk for kk in colorDict if 'GRN' in colorDict[kk] ]
+    yelKeys = [ kk for kk in colorDict if 'YEL' in colorDict[kk] ]
+
     redDict = {}
     grnDict = {}
+    yelDict = {}
+
     for ii,idx in enumerate(redKeys):
         redDict[ii] = colorDict[idx]['RED']
     for ii,idx in enumerate(grnKeys):
         grnDict[ii] = colorDict[idx]['GRN']
+    for ii,idx in enumerate(yelKeys):
+        yelDict[ii] = colorDict[idx]['YEL']
 
     #print()
     #pp.pprint(colorDict)
@@ -62,6 +77,8 @@ def printCanidates(canidates, colorDict):
                             lineToPrn += '{}{:1}{}'.format(ACC.RED_BOLD, num, ACC.OFF)
                         elif charShouldBeGrn( grnDict, rIdx, cIdx, num ):
                             lineToPrn += '{}{:1}{}'.format(ACC.GRN_BOLD, num, ACC.OFF)
+                        elif charShouldBeYel( yelDict, rIdx, cIdx, num ):
+                            lineToPrn += '{}{:1}{}'.format(ACC.YEL_BOLD, num, ACC.OFF)
                         else:
                             lineToPrn += '{:1}'.format(num)
 

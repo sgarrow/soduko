@@ -1,4 +1,5 @@
 from itertools import combinations
+import pprint        as pp
 import utils         as ut
 import printRoutines as pr
 ############################################################################
@@ -81,6 +82,41 @@ def pruneyWings (lclCanidates, lclPrintDic):
             yWingDict2[k]['Z']      = z       # Val to del.
             yWingDict2[k]['rmvIdx'] = rmvIdx  # Where to del from.
 
+    #pp.pprint(yWingDict)
+    #print('***********')
+    #pp.pprint(yWingDict2)
+
+    colorDict   = {}
+    for k,v in yWingDict2.items():
+
+        print('\n  Processing key {}'.format(k))
+        pr.prYWingDict(v)
+
+        for ii,cord in enumerate(v['cord']):
+            if ii == v['pIdx']:
+                colorDict[len(colorDict)] = \
+                    {'YEL': {'coord': [cord[0],cord[1]], 'val': v['vals'][ii][0]}}
+                colorDict[len(colorDict)] = \
+                    {'YEL': {'coord': [cord[0],cord[1]], 'val': v['vals'][ii][1]}}
+            else:
+                colorDict[len(colorDict)] = \
+                    {'GRN': {'coord': [cord[0],cord[1]], 'val': v['vals'][ii][0]}}
+                colorDict[len(colorDict)] = \
+                    {'GRN': {'coord': [cord[0],cord[1]], 'val': v['vals'][ii][1]}}
+
+        for cord in v['rmvIdx']:
+
+            if lclCanidates[ cord[0]][cord[1] ] != 0 and \
+                v['Z'] in lclCanidates[ cord[0]][cord[1]]:
+
+                colorDict[len(colorDict)] = \
+                    {'RED': {'coord': [cord[0],cord[1]], 'val': v['Z']}}
+
+
+    if len(yWingDict2) > 0 and lclPrintDic['ywPrn'] >= 2:
+        pr.printCanidates(lclCanidates, colorDict)
+
+    removeStr   = ''
     for k,v in yWingDict2.items():
         if lclPrintDic['ywPrn'] >= 1:
             print('\n  Processing key {}'.format(k))
@@ -88,14 +124,14 @@ def pruneyWings (lclCanidates, lclPrintDic):
         for cord in v['rmvIdx']:
             if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
 
-                if lclPrintDic['ywPrn'] >= 2:
-                    pr.printCanidates(lclCanidates, {})
+                if lclPrintDic['ywPrn'] >= 1:
+                    print('     remove {} from ({},{})'.format(v['Z'], cord[0],cord[1]))
 
                 lclCanidates[cord[0]][cord[1]].remove(v['Z'])
                 numPruned += 1
 
-                if lclPrintDic['ywPrn'] >= 1:
-                    print('     remove {} from ({},{})'.format(v['Z'], cord[0],cord[1]))
+    if lclPrintDic['ywPrn'] >= 1:
+        print(removeStr)
 
     return numPruned,lclCanidates
 #############################################################################
