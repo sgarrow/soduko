@@ -2,7 +2,7 @@ from itertools import combinations
 import sys
 import time
 import copy
-#import pprint        as pp
+import pprint        as pp
 
 import printRoutines as pr
 import utils         as ut
@@ -14,7 +14,7 @@ import prune.xWing           as xw
 import prune.yWing           as yw
 import prune.pointingPair    as pnp
 
-VER = 'v2.3.0 - 22-Sep-2026'
+VER = 'v2.3.1 - 23-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -183,13 +183,17 @@ def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, lclPrintDic):
     for theK in lclfillDicOfFuncs:
 
         numFilled, lclSolution = \
-        lclfillDicOfFuncs[theK]['func'](lclSolution,lclCanidates,lclPrintDic,theK)
+        lclfillDicOfFuncs[theK]['func']( lclSolution, lclCanidates,
+                                         lclPrintDic, theK )
 
-        totalNumFilled  += numFilled
+        totalNumFilled                     += numFilled
         lclfillDicOfFuncs[theK]['calls']   += 1
         lclfillDicOfFuncs[theK]['replace'] += numFilled
-        if sum(x.count(0) for x in lclSolution)==0: break
-    print(f'  Total filled {totalNumFilled:2d}')
+
+        if sum(x.count(0) for x in lclSolution)==0:
+            break
+
+    print(f'Total filled {totalNumFilled:2d}')
     print(62*'*')
     #if 'ss' in clArgs: input('Return to continue')
 

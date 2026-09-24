@@ -43,24 +43,39 @@ def getRowColFromSqrOffset(sqr,ofst):
     col = offsetInto9X9  % 9
     return row,col
 #############################################################################
-# HUGE BUG!!!
+
 def findRowsColsInSquare(rIdx, cIdx):
+
+    # Input: Coord of a single cell.
+    # 
+    # Outputs:
+    # rowsInSquare: A list of all rows in the square that input coord is in.
+    # colsInSquare: A list of all cols in the square that input coord is in.
+    # 
+    # Examples:
+    # In        outRows     outCols
+    # 4 8 -> [ 3, 4, 5 ] [ 6, 7, 8 ]
+    # 5 0 -> [ 3, 4, 5 ] [ 0, 1, 2 ]
+    # 5 1 -> [ 3, 4, 5 ] [ 0, 1, 2 ]
+    # 5 2 -> [ 3, 4, 5 ] [ 0, 1, 2 ]
+    # 5 3 -> [ 3, 4, 5 ] [ 3, 4, 5 ]
+    # 5 4 -> [ 3, 4, 5 ] [ 3, 4, 5 ]
+    # 5 5 -> [ 3, 4, 5 ] [ 3, 4, 5 ]
+    # 5 6 -> [ 3, 4, 5 ] [ 6, 7, 8 ]
+    # 5 7 -> [ 3, 4, 5 ] [ 6, 7, 8 ]
+    # 5 8 -> [ 3, 4, 5 ] [ 6, 7, 8 ]
+    # 6 0 -> [ 6, 7, 8 ] [ 0, 1, 2 ]
 
     rOffsets = []
     cOffsets = []
 
-    if rIdx % 3 == 0:
-        rOffsets = [ 1, 2]
-    if rIdx % 3 == 1:
-        rOffsets = [-1, 1]
-    if rIdx % 3 == 2:
-        rOffsets = [-1,-2]
-    if cIdx % 3 == 0:
-        cOffsets = [ 1, 2]
-    if cIdx % 3 == 1:
-        cOffsets = [-1, 1]
-    if cIdx % 3 == 2:
-        cOffsets = [-1,-2]
+    if rIdx % 3 == 0: rOffsets = [ 1, 2]
+    if rIdx % 3 == 1: rOffsets = [-1, 1]
+    if rIdx % 3 == 2: rOffsets = [-1,-2]
+
+    if cIdx % 3 == 0: cOffsets = [ 1, 2]
+    if cIdx % 3 == 1: cOffsets = [-1, 1]
+    if cIdx % 3 == 2: cOffsets = [-1,-2]
 
     rowsInSquare = sorted([rIdx] + [ rIdx+rOffsets[0], rIdx+rOffsets[1] ] )
     colsInSquare = sorted([cIdx] + [ cIdx+cOffsets[0], cIdx+cOffsets[1] ] )
@@ -96,3 +111,9 @@ def getAllBinsHeightTwo(xCanidates):
         allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
     return allBinsHeightTwo
 #############################################################################
+
+if __name__ == '__main__':
+    for row in range(9):
+        for col in range(9):
+            rowsInSq, colsInSq = findRowsColsInSquare(row, col)
+            print(row,col, ' ->' , rowsInSq, colsInSq)
