@@ -19,17 +19,16 @@ def fillViaOneCanidate(solution, canidates, lclPrintDic, house):
                 solution[rIdx][cIdx] = canidates[rIdx][cIdx][0]
                 numFilled += 1
 
-                if lclPrintDic['flPrn'] >= 2:
-                    placedStr += '    {} at {},{}'.\
-                        format(canidates[rIdx][cIdx][0],rIdx,cIdx, end = '')
-                    if numFilled%4 == 0: placedStr += '\n'
+                placedStr += '    {} at {},{}'.\
+                    format(canidates[rIdx][cIdx][0],rIdx,cIdx, end = '')
+                if numFilled%5 == 0: placedStr += '\n'
 
-    if numFilled%4 != 0: placedStr += '\n' 
+    if numFilled%5 != 0: placedStr += '\n' 
     numZeros = sum(x.count(0) for x in solution)
 
-    print('  Cells filled RE: one canidate : {:2} ({:2} unfilled cells left)'.format(numFilled, numZeros))
+    if lclPrintDic['flPrn'] >= 1:
+        print('  Cells filled RE: one canidate : {:2} ({:2} unfilled cells left)'.format(numFilled, numZeros))
     if lclPrintDic['flPrn'] >= 2:
-        #print(placedStr,'\n')
         print(placedStr)
 
     return numFilled,solution
@@ -68,14 +67,14 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
                 lclSolution[rIdx][cIdx] = val
                 numFilled += 1
                 placedStr += '    {} at {},{}'.format(val,rIdx,cIdx, end = '')
-                if numFilled%4 == 0: placedStr += '\n'
+                if numFilled%5 == 0: placedStr += '\n'
 
-    if numFilled%4 != 0: placedStr += '\n' 
+    if numFilled%5 != 0: placedStr += '\n' 
     numZeros = sum(x.count(0) for x in lclSolution)
 
-    print('  Cells filled RE: {} histogram: {:2} ({:2} unfilled cells left)'.format(house, numFilled, numZeros))
+    if lclPrintDic['flPrn'] >= 1:
+        print('  Cells filled RE: {} histogram: {:2} ({:2} unfilled cells left)'.format(house, numFilled, numZeros))
     if lclPrintDic['flPrn'] >= 2:
-        #print(placedStr,'\n')
         print(placedStr)
 
     return numFilled,lclSolution

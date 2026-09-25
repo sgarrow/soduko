@@ -1,14 +1,14 @@
-nhOn  1  # 0-disable. 1-enable.
+nhOn  0  # 0-disable. 1-enable.
 xwOn  1  # 0-disable. 1-enable.
-ppOn  1  # 0-disable. 1-enable.
-ywOn  1  # 0-disable. 1-enable.
+ppOn  0  # 0-disable. 1-enable.
+ywOn  0  # 0-disable. 1-enable.
 
 
-nhPrn 0  # 0-quiet. 1-Dicts,removed. 2-canidates.
-xwPrn 0  # 0-quiet, 1-Dicts,removed. 2-canidates.
-ppPrn 0  # 0-quiet, 1-Dicts,removed. 2-canidates, 3-multi Dict.
-ywPrn 0  # 0-quiet, 1-Dicts,removed. 2-canidates.
-flPrn 0  # 0-quiet, 1-numFilled.     2-filled coords.
+nhPrn 0  # 0-Tot Num Pruned, 1-Num Prunned Each Pass.       2-canidates.
+xwPrn 2  # 0-quiet,          1-Num Prunned Each Pass.       2-canidates.
+ppPrn 0  # 0-quiet,          1-Dicts,removed.               2-canidates, 3-multi Dict.
+ywPrn 0  # 0-quiet,          1-Dicts,removed.               2-canidates.
+flPrn 0  # 0-Tot Num Filled, 1-Tot Num Filled by each func, 2-Filled Coords
 
 analyze  0	 # 0-disable. 1-enable.
 guess    0	 # 0-disable. 1-enable.

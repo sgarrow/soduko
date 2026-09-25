@@ -86,7 +86,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                         removeStr += '        remove {:>8} from ({},{})'.\
                             format(str(diff),myD['row'],tripIdx)
 
-                    if lclPrintDic['nhPrn'] >= 1:
+                    if lclPrintDic['nhPrn'] >= 2:
                         print('\n   Hidden {}-tuple in {} \n      {}'.\
                             format(tupSiz, house, pp.pformat(myD)))
                         print(removeStr)
@@ -124,7 +124,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                         removeStr += '        remove {:>8} from ({},{})'.\
                             format(str(diff), myD['row'], idx)
 
-                if lclPrintDic['nhPrn'] >= 1:
+                if lclPrintDic['nhPrn'] >= 2:
                     print('\n   Naked {}-tuple in {} \n      {}'.\
                         format(tupSiz, house, pp.pformat(myD)))
                     print(removeStr)

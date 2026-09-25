@@ -35,7 +35,7 @@ def pruneXwings(canidates, house, lclPrintDic):
 
     for xWing in xWingD.values():
 
-        if lclPrintDic['xwPrn'] >= 1:
+        if lclPrintDic['xwPrn'] >= 2:
             print(xWing)
 
         for row in xWing['A_rows']:
@@ -64,7 +64,7 @@ def pruneXwings(canidates, house, lclPrintDic):
                     row not in xWing['A_rows']  and \
                     (xWing['C_val'] in xCanidates[row][col]):
 
-                    if lclPrintDic['xwPrn'] >= 1:
+                    if lclPrintDic['xwPrn'] >= 2:
                         print('      remove {} from ({},{})'.format(xWing['C_val'], row, col))
 
                     xCanidates[row][col].remove(xWing['C_val'])
