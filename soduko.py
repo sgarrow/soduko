@@ -14,7 +14,7 @@ import prune.xWing           as xw
 import prune.yWing           as yw
 import prune.pointingPair    as pnp
 
-VER = 'v2.4.0 - 24-Sep-2026'
+VER = 'v2.4.1 - 25-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -68,7 +68,6 @@ def pruneNht(lclCanidates, lclPrintDic):
     #tupSizeLst     = [2]
 
     totNumPruned   = 0
-
     for hideNkd in hiddenNakedLst:
         for tupSize in tupSizeLst:
             for house in houseLst:
@@ -86,6 +85,24 @@ def pruneNht(lclCanidates, lclPrintDic):
     return totNumPruned, lclCanidates
 #############################################################################
 
+def prunePp(lclCanidates, lclPrintDic):
+
+    houseLst = [ 'row','col' ]
+    #houseLst = [ 'col']
+
+    totNumPruned = 0
+    for house in houseLst:
+        numPruned, lclCanidates = pnp.prunePointingPairs(lclCanidates,
+                                                        house, lclPrintDic)
+        totNumPruned += numPruned
+
+        if lclPrintDic['ppPrn'] >= 1:
+            print('    Pruning Pointing Pairs in {}s. '.format(house), end = '')
+            print('Prunned: {:3}'.format(numPruned))
+
+    return totNumPruned, lclCanidates
+#############################################################################
+
 def pruneXw(lclCanidates, lclPrintDic):
 
     houseLst = [ 'row','col' ]
@@ -93,7 +110,6 @@ def pruneXw(lclCanidates, lclPrintDic):
     #houseLst = [ 'row' ]
 
     totNumPruned = 0
-
     for house in houseLst:
         numPruned,lclCanidates=xw.pruneXwings(lclCanidates,house,lclPrintDic)
         totNumPruned += numPruned
@@ -106,30 +122,18 @@ def pruneXw(lclCanidates, lclPrintDic):
 #############################################################################
 
 def pruneYw(lclCanidates, lclPrintDic):
+
     totNumPruned = 0
     numPruned, lclCanidates = yw.pruneyWings(lclCanidates, lclPrintDic)
     totNumPruned += numPruned
 
-    if lclPrintDic['ywPrn'] > 0 and numPruned > 0:
-        print(f'    Prunned {numPruned:2} lclCanidates RE: Y-Wings.')
+    if lclPrintDic['xwPrn'] >= 1:
+        print('    Pruning yWings. ', end = '')
+        print('Prunned: {:3}'.format(numPruned))
 
     return totNumPruned, lclCanidates
 #############################################################################
 
-def prunePp(lclCanidates, lclPrintDic):
-    totNumPruned = 0
-    houseLst = [ 'row','col' ]
-    #houseLst = [ 'col']
-    for house in houseLst:
-        numPruned, lclCanidates = pnp.prunePointingPairs(lclCanidates,
-                                                        house, lclPrintDic)
-        totNumPruned += numPruned
-
-        if lclPrintDic['ppPrn'] > 0:
-            print(f'  Prunned {numPruned:2} canidates RE: Pointing Pairs in {house}\n')
-
-    return totNumPruned, lclCanidates
-#############################################################################
 #if 'ss' in clArgs: input('Return to continue')
 def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,lclPrintDic):
     if len(lclPruneSet) == 0:
@@ -146,10 +150,20 @@ def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,lclPrintDic):
         prunedAtLeastOne = False
         for theKey,v in lclPruneDicOfFuncs.items():
 
-            if v['func'] is pruneXw  and not 'xwOn' in lclPruneSet: continue
             if v['func'] is pruneNht and not 'nhOn' in lclPruneSet: continue
             if v['func'] is prunePp  and not 'ppOn' in lclPruneSet: continue
+            if v['func'] is pruneXw  and not 'xwOn' in lclPruneSet: continue
             if v['func'] is pruneYw  and not 'ywOn' in lclPruneSet: continue
+
+            printLevel = 0
+            if   v['func'] is pruneNht: 
+               printLevel = lclPrintDic['nhPrn']
+            elif v['func'] is prunePp:
+               printLevel = lclPrintDic['ppPrn']
+            elif v['func'] is pruneXw:
+               printLevel = lclPrintDic['xwPrn']
+            elif v['func'] is pruneYw:
+               printLevel = lclPrintDic['ywPrn']
 
             passNum            = 0
             numPrunnedThisPass = 0
@@ -158,21 +172,18 @@ def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,lclPrintDic):
             # Loop over this prune function until it returns 0 prunes done.
             while True:
 
-                if v['func'] is pruneXw  and lclPrintDic['nhPrn'] >= 1 or \
-                   v['func'] is pruneNht and lclPrintDic['xwPrn'] >= 1 or \
-                   v['func'] is prunePp  and lclPrintDic['ppPrn'] >= 1 or \
-                   v['func'] is pruneYw  and lclPrintDic['ywPrn'] >= 1:
-
+                if printLevel >= 1:
                     print('  {:9} pass {}'.\
-                        format(theKey, passNum, numPrunnedThisPass),end = '')
+                        format(theKey, passNum, numPrunnedThisPass))
 
                 numPrunnedThisPass, lclCanidates = v['func'](lclCanidates,
                                                              lclPrintDic)
-                if v['func'] is pruneNht and lclPrintDic['nhPrn'] >= 1:
+
+                if printLevel >= 1:
                     print('  Prunned {:3}'.format(numPrunnedThisPass))
 
                 numPrunnedThisLoop.append(numPrunnedThisPass)
-                cumStr+='{:9} prunned {}\n'.format(theKey,numPrunnedThisPass)
+                #cumStr+='{:9} prunned {}\n'.format(theKey,numPrunnedThisPass)
                 passNum += 1
 
                 if numPrunnedThisPass > 0:

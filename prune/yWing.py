@@ -89,8 +89,9 @@ def pruneyWings (lclCanidates, lclPrintDic):
     colorDict   = {}
     for k,v in yWingDict2.items():
 
-        print('\n  Processing key {}'.format(k))
-        pr.prYWingDict(v)
+        if lclPrintDic['ywPrn'] >= 3:
+            print('\n  Processing key {}'.format(k))
+            pr.prYWingDict(v)
 
         for ii,cord in enumerate(v['cord']):
             if ii == v['pIdx']:
@@ -118,19 +119,19 @@ def pruneyWings (lclCanidates, lclPrintDic):
 
     removeStr   = ''
     for k,v in yWingDict2.items():
-        if lclPrintDic['ywPrn'] >= 1:
+        if lclPrintDic['ywPrn'] >= 2:
             print('\n  Processing key {}'.format(k))
             pr.prYWingDict(v)
         for cord in v['rmvIdx']:
             if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
 
-                if lclPrintDic['ywPrn'] >= 1:
+                if lclPrintDic['ywPrn'] >= 3:
                     print('     remove {} from ({},{})'.format(v['Z'], cord[0],cord[1]))
 
                 lclCanidates[cord[0]][cord[1]].remove(v['Z'])
                 numPruned += 1
 
-    if lclPrintDic['ywPrn'] >= 1:
+    if lclPrintDic['ywPrn'] >= 3:
         print(removeStr)
 
     return numPruned,lclCanidates
