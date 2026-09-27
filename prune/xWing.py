@@ -6,7 +6,7 @@ import printRoutines as pr
 import utils         as ut
 #############################################################################
 
-def pruneXwings(canidates, house, lclPrintDic):
+def pruneXwings(canidates, house, cfgDic):
     cpyDic = {'row':cp.deepcopy, 'col':ut.mapColsToRows, 'sqr':ut.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
 
@@ -35,7 +35,7 @@ def pruneXwings(canidates, house, lclPrintDic):
 
     for xWing in xWingD.values():
 
-        if lclPrintDic['xwPrn'] >= 2:
+        if cfgDic['xw']['prnLevel'] >= 2:
             print(xWing)
 
         for row in xWing['A_rows']:
@@ -54,7 +54,7 @@ def pruneXwings(canidates, house, lclPrintDic):
                         {'RED': {'coord': [row, col], 'val': xWing['C_val']}}
 
     if len(xWingD) > 0:
-        if lclPrintDic['xwPrn'] >= 2:
+        if cfgDic['xw']['prnLevel'] >= 2:
             pr.printCanidates(xCanidates, colorDict)
 
     for xWing in xWingD.values():
@@ -64,7 +64,7 @@ def pruneXwings(canidates, house, lclPrintDic):
                     row not in xWing['A_rows']  and \
                     (xWing['C_val'] in xCanidates[row][col]):
 
-                    if lclPrintDic['xwPrn'] >= 2:
+                    if cfgDic['xw']['prnLevel'] >= 2:
                         print('      remove {} from ({},{})'.format(xWing['C_val'], row, col))
 
                     xCanidates[row][col].remove(xWing['C_val'])

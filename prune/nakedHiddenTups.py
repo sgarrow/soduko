@@ -27,7 +27,7 @@ def getComIdxs(rOrCOrS, tupSiz):
     return combIdxs
 ############################################################################
 
-def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintDic):
+def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, cfgDic):
     cpyDic = {'row':cp.deepcopy, 'col':ut.mapColsToRows, 'sqr':ut.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
 
@@ -86,12 +86,12 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                         removeStr += '        remove {:>8} from ({},{})'.\
                             format(str(diff),myD['row'],tripIdx)
 
-                    if lclPrintDic['nhPrn'] >= 2:
+                    if cfgDic['nh']['prnLevel'] >= 2:
                         print('\n   Hidden {}-tuple in {} \n      {}'.\
                             format(tupSiz, house, pp.pformat(myD)))
                         print(removeStr)
     
-                    if lclPrintDic['nhPrn'] >= 2 and removeStr != noRemoveStr:
+                    if cfgDic['nh']['prnLevel'] >= 2 and removeStr != noRemoveStr:
                         pr.printCanidates(xCanidates, colorCordAndValDict)
 
                     xCanidates[myD['row']][tripIdx] = temp # Now actually remove them.
@@ -124,12 +124,12 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, lclPrintD
                         removeStr += '        remove {:>8} from ({},{})'.\
                             format(str(diff), myD['row'], idx)
 
-                if lclPrintDic['nhPrn'] >= 2:
+                if cfgDic['nh']['prnLevel'] >= 2:
                     print('\n   Naked {}-tuple in {} \n      {}'.\
                         format(tupSiz, house, pp.pformat(myD)))
                     print(removeStr)
 
-                if lclPrintDic['nhPrn'] >= 2 and removeStr != noRemoveStr:
+                if cfgDic['nh']['prnLevel'] >= 2 and removeStr != noRemoveStr:
                     pr.printCanidates(xCanidates, colorCordAndValDict)
 
                 xCanidates[myD['row']] = temp2 # Now actually remove them.

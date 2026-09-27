@@ -8,13 +8,14 @@ import printRoutines as pr
 import utils         as ut
 import fillRoutines  as fr
 import ana           as an
+import cfg
 
 import prune.nakedHiddenTups as nht
 import prune.xWing           as xw
 import prune.yWing           as yw
 import prune.pointingPair    as pnp
 
-VER = 'v2.4.1 - 25-Sep-2026'
+VER = 'v2.5.0 - 26-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -54,7 +55,7 @@ def updateCanidatesList(lclSolution,lclCanidates):
     return lclCanidates
 #############################################################################
 
-def pruneNht(lclCanidates, lclPrintDic):
+def pruneNht(lclCanidates, cfgDic):
 
     hiddenNakedLst = [ 'hidden', 'naked' ]
     houseLst       = [ 'row','col','sqr' ]
@@ -73,11 +74,11 @@ def pruneNht(lclCanidates, lclPrintDic):
             for house in houseLst:
 
                 numPruned, lclCanidates = nht.pruneNakedAndHiddenTuples(
-                    lclCanidates, house, hideNkd,tupSize, lclPrintDic)
+                lclCanidates, house, hideNkd,tupSize, cfgDic)
 
                 totNumPruned += numPruned
 
-                if lclPrintDic['nhPrn'] >= 1:
+                if cfgDic['nh']['prnLevel'] >= 1:
                     print('    Pruning {:6} {}-tuples in {}s. '.\
                         format(hideNkd,tupSize,house), end = '')
                     print('Prunned: {:3}'.format(numPruned))
@@ -85,7 +86,7 @@ def pruneNht(lclCanidates, lclPrintDic):
     return totNumPruned, lclCanidates
 #############################################################################
 
-def prunePp(lclCanidates, lclPrintDic):
+def prunePp(lclCanidates, cfgDic):
 
     houseLst = [ 'row','col' ]
     #houseLst = [ 'col']
@@ -93,17 +94,17 @@ def prunePp(lclCanidates, lclPrintDic):
     totNumPruned = 0
     for house in houseLst:
         numPruned, lclCanidates = pnp.prunePointingPairs(lclCanidates,
-                                                        house, lclPrintDic)
+                                                        house, cfgDic)
         totNumPruned += numPruned
 
-        if lclPrintDic['ppPrn'] >= 1:
+        if cfgDic['pp']['prnLevel'] >= 1:
             print('    Pruning Pointing Pairs in {}s. '.format(house), end = '')
             print('Prunned: {:3}'.format(numPruned))
 
     return totNumPruned, lclCanidates
 #############################################################################
 
-def pruneXw(lclCanidates, lclPrintDic):
+def pruneXw(lclCanidates, cfgDic):
 
     houseLst = [ 'row','col' ]
 
@@ -111,23 +112,23 @@ def pruneXw(lclCanidates, lclPrintDic):
 
     totNumPruned = 0
     for house in houseLst:
-        numPruned,lclCanidates=xw.pruneXwings(lclCanidates,house,lclPrintDic)
+        numPruned,lclCanidates=xw.pruneXwings(lclCanidates,house,cfgDic)
         totNumPruned += numPruned
 
-        if lclPrintDic['xwPrn'] >= 1:
+        if cfgDic['xw']['prnLevel'] >= 1:
             print('    Pruning xWings in {}s. '.format(house), end = '')
             print('Prunned: {:3}'.format(numPruned))
 
     return totNumPruned, lclCanidates
 #############################################################################
 
-def pruneYw(lclCanidates, lclPrintDic):
+def pruneYw(lclCanidates, cfgDic):
 
     totNumPruned = 0
-    numPruned, lclCanidates = yw.pruneyWings(lclCanidates, lclPrintDic)
+    numPruned, lclCanidates = yw.pruneyWings(lclCanidates, cfgDic)
     totNumPruned += numPruned
 
-    if lclPrintDic['xwPrn'] >= 1:
+    if cfgDic['xw']['prnLevel'] >= 1:
         print('    Pruning yWings. ', end = '')
         print('Prunned: {:3}'.format(numPruned))
 
@@ -135,7 +136,7 @@ def pruneYw(lclCanidates, lclPrintDic):
 #############################################################################
 
 #if 'ss' in clArgs: input('Return to continue')
-def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,lclPrintDic):
+def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,cfgDic):
     if len(lclPruneSet) == 0:
         return lclPruneDicOfFuncs, lclCanidates
 
@@ -149,21 +150,20 @@ def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,lclPrintDic):
         # Loop over all (enabled) prune functions.
         prunedAtLeastOne = False
         for theKey,v in lclPruneDicOfFuncs.items():
-
-            if v['func'] is pruneNht and not 'nhOn' in lclPruneSet: continue
-            if v['func'] is prunePp  and not 'ppOn' in lclPruneSet: continue
-            if v['func'] is pruneXw  and not 'xwOn' in lclPruneSet: continue
-            if v['func'] is pruneYw  and not 'ywOn' in lclPruneSet: continue
+            if v['func'] is pruneNht and not 'nh' in lclPruneSet: continue
+            if v['func'] is prunePp  and not 'pp' in lclPruneSet: continue
+            if v['func'] is pruneXw  and not 'xw' in lclPruneSet: continue
+            if v['func'] is pruneYw  and not 'yw' in lclPruneSet: continue
 
             printLevel = 0
             if   v['func'] is pruneNht: 
-               printLevel = lclPrintDic['nhPrn']
+               printLevel = cfgDic['nh']['prnLevel']
             elif v['func'] is prunePp:
-               printLevel = lclPrintDic['ppPrn']
+               printLevel = cfgDic['pp']['prnLevel']
             elif v['func'] is pruneXw:
-               printLevel = lclPrintDic['xwPrn']
+               printLevel = cfgDic['xw']['prnLevel']
             elif v['func'] is pruneYw:
-               printLevel = lclPrintDic['ywPrn']
+               printLevel = cfgDic['yw']['prnLevel']
 
             passNum            = 0
             numPrunnedThisPass = 0
@@ -177,7 +177,7 @@ def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,lclPrintDic):
                         format(theKey, passNum, numPrunnedThisPass))
 
                 numPrunnedThisPass, lclCanidates = v['func'](lclCanidates,
-                                                             lclPrintDic)
+                                                             cfgDic)
 
                 if printLevel >= 1:
                     print('  Prunned {:3}'.format(numPrunnedThisPass))
@@ -204,7 +204,7 @@ def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,lclPrintDic):
     return lclPruneDicOfFuncs, lclCanidates
 #############################################################################
 
-def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, lclPrintDic):
+def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, cfgDic):
     totalNumFilled = 0
 
     print('\nFilling in solution cells')
@@ -212,7 +212,7 @@ def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, lclPrintDic):
 
         numFilled, lclSolution = \
         lclfillDicOfFuncs[theK]['func']( lclSolution, lclCanidates,
-                                         lclPrintDic, theK )
+                                         cfgDic, theK )
 
         totalNumFilled                     += numFilled
         lclfillDicOfFuncs[theK]['calls']   += 1
@@ -250,7 +250,7 @@ def checkStatus(sln):
     return cumPassed
 #############################################################################
 
-def solvePuzzle(lclPuzzleDict, lclPruneSet, lclPrintDic):
+def solvePuzzle(lclPuzzleDict, lclPruneSet, cfgDic):
     fillDicOfFuncs = {
     'one': { 'func': fr.fillViaOneCanidate, 'calls': 0, 'replace': 0 },
     'row': { 'func': fr.fillViaRCHistAnal,  'calls': 0, 'replace': 0 },
@@ -282,10 +282,10 @@ def solvePuzzle(lclPuzzleDict, lclPruneSet, lclPrintDic):
             canidates = updateCanidatesList(solution, canidates)
 
             pruneDicOfFuncs,canidates = \
-            pruneCanidates(canidates,lclPruneSet,pruneDicOfFuncs,lclPrintDic)
+            pruneCanidates(canidates,lclPruneSet,pruneDicOfFuncs,cfgDic)
 
             numberFilled, solution, fillDicOfFuncs = \
-            fillSolution(solution,canidates,fillDicOfFuncs,lclPrintDic)
+            fillSolution(solution,canidates,fillDicOfFuncs,cfgDic)
 
         numZerosAfterAllFill = sum(x.count(0) for x in solution)
         if  numZerosAfterAllFill in (numZerosBeforeAllFill,0):
@@ -453,34 +453,84 @@ if __name__ == '__main__':
     cumSumStr = ''
     ###########################################################
 
-    with open('cfgFile.txt', encoding='utf-8') as cfgFile:
-        rawOptions = cfgFile.readlines()
-    options = [ x.split() for x in rawOptions ]
+    error, rspStr, mnCfgDic = cfg.mkCfgDictPikleFile()
 
-    pruneDic = {}
-    printDic = {}
-    optDic   = {}
-    for option in options:
-        if len(option) > 1:
-            if option[0] == 'nhOn' : pruneDic['nhOn']  = int(option[1])
-            if option[0] == 'xwOn' : pruneDic['xwOn']  = int(option[1])
-            if option[0] == 'ppOn' : pruneDic['ppOn']  = int(option[1])
-            if option[0] == 'ywOn' : pruneDic['ywOn']  = int(option[1])
+    #with open('cfgFileOrig.txt', encoding='utf-8') as cfgFile:
+    #    rawOptions = cfgFile.readlines()
+    #options = [ x.split() for x in rawOptions ]
+    #
+    #pruneDic = {}
+    #printDic = {}
+    #optDic   = {}
+    #for option in options:
+    #    if len(option) > 1:
+    #        if option[0] == 'nhOn' : pruneDic['nhOn']  = int(option[1])
+    #        if option[0] == 'xwOn' : pruneDic['xwOn']  = int(option[1])
+    #        if option[0] == 'ppOn' : pruneDic['ppOn']  = int(option[1])
+    #        if option[0] == 'ywOn' : pruneDic['ywOn']  = int(option[1])
+    #
+    #        if option[0] == 'nhPrn': printDic['nhPrn'] = int(option[1])
+    #        if option[0] == 'xwPrn': printDic['xwPrn'] = int(option[1])
+    #        if option[0] == 'ppPrn': printDic['ppPrn'] = int(option[1])
+    #        if option[0] == 'ywPrn': printDic['ywPrn'] = int(option[1])
+    #        if option[0] == 'flPrn': printDic['flPrn'] = int(option[1])
+    #
+    #        if option[0] == 'analyze': optDic['analyze'] = int(option[1])
+    #        if option[0] == 'guess':   optDic['guess'  ] = int(option[1])
+    #        if option[0] == 'ss':      optDic['ss'     ] = int(option[1])
+    #
+    #
+    #pruneLst = [ k for k,v in pruneDic.items() if v == 1 ]
+    #allSets  = set()
+    #for ii in range(0,len(pruneLst)+1):
+    #    allSets = set.union(allSets,set(combinations(pruneLst, ii)))
+    #
+    #print('\npruneDic')
+    #pp.pprint(pruneDic)
+    #
+    #print('\nprintDic')
+    #pp.pprint(printDic)
+    #
+    #print('\noptDic  ')
+    #pp.pprint(optDic  )
+    #
+    #print('\npruneLst')
+    #print(pruneLst)
+    #
+    #print('\nallSets')
+    #pp.pprint(allSets)
+    #
+    #print('\n*******\n')
+    #
 
-            if option[0] == 'nhPrn': printDic['nhPrn'] = int(option[1])
-            if option[0] == 'xwPrn': printDic['xwPrn'] = int(option[1])
-            if option[0] == 'ppPrn': printDic['ppPrn'] = int(option[1])
-            if option[0] == 'ywPrn': printDic['ywPrn'] = int(option[1])
-            if option[0] == 'flPrn': printDic['flPrn'] = int(option[1])
-
-            if option[0] == 'analyze': optDic['analyze'] = int(option[1])
-            if option[0] == 'guess':   optDic['guess'  ] = int(option[1])
-            if option[0] == 'ss':      optDic['ss'     ] = int(option[1])
-
-    pruneLst = [ k for k,v in pruneDic.items() if v == 1 ]
+    pruneLst = [ k for k,v in mnCfgDic.items() \
+                 if v['isPrundFunc'] == 1 and v['enabled'] == 1 ]
     allSets  = set()
     for ii in range(0,len(pruneLst)+1):
         allSets = set.union(allSets,set(combinations(pruneLst, ii)))
+
+    pp.pprint(mnCfgDic)
+    print('\n')
+     
+    print('\npruneLst')
+    print(pruneLst)
+    
+    print('\nallSets')
+    pp.pprint(allSets)
+
+    #sys.exit()
+    ###########################################################
+
+    if mnCfgDic[ 'analyze' ][ 'enabled' ] == 1 and \
+       mnCfgDic[ 'guess'   ][ 'enabled' ] == 1:
+        print('\n  ERROR. Can\'t analyze and guesss together.\n')
+        sys.exit()
+
+    if mnCfgDic[ 'analyze' ][ 'enabled' ] == 1: 
+        pruneSets = allSets
+    else: 
+        pruneSets = [pruneLst]
+    pp.pprint(pruneSets)
     ###########################################################
 
     puzDicKeys = list(puzzlesDict.keys())
@@ -499,25 +549,17 @@ if __name__ == '__main__':
     dsrdKeys = [puzDicKeys[int(x)] for x in puzIdxs]
     ###########################################################
 
-    if optDic['analyze'] == 1 and optDic['guess'] == 1:
-        print('\n  ERROR. Can\'t analyze and guesss together.\n')
-        sys.exit()
-
-    if optDic['analyze'] == 1: pruneSets = allSets
-    else: pruneSets = [pruneLst]
-    ###########################################################
-
     startTime = time.time()
     for pNme,pIdx in zip(dsrdKeys,puzIdxs):
         print(' ### Start {} ###'.format(pNme))
         pDat = puzzlesDict[pNme]
         for pruneSet in pruneSets:
-            puzzlesDict[pNme] = solvePuzzle(pDat, pruneSet, printDic)
+            puzzlesDict[pNme] = solvePuzzle(pDat, pruneSet, mnCfgDic)
             aStr, sStr = pr.printResults(pNme, pIdx, pDat)
             cumAllStr += aStr
             cumSumStr += sStr
 
-            if not puzzlesDict[pNme]['passed'] and optDic['guess'] == 1:
+            if not puzzlesDict[pNme]['passed'] and mnCfgDic['guess']['enabled'] == 1:
                 print('{} guessing'.format(pNme))
                 #input()
                 tryCords, tryVals = \
@@ -528,7 +570,7 @@ if __name__ == '__main__':
                     for ii,k in enumerate(tryCords):
                         puzzlesDict[pNme]['puzzle'][k[0]][k[1]] = tVals[ii]
 
-                    puzzlesDict[pNme] = solvePuzzle(pDat, pruneSet, printDic)
+                    puzzlesDict[pNme] = solvePuzzle(pDat, pruneSet, mnCfgDic)
                     aStr, sStr = pr.printResults(pNme, pIdx, pDat)
                     cumAllStr += aStr
                     cumSumStr += sStr
@@ -546,7 +588,7 @@ if __name__ == '__main__':
         if puzzlesDict[k]['guesses'] > 0:
             print(' Made {:3} guesses on puzzle {}'.format(puzzlesDict[k]['guesses'],k))
 
-    if optDic['analyze'] == 1:
+    if mnCfgDic['analyze']['enabled'] == 1:
         with open('pData.txt', 'w', encoding='utf-8') as pFile:
             pFile.write(cumSumStr)
         an.analyze()

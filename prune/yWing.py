@@ -4,7 +4,7 @@ import utils         as ut
 import printRoutines as pr
 ############################################################################
 
-def pruneyWings (lclCanidates, lclPrintDic):
+def pruneyWings (lclCanidates, cfgDic):
     numPruned = 0
     coordsOfAllPairs  = [ [r,c] for r in range(9) for c in range(9) \
         if lclCanidates[r][c] != 0 and len(lclCanidates[r][c]) == 2]
@@ -89,7 +89,7 @@ def pruneyWings (lclCanidates, lclPrintDic):
     colorDict   = {}
     for k,v in yWingDict2.items():
 
-        if lclPrintDic['ywPrn'] >= 3:
+        if cfgDic['yw']['prnLevel'] >= 3:
             print('\n  Processing key {}'.format(k))
             pr.prYWingDict(v)
 
@@ -114,24 +114,24 @@ def pruneyWings (lclCanidates, lclPrintDic):
                     {'RED': {'coord': [cord[0],cord[1]], 'val': v['Z']}}
 
 
-    if len(yWingDict2) > 0 and lclPrintDic['ywPrn'] >= 2:
+    if len(yWingDict2) > 0 and cfgDic['yw']['prnLevel'] >= 2:
         pr.printCanidates(lclCanidates, colorDict)
 
     removeStr   = ''
     for k,v in yWingDict2.items():
-        if lclPrintDic['ywPrn'] >= 2:
+        if cfgDic['yw']['prnLevel'] >= 2:
             print('\n  Processing key {}'.format(k))
             pr.prYWingDict(v)
         for cord in v['rmvIdx']:
             if lclCanidates[cord[0]][cord[1]]!=0 and v['Z'] in lclCanidates[cord[0]][cord[1]]:
 
-                if lclPrintDic['ywPrn'] >= 3:
+                if cfgDic['yw']['prnLevel'] >= 3:
                     print('     remove {} from ({},{})'.format(v['Z'], cord[0],cord[1]))
 
                 lclCanidates[cord[0]][cord[1]].remove(v['Z'])
                 numPruned += 1
 
-    if lclPrintDic['ywPrn'] >= 3:
+    if cfgDic['yw']['prnLevel'] >= 3:
         print(removeStr)
 
     return numPruned,lclCanidates

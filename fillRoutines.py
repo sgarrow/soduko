@@ -2,7 +2,7 @@ import copy
 import utils as ut
 #############################################################################
 
-def fillViaOneCanidate(solution, canidates, lclPrintDic, house):
+def fillViaOneCanidate(solution, canidates, cfgDic, house):
     if house:
         pass # Unused arg warning.
 
@@ -26,15 +26,15 @@ def fillViaOneCanidate(solution, canidates, lclPrintDic, house):
     if numFilled%5 != 0: placedStr += '\n' 
     numZeros = sum(x.count(0) for x in solution)
 
-    if lclPrintDic['flPrn'] >= 1:
+    if cfgDic['fill']['prnLevel'] >= 1:
         print('  Cells filled RE: one canidate : {:2} ({:2} unfilled cells left)'.format(numFilled, numZeros))
-    if lclPrintDic['flPrn'] >= 2:
+    if cfgDic['fill']['prnLevel'] >= 2:
         print(placedStr)
 
     return numFilled,solution
 #############################################################################
 
-def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
+def fillViaRCHistAnal(lclSolution, lclCanidates, cfgDic, house):
     cpyDic={'row':copy.deepcopy,'col':ut.mapColsToRows,'sqr':ut.mapSrqsToRows}
     xCanidates = cpyDic[house](lclCanidates)
     numFilled  = 0
@@ -72,9 +72,9 @@ def fillViaRCHistAnal(lclSolution, lclCanidates, lclPrintDic, house):
     if numFilled%5 != 0: placedStr += '\n' 
     numZeros = sum(x.count(0) for x in lclSolution)
 
-    if lclPrintDic['flPrn'] >= 1:
+    if cfgDic['fill']['prnLevel'] >= 1:
         print('  Cells filled RE: {} histogram: {:2} ({:2} unfilled cells left)'.format(house, numFilled, numZeros))
-    if lclPrintDic['flPrn'] >= 2:
+    if cfgDic['fill']['prnLevel'] >= 2:
         print(placedStr)
 
     return numFilled,lclSolution

@@ -18,7 +18,7 @@ import printRoutines as pr
 #
 # process the pointing pairs in canidates.
 
-def prunePointingPairs(canidates, house, lclPrintDic):
+def prunePointingPairs(canidates, house, cfgDic):
     xCanidates = ut.mapSrqsToRows(canidates)
     numPruned  = 0
 
@@ -72,7 +72,7 @@ def prunePointingPairs(canidates, house, lclPrintDic):
     ####################################################################################
 
     # debug prints
-    if lclPrintDic['ppPrn'] >= 3:
+    if cfgDic['pp']['prnLevel'] >= 3:
         thingsPprint = { #'allBinsHeightTwo':allBinsHeightTwo,
                          'allBinsHeightTwoD':allBinsHeightTwoD,
                          'ppRowD':ppRowD,
@@ -137,9 +137,9 @@ def prunePointingPairs(canidates, house, lclPrintDic):
                     {'RED': {'coord': [rIdx, dictVal['aCol']], 'val': dictVal['cVal']}}
     ################################ 
 
-    if lclPrintDic['ppPrn'] >= 2:
+    if cfgDic['pp']['prnLevel'] >= 2:
         pr.printCanidates(canidates, colorCordAndValDict)
-    if lclPrintDic['ppPrn'] >= 2:
+    if cfgDic['pp']['prnLevel'] >= 2:
         if len(ppRowAbsCoordD):
             pp.pprint(ppRowAbsCoordD)
         if len(ppColAbsCoordD):
@@ -165,7 +165,7 @@ def prunePointingPairs(canidates, house, lclPrintDic):
                 removeStr = '       remove {} from ({},{})'.format(val['cVal'],rIdx,val['aCol'])
     ####################################################################################
 
-    if lclPrintDic['ppPrn'] >= 2:
+    if cfgDic['pp']['prnLevel'] >= 2:
         print(removeStr, end = '')
 
     return numPruned,canidates
