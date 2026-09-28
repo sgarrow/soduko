@@ -137,7 +137,7 @@ def prunePointingPairs(canidates, house, cfgDic):
                     {'RED': {'coord': [rIdx, dictVal['aCol']], 'val': dictVal['cVal']}}
     ################################ 
 
-    if cfgDic['pp']['prnLevel'] >= 2:
+    if cfgDic['pp']['prnLevel'] >= 3:
         pr.printCanidates(canidates, colorCordAndValDict)
     if cfgDic['pp']['prnLevel'] >= 2:
         if len(ppRowAbsCoordD):

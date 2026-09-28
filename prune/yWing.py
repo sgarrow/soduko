@@ -114,7 +114,7 @@ def pruneyWings (lclCanidates, cfgDic):
                     {'RED': {'coord': [cord[0],cord[1]], 'val': v['Z']}}
 
 
-    if len(yWingDict2) > 0 and cfgDic['yw']['prnLevel'] >= 2:
+    if len(yWingDict2) > 0 and cfgDic['yw']['prnLevel'] >= 3:
         pr.printCanidates(lclCanidates, colorDict)
 
     removeStr   = ''

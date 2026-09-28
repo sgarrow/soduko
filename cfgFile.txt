@@ -1,25 +1,84 @@
-# Blank lines and lines starting with # are ignored.
-# Entries for the RPi Name (Raspberry Pi) cannot containd spaces.
-#
-# 0-Tot Num Pruned, 1-Num Prunned Each Pass.       2-canidates.
-# 0-quiet,          1-Dicts,removed.               2-canidates, 3-multi #Dict.
-# 0-quiet,          1-Num Prunned Each Pass.       2-canidates.
-# 0-quiet,          1-Dicts,removed.               2-canidates, 3-keys
-#
-# flPrn 0  # 0-Tot Num Filled, 1-Tot Num Filled by each func, 2-Filled Coords
-
+# ---------------------------------------------------------------------------
+# Blank lines and lines containing a # character are ignored.
+# ---------------------------------------------------------------------------
 
 			 is a Prune    Print
 #  Key          Enable   Function      Level   Notes
 # ------------ -------- ------------- ------- -------
-   key= nh         1         1          0      None1 a
-   key= pp         1         1          0      None2 b
-   key= xw         1         1          0      None3 c
-   key= yw         1         1          0      None4 d
+   key= nh         1         1          2      None1 a
+   key= pp         1         1          2      None2 b
+   key= xw         1         1          2      None3 c
+   key= yw         1         1          2      None4 d
 				      
-   key= fill       0         0          0      None5 e
+   key= fill       0         0          1      None5 e
 				      
    key= analyze    0         0          0      None6 f
-   key= guess      1         0          0      None7 g
+   key= guess      0         0          0      None7 g
    key= ss         0         0          0      None8 h
+
+# ---------------------------------------------------------------------------
+# --------------------  NOTES  ----------------------------------------------
+# ---------------------------------------------------------------------------
+#
+#
+# Print Level Description.
+# ------------------------
+#
+# If print level is set to, say 3, then everything at levels 1, 2 and
+# 3 are printed.
+
+# Level 0.
+#
+#	A single line for each prune routine showing the number of canidates
+#	pruned is printed.  Note that when a prune routine is called it is 
+#	actually looped on until no new prunes are performed.  Each loop is
+#	refered	to as a 'pass".  The looping is done because when, for
+#	example, hidden triples are discovered and prunned that prunning may
+#	open up	new hidden tripples.
+#	
+#	A single line is printed showing the number of cells that were able
+#	to be filled in after prunning.  Note that there are 3 different fill
+#	routine algorithms and the number shown is the sum from all three
+#	routines.
+#	
+#	After the puzzle is solved (or not solved) the starting puzzle and
+#	the ending solution are displayed along with a summary of the number
+#	of calls to each fill routine.
+#	
+#	Note that in the code there is no check for the printLevel being zero.
+#	Instead, everything that is 'always' printed is just a plain old 
+#	print() statement that is not part of any 'if printLevel = n' 
+#	conditional.
+#	
+#       The complete summary from the 'analyze' option (when enabled) is 
+#	always printed.	 The printed stuff is a list of the minimum set of 
+#	prune functions that must be enabled for a given suduko puzzle to be 
+#	able to be solved.
+#	
+# Level 1.
+#	
+#	For the prune routines, canidates prunned PER PASS (see description
+#	of looping behaviour provided above) is displayed along with other
+#	information about that pass, for eaxample, as to wgether that pass
+#	was across rows	or cols.
+#	
+#	For the fill routines, the number of cells filled by each of the 3
+#	fill functions is displyed.
+#	
+# Level 2.
+#	
+#	Information about where each prune identifying characteristic
+#	(typically a dictionary) is displayed along with the coordinates and
+#	value of each canidate to be removed.
+#	
+# Level 3.
+#	
+#	A color coded matrix type display of the canidates is displayed. The
+#	identifying canidates are displaed in green whereas the	canidates
+#	that can be removed are displayed in red.  For example, for a hidden
+#	pair the hidden pair itself is displayed in red and the	canidates
+#	that can be removed (if any) are displayed in red.
+#	
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 

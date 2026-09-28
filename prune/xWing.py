@@ -54,7 +54,7 @@ def pruneXwings(canidates, house, cfgDic):
                         {'RED': {'coord': [row, col], 'val': xWing['C_val']}}
 
     if len(xWingD) > 0:
-        if cfgDic['xw']['prnLevel'] >= 2:
+        if cfgDic['xw']['prnLevel'] >= 3:
             pr.printCanidates(xCanidates, colorDict)
 
     for xWing in xWingD.values():

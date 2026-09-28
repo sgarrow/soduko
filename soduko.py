@@ -15,7 +15,7 @@ import prune.xWing           as xw
 import prune.yWing           as yw
 import prune.pointingPair    as pnp
 
-VER = 'v2.5.0 - 26-Sep-2026'
+VER = 'v2.6.0 - 27-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -61,12 +61,12 @@ def pruneNht(lclCanidates, cfgDic):
     houseLst       = [ 'row','col','sqr' ]
     tupSizeLst     = [4,3,2]
 
-    #hiddenNakedLst = [ 'hidden']
-    #hiddenNakedLst = [ 'naked']
-    #houseLst       = [ 'row','col' ]
-    #houseLst       = [ 'row' ]
-    #tupSizeLst     = [2,3]
-    #tupSizeLst     = [2]
+    hiddenNakedLst = [ 'hidden']
+    hiddenNakedLst = [ 'naked']
+    houseLst       = [ 'row','col' ]
+    houseLst       = [ 'row' ]
+    tupSizeLst     = [2,3]
+    tupSizeLst     = [2]
 
     totNumPruned   = 0
     for hideNkd in hiddenNakedLst:
@@ -455,54 +455,6 @@ if __name__ == '__main__':
 
     error, rspStr, mnCfgDic = cfg.mkCfgDictPikleFile()
 
-    #with open('cfgFileOrig.txt', encoding='utf-8') as cfgFile:
-    #    rawOptions = cfgFile.readlines()
-    #options = [ x.split() for x in rawOptions ]
-    #
-    #pruneDic = {}
-    #printDic = {}
-    #optDic   = {}
-    #for option in options:
-    #    if len(option) > 1:
-    #        if option[0] == 'nhOn' : pruneDic['nhOn']  = int(option[1])
-    #        if option[0] == 'xwOn' : pruneDic['xwOn']  = int(option[1])
-    #        if option[0] == 'ppOn' : pruneDic['ppOn']  = int(option[1])
-    #        if option[0] == 'ywOn' : pruneDic['ywOn']  = int(option[1])
-    #
-    #        if option[0] == 'nhPrn': printDic['nhPrn'] = int(option[1])
-    #        if option[0] == 'xwPrn': printDic['xwPrn'] = int(option[1])
-    #        if option[0] == 'ppPrn': printDic['ppPrn'] = int(option[1])
-    #        if option[0] == 'ywPrn': printDic['ywPrn'] = int(option[1])
-    #        if option[0] == 'flPrn': printDic['flPrn'] = int(option[1])
-    #
-    #        if option[0] == 'analyze': optDic['analyze'] = int(option[1])
-    #        if option[0] == 'guess':   optDic['guess'  ] = int(option[1])
-    #        if option[0] == 'ss':      optDic['ss'     ] = int(option[1])
-    #
-    #
-    #pruneLst = [ k for k,v in pruneDic.items() if v == 1 ]
-    #allSets  = set()
-    #for ii in range(0,len(pruneLst)+1):
-    #    allSets = set.union(allSets,set(combinations(pruneLst, ii)))
-    #
-    #print('\npruneDic')
-    #pp.pprint(pruneDic)
-    #
-    #print('\nprintDic')
-    #pp.pprint(printDic)
-    #
-    #print('\noptDic  ')
-    #pp.pprint(optDic  )
-    #
-    #print('\npruneLst')
-    #print(pruneLst)
-    #
-    #print('\nallSets')
-    #pp.pprint(allSets)
-    #
-    #print('\n*******\n')
-    #
-
     pruneLst = [ k for k,v in mnCfgDic.items() \
                  if v['isPrundFunc'] == 1 and v['enabled'] == 1 ]
     allSets  = set()
@@ -511,14 +463,10 @@ if __name__ == '__main__':
 
     pp.pprint(mnCfgDic)
     print('\n')
-     
     print('\npruneLst')
     print(pruneLst)
-    
     print('\nallSets')
     pp.pprint(allSets)
-
-    #sys.exit()
     ###########################################################
 
     if mnCfgDic[ 'analyze' ][ 'enabled' ] == 1 and \

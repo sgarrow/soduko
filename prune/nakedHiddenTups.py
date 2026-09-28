@@ -91,7 +91,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, cfgDic):
                             format(tupSiz, house, pp.pformat(myD)))
                         print(removeStr)
     
-                    if cfgDic['nh']['prnLevel'] >= 2 and removeStr != noRemoveStr:
+                    if cfgDic['nh']['prnLevel'] >= 3 and removeStr != noRemoveStr:
                         pr.printCanidates(xCanidates, colorCordAndValDict)
 
                     xCanidates[myD['row']][tripIdx] = temp # Now actually remove them.
@@ -129,7 +129,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, cfgDic):
                         format(tupSiz, house, pp.pformat(myD)))
                     print(removeStr)
 
-                if cfgDic['nh']['prnLevel'] >= 2 and removeStr != noRemoveStr:
+                if cfgDic['nh']['prnLevel'] >= 3 and removeStr != noRemoveStr:
                     pr.printCanidates(xCanidates, colorCordAndValDict)
 
                 xCanidates[myD['row']] = temp2 # Now actually remove them.
