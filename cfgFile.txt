@@ -5,12 +5,12 @@
 			 is a Prune    Print
 #  Key          Enable   Function      Level   Notes
 # ------------ -------- ------------- ------- -------
-   key= nh         1         1          2      None1 a
-   key= pp         1         1          2      None2 b
-   key= xw         1         1          2      None3 c
-   key= yw         1         1          2      None4 d
+   key= nh         1         1          0      None1 a
+   key= pp         1         1          1      None2 b
+   key= xw         1         1          0      None3 c
+   key= yw         1         1          0      None4 d
 				      
-   key= fill       0         0          1      None5 e
+   key= fill       0         0          0      None5 e
 				      
    key= analyze    0         0          0      None6 f
    key= guess      0         0          0      None7 g

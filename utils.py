@@ -103,13 +103,13 @@ def genHistogram(inLst):
     return hist
 #############################################################################
 
-def getAllBinsHeightTwo(xCanidates):
-    allBinsHeightTwo = []
+def getAllBinsHeightN(xCanidates,n):
+    allBinsHeightN = []
     for row in xCanidates:
         flatRow = flatten(row)
         histRow = genHistogram(flatRow)
-        allBinsHeightTwo.append([ x[0] for x in histRow if x[1] == 2 and x[0] != 0])
-    return allBinsHeightTwo
+        allBinsHeightN.append([ x[0] for x in histRow if x[1] == n and x[0] != 0])
+    return allBinsHeightN
 #############################################################################
 
 if __name__ == '__main__':

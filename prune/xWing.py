@@ -10,7 +10,7 @@ def pruneXwings(canidates, house, cfgDic):
     cpyDic = {'row':cp.deepcopy, 'col':ut.mapColsToRows, 'sqr':ut.mapSrqsToRows}
     xCanidates = cpyDic[house](canidates)
 
-    binsHeight2 = ut.getAllBinsHeightTwo(xCanidates)
+    binsHeight2 = ut.getAllBinsHeightN(xCanidates,2)
     numPruned   = 0
     colorDict   = {}
     xWingD      = {}

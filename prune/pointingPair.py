@@ -6,39 +6,44 @@ import printRoutines as pr
 
 # map sqrs to rows -> xCanidates
 #
-# find all nums in rows of xCanidates (sqrs of canidates) that appear exactly twice
+# find all nums in rows of xCanidates (sqrs of canidates) that appear 
+# exactly twice
 #
-# if the nums that appear exactly twice are in cols of xCanidates (sqrs of canidates)
-# 0,1,2 or 3,4,5 of 6,7,8 then they are in the same row of canidates
-# and hence are a 'row' pointing pair.
+# if the nums that appear exactly twice are in cols of xCanidates (sqrs of 
+# canidates) 0,1,2 or 3,4,5 of 6,7,8 then they are in the same row of 
+# canidates  and hence are a 'row' pointing pair.
 #
-# if the nums that appear exactly twice are in cols of xCanidates (sqrs of canidates)
-# 0,3,6 or 1,4,7 of 2,5,8 then they are in the same col of canidates
-# and hence are a 'col' pointing pair.
+# if the nums that appear exactly twice are in cols of xCanidates (sqrs of
+# canidates)  0,3,6 or 1,4,7 of 2,5,8 then they are in the same col of 
+# canidates  and hence are a 'col' pointing pair.
 #
 # process the pointing pairs in canidates.
 
-def prunePointingPairs(canidates, house, cfgDic):
+def prunePointingPairs(canidates, house, tupSize, cfgDic):
     xCanidates = ut.mapSrqsToRows(canidates)
     numPruned  = 0
 
-    # find all nums in rows of xCanidates (sqrs of canidates) that appear exactly twice
-    allBinsHeightTwo = ut.getAllBinsHeightTwo(xCanidates)
+    # find all nums in rows of xCanidates that appear exactly twice
+    allBinsHeightTwo = ut.getAllBinsHeightN(xCanidates, tupSize)
 
-    # Place above data in a dict and add to data the two offset within the square
-    # where the two nums appear. Note that pair may not be on the same row/col ...
+    # Place above data in dict & add to data the two offset within the square
+    # where the two nums appear (pair may not be on the same row/col).
     k = 0
     allBinsHeightTwoD = {}
     for idx,lstOfVals in enumerate(allBinsHeightTwo):
         for val in lstOfVals:
-            cols = [ c for c,lst in enumerate(xCanidates[idx]) if lst != 0 and val in lst ]
-            allBinsHeightTwoD[k] = { 'A_sqr':idx, 'B_idxs':cols, 'C_val':val,  }
-            k += 1
-    ####################################################################################
 
-    # Create a new dict (either row or col, but not both) that are a subset of above dict.
-    # New dict only contains the elements of the old dict that have the pair (in the square)
-    # on the same row/col.  One of the two dicts will be empty.
+            cols = [ c for c,lst in enumerate(xCanidates[idx]) \
+                     if lst != 0 and val in lst ]
+
+            allBinsHeightTwoD[k] = { 'A_sqr':idx, 'B_idxs':cols, 'C_val':val}
+            k += 1
+    #########################################################################
+
+    # Create a new dict (either row or col, but not both) that are a subset
+    # of above dict. New dict only contains the elements of the old dict that
+    # have the pair (in the square) on the same row/col.  
+    # One of the two dicts will be empty.
     k = 0
     ppRowRqmt = [[0,1,2],[3,4,5],[6,7,8]]
     ppColRqmt = [[0,3,6],[1,4,7],[2,5,8]]
@@ -53,10 +58,10 @@ def prunePointingPairs(canidates, house, cfgDic):
                 if house == 'row': ppRowD[k] = val
                 if house == 'col': ppColD[k] = val
                 k += 1
-    ####################################################################################
+    #########################################################################
 
-    # create a 3rd dict (either row or col, but not both) that is the same as the above
-    # dict except sqr,offset mapped to abs r,c.
+    # create a 3rd dict (either row or col, but not both) that is the same as
+    # the above dict except sqr,offset mapped to abs r,c.
     k = 0
     ppRowAbsCoordD = {}
     ppColAbsCoordD = {}
@@ -64,12 +69,22 @@ def prunePointingPairs(canidates, house, cfgDic):
     if house == 'row': ppD = ppRowD
     if house == 'col': ppD = ppColD
     for val in ppD.values():
-        row0,col0= ut.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][0])
-        row1,col1= ut.getRowColFromSqrOffset(val['A_sqr'],val['B_idxs'][1])
-        if house == 'row': ppRowAbsCoordD[k]= {'aRow':row0,'bCols':[col0,col1],'cVal':val['C_val']}
-        if house == 'col': ppColAbsCoordD[k]= {'aCol':col0,'bRows':[row0,row1],'cVal':val['C_val']}
+
+        rows = []
+        cols = []
+        for ii in val['B_idxs']:
+            arow,acol= ut.getRowColFromSqrOffset(val['A_sqr'],ii)
+            rows.append(arow)
+            cols.append(acol)
+
+        if house == 'row':
+            ppRowAbsCoordD[k] = \
+                { 'aRow': rows[0], 'bCols': cols, 'cVal': val['C_val'] }
+        if house == 'col': 
+            ppColAbsCoordD[k] = \
+                { 'aCol': cols[0], 'bRows': rows, 'cVal': val['C_val'] }
         k += 1
-    ####################################################################################
+    #########################################################################
 
     # debug prints
     if cfgDic['pp']['prnLevel'] >= 3:
@@ -88,11 +103,10 @@ def prunePointingPairs(canidates, house, cfgDic):
                 myStr = pp.pformat(v[ii])
                 print('    ',myStr)
             print()
+    #########################################################################
 
-    ####################################################################################
-
-    # perform associated removals Note only one of the 2 dicts looped through below will
-    # have anything in it.
+    # perform associated removals Note only one of the 2 dicts looped through
+    # below will have anything in it.
 
     #print('ppRowAbsCoordD')
     #pp.pprint(ppRowAbsCoordD)
@@ -107,7 +121,7 @@ def prunePointingPairs(canidates, house, cfgDic):
         for col in dictVal['bCols']:
 
             colorCordAndValDict[len(colorCordAndValDict)] = \
-                {'GRN': {'coord': [dictVal['aRow'], col], 'val': dictVal['cVal']}}
+            {'GRN': {'coord': [dictVal['aRow'], col], 'val': dictVal['cVal']}}
 
         cols = [ x for x in range(9) if x not in dictVal['bCols'] ]
         for cIdx in cols:
@@ -116,7 +130,7 @@ def prunePointingPairs(canidates, house, cfgDic):
                dictVal['cVal'] in canidates[dictVal['aRow']][cIdx]:
 
                 colorCordAndValDict[len(colorCordAndValDict)] = \
-                    {'RED': {'coord': [dictVal['aRow'], cIdx], 'val': dictVal['cVal']}}
+                {'RED': {'coord': [dictVal['aRow'], cIdx], 'val': dictVal['cVal']}}
     ################################ 
 
     # Color code col pointing pairs. 
@@ -125,7 +139,7 @@ def prunePointingPairs(canidates, house, cfgDic):
         for row in dictVal['bRows']:
 
             colorCordAndValDict[len(colorCordAndValDict)] = \
-                {'GRN': {'coord': [row, dictVal['aCol']], 'val': dictVal['cVal']}}
+            {'GRN': {'coord': [row, dictVal['aCol']], 'val': dictVal['cVal']}}
 
         rows = [ x for x in range(9) if x not in dictVal['bRows'] ]
         for rIdx in rows:
@@ -134,7 +148,7 @@ def prunePointingPairs(canidates, house, cfgDic):
             dictVal['cVal'] in canidates[rIdx][dictVal['aCol']]:
 
                 colorCordAndValDict[len(colorCordAndValDict)] = \
-                    {'RED': {'coord': [rIdx, dictVal['aCol']], 'val': dictVal['cVal']}}
+                {'RED': {'coord': [rIdx, dictVal['aCol']], 'val': dictVal['cVal']}}
     ################################ 
 
     if cfgDic['pp']['prnLevel'] >= 3:
@@ -145,6 +159,7 @@ def prunePointingPairs(canidates, house, cfgDic):
         if len(ppColAbsCoordD):
             pp.pprint(ppColAbsCoordD)
     ################################ 
+
 
     removeStr = ''
     for val in ppRowAbsCoordD.values():
@@ -163,10 +178,10 @@ def prunePointingPairs(canidates, house, cfgDic):
                 canidates[rIdx][val['aCol']].remove(val['cVal'])
                 numPruned += 1
                 removeStr = '       remove {} from ({},{})'.format(val['cVal'],rIdx,val['aCol'])
-    ####################################################################################
+    #########################################################################
 
     if cfgDic['pp']['prnLevel'] >= 2:
         print(removeStr, end = '')
 
     return numPruned,canidates
-############################################################################
+#############################################################################

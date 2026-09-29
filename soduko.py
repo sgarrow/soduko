@@ -15,7 +15,7 @@ import prune.xWing           as xw
 import prune.yWing           as yw
 import prune.pointingPair    as pnp
 
-VER = 'v2.6.0 - 27-Sep-2026'
+VER = 'v2.6.1 - 28-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -61,12 +61,12 @@ def pruneNht(lclCanidates, cfgDic):
     houseLst       = [ 'row','col','sqr' ]
     tupSizeLst     = [4,3,2]
 
-    hiddenNakedLst = [ 'hidden']
-    hiddenNakedLst = [ 'naked']
-    houseLst       = [ 'row','col' ]
-    houseLst       = [ 'row' ]
-    tupSizeLst     = [2,3]
-    tupSizeLst     = [2]
+    #hiddenNakedLst = [ 'hidden']
+    #hiddenNakedLst = [ 'naked']
+    #houseLst       = [ 'row','col' ]
+    #houseLst       = [ 'row' ]
+    #tupSizeLst     = [2,3]
+    #tupSizeLst     = [2]
 
     totNumPruned   = 0
     for hideNkd in hiddenNakedLst:
@@ -88,18 +88,25 @@ def pruneNht(lclCanidates, cfgDic):
 
 def prunePp(lclCanidates, cfgDic):
 
-    houseLst = [ 'row','col' ]
-    #houseLst = [ 'col']
+    houseLst   = [ 'row','col' ]
+    tupSizeLst = [2,3]
+
+    #houseLst = [ 'row']
+    #tupSizeLst = [2]
 
     totNumPruned = 0
-    for house in houseLst:
-        numPruned, lclCanidates = pnp.prunePointingPairs(lclCanidates,
-                                                        house, cfgDic)
-        totNumPruned += numPruned
+    for tupSize in tupSizeLst:
+        for house in houseLst:
 
-        if cfgDic['pp']['prnLevel'] >= 1:
-            print('    Pruning Pointing Pairs in {}s. '.format(house), end = '')
-            print('Prunned: {:3}'.format(numPruned))
+            numPruned, lclCanidates = \
+            pnp.prunePointingPairs( lclCanidates, house, tupSize, cfgDic)
+
+            totNumPruned += numPruned
+    
+            if cfgDic['pp']['prnLevel'] >= 1:
+                print('    Pruning Pointing {}s in {}s. '.\
+                    format(tupSize,house), end = '')
+                print('Prunned: {:3}'.format(numPruned))
 
     return totNumPruned, lclCanidates
 #############################################################################
