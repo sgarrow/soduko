@@ -5,10 +5,11 @@
 			 is a Prune    Print
 #  Key          Enable   Function      Level   Notes
 # ------------ -------- ------------- ------- -------
-   key= nh         1         1          0      None1 a
-   key= pp         1         1          1      None2 b
-   key= xw         1         1          0      None3 c
-   key= yw         1         1          0      None4 d
+   key= nh         1         1          0      Naked and Hidden pairs, triples, quads in all 3 houses.
+   key= pp         1         1          0      Pointing Pairs in rows and cols.
+   key= xw         1         1          0      X-Wings.
+   key= yw         1         1          0      Y-Wings.
+   key= cc         1         1          0      Claimig Canidates.
 				      
    key= fill       0         0          0      None5 e
 				      

@@ -14,8 +14,9 @@ import prune.nakedHiddenTups as nht
 import prune.xWing           as xw
 import prune.yWing           as yw
 import prune.pointingPair    as pnp
+import prune.claimCanidates  as cc
 
-VER = 'v2.6.1 - 28-Sep-2026'
+VER = 'v2.6.2 - 29-Sep-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -142,6 +143,19 @@ def pruneYw(lclCanidates, cfgDic):
     return totNumPruned, lclCanidates
 #############################################################################
 
+def pruneCc(lclCanidates, cfgDic):
+
+    totNumPruned = 0
+    numPruned, lclCanidates = cc.pruneClaimCanidates(lclCanidates, cfgDic)
+    totNumPruned += numPruned
+
+    if cfgDic['cc']['prnLevel'] >= 1:
+        print('    Pruning Claiming Canidates. ', end = '')
+        print('Prunned: {:3}'.format(numPruned))
+
+    return totNumPruned, lclCanidates
+#############################################################################
+
 #if 'ss' in clArgs: input('Return to continue')
 def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,cfgDic):
     if len(lclPruneSet) == 0:
@@ -161,6 +175,7 @@ def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,cfgDic):
             if v['func'] is prunePp  and not 'pp' in lclPruneSet: continue
             if v['func'] is pruneXw  and not 'xw' in lclPruneSet: continue
             if v['func'] is pruneYw  and not 'yw' in lclPruneSet: continue
+            if v['func'] is pruneCc  and not 'cc' in lclPruneSet: continue
 
             printLevel = 0
             if   v['func'] is pruneNht: 
@@ -171,6 +186,8 @@ def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,cfgDic):
                printLevel = cfgDic['xw']['prnLevel']
             elif v['func'] is pruneYw:
                printLevel = cfgDic['yw']['prnLevel']
+            elif v['func'] is pruneCc:
+               printLevel = cfgDic['cc']['prnLevel']
 
             passNum            = 0
             numPrunnedThisPass = 0
@@ -268,7 +285,8 @@ def solvePuzzle(lclPuzzleDict, lclPruneSet, cfgDic):
     'prune_XW' : { 'func': pruneXw,  'numPrunned': []},
     'prune_NHT': { 'func': pruneNht, 'numPrunned': []},
     'prune_PP' : { 'func': prunePp,  'numPrunned': []},
-    'prune_YW' : { 'func': pruneYw,  'numPrunned': []}}
+    'prune_YW' : { 'func': pruneYw,  'numPrunned': []},
+    'prune_CC' : { 'func': pruneCc,  'numPrunned': []}}
     ###########################################################
 
     solution = [x[:] for x in lclPuzzleDict['puzzle'] ]
@@ -468,12 +486,12 @@ if __name__ == '__main__':
     for ii in range(0,len(pruneLst)+1):
         allSets = set.union(allSets,set(combinations(pruneLst, ii)))
 
-    pp.pprint(mnCfgDic)
-    print('\n')
-    print('\npruneLst')
-    print(pruneLst)
-    print('\nallSets')
-    pp.pprint(allSets)
+    #pp.pprint(mnCfgDic)
+    #print('\n')
+    #print('\npruneLst')
+    #print(pruneLst)
+    #print('\nallSets')
+    #pp.pprint(allSets)
     ###########################################################
 
     if mnCfgDic[ 'analyze' ][ 'enabled' ] == 1 and \
