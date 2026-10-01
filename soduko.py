@@ -16,7 +16,7 @@ import prune.yWing           as yw
 import prune.pointingPair    as pnp
 import prune.claimCanidates  as cc
 
-VER = 'v2.6.3 - 30-Sep-2026'
+VER = 'v2.6.4 - 01-Oct-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
