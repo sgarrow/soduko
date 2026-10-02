@@ -16,7 +16,7 @@ import prune.yWing           as yw
 import prune.pointingPair    as pnp
 import prune.claimCanidates  as cc
 
-VER = 'v2.6.4 - 01-Oct-2026'
+VER = 'v2.6.5 - 01-Oct-2026'
 #############################################################################
 
 def updateCanidatesList(lclSolution,lclCanidates):
@@ -145,13 +145,18 @@ def pruneYw(lclCanidates, cfgDic):
 
 def pruneCc(lclCanidates, cfgDic):
 
-    totNumPruned = 0
-    numPruned, lclCanidates = cc.pruneClaimCanidates(lclCanidates, cfgDic)
-    totNumPruned += numPruned
+    houseLst = [ 'row','col' ]
+    #houseLst = [ 'row' ]
 
-    if cfgDic['cc']['prnLevel'] >= 1:
-        print('    Pruning Claiming Canidates. ', end = '')
-        print('Prunned: {:3}'.format(numPruned))
+    totNumPruned = 0
+
+    for house in houseLst:
+        numPruned, lclCanidates = cc.pruneClaimCanidates(lclCanidates, house, cfgDic)
+        totNumPruned += numPruned
+
+        if cfgDic['cc']['prnLevel'] >= 1:
+            print('    Pruning Claiming Canidates in {}s. '.format(house), end = '')
+            print('Prunned: {:3}'.format(numPruned))
 
     return totNumPruned, lclCanidates
 #############################################################################

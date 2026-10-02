@@ -1,4 +1,5 @@
 import sys
+import copy          as cp
 import pprint        as pp
 
 import utils         as ut
@@ -20,7 +21,9 @@ def sameSqr(inLst):
         return False
 #############################################################################
 
-def pruneClaimCanidates(canidates, cfgDic):
+def pruneClaimCanidates(canidates, house, cfgDic):
+    cpyDic = {'row':cp.deepcopy, 'col':ut.mapColsToRows, 'sqr':ut.mapSrqsToRows}
+    xCanidates = cpyDic[house](canidates)
 
     numPruned = 0
     colorCordAndValDict = {} # Initialze color Dict.
@@ -31,17 +34,17 @@ def pruneClaimCanidates(canidates, cfgDic):
     # build a color coded canidates DB.  Printing the canidates at this point
     # shows all the canidates that appear 2 or three times in a given row but
     # those 2 or 3 canidates might not be in the same square.
-    allBinsHeight2 = ut.getAllBinsHeightN(canidates, 2)
-    allBinsHeight3 = ut.getAllBinsHeightN(canidates, 3)
+    allBinsHeight2 = ut.getAllBinsHeightN(xCanidates, 2)
+    allBinsHeight3 = ut.getAllBinsHeightN(xCanidates, 3)
     allBinsHeight23 = [ a+b for a,b in zip(allBinsHeight2,allBinsHeight3)]
 
     coordValsOfAllCansWithBinsHeight23 = {}
     ii = 0
     for row in range(9):
         for col in range(9):
-            if canidates[row][col] != 0:
+            if xCanidates[row][col] != 0:
                 for canVal in allBinsHeight23[row]:
-                    if canVal in canidates[row][col]:
+                    if canVal in xCanidates[row][col]:
 
                         coordValsOfAllCansWithBinsHeight23[ii] = \
                             {'coord': [row,col], 'val': canVal}
@@ -94,19 +97,19 @@ def pruneClaimCanidates(canidates, cfgDic):
         for currRow in currSqrRows:
             for currCol in currSqrCols:
                 #print('currRow,currCol,valToRemove',currRow,currCol,valToRemove)
-                #print(canidates[currRow][currCol])
+                #print(xCanidates[currRow][currCol])
                 #print()
-                if canidates[currRow][currCol] != 0 and \
-                   valToRemove in canidates[currRow][currCol]:
+                if xCanidates[currRow][currCol] != 0 and \
+                   valToRemove in xCanidates[currRow][currCol]:
 
                     colorCordAndValDict[len(colorCordAndValDict)] = \
                     {'RED': {'coord': [currRow, currCol], 'val': valToRemove}}
     #print()
-    #pr.printCanidates(canidates, colorCordAndValDict)
+    #pr.printCanidates(xCanidates, colorCordAndValDict)
     ###################################################
 
     if cfgDic['cc']['prnLevel'] >= 3:
-        pr.printCanidates(canidates, colorCordAndValDict)
+        pr.printCanidates(xCanidates, colorCordAndValDict)
 
     # Now remove (prune) all the things that are colored red.
     removeStr = ''
@@ -116,15 +119,18 @@ def pruneClaimCanidates(canidates, cfgDic):
         valToRemove = k[1]
         for currRow in currSqrRows:
             for currCol in currSqrCols:
-                if canidates[currRow][currCol] != 0 and \
-                   valToRemove in canidates[currRow][currCol]:
-                    canidates[currRow][currCol].remove(valToRemove)
+                if xCanidates[currRow][currCol] != 0 and \
+                   valToRemove in xCanidates[currRow][currCol]:
+                    xCanidates[currRow][currCol].remove(valToRemove)
                     numPruned += 1
                     removeStr += '       remove {} from ({},{})\n'.\
                         format(currRow,currCol,valToRemove)
 
     if cfgDic['cc']['prnLevel'] >= 2:
         print(removeStr, end = '')
+
+    cpyDic = {'row':cp.deepcopy, 'col':ut.mapRowsToCols, 'sqr':ut.mapRowsToSqrs}
+    canidates = cpyDic[house](xCanidates)
 
     return numPruned,canidates
 #############################################################################
