@@ -86,6 +86,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, cfgDic):
                         removeStr += '        remove {:>8} from ({},{})'.\
                             format(str(diff),myD['row'],tripIdx)
 
+
                     if cfgDic['nh']['prnLevel'] >= 2:
                         print('\n   Hidden {}-tuple in {} \n      {}'.\
                             format(tupSiz, house, pp.pformat(myD)))
@@ -124,6 +125,7 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, cfgDic):
                         removeStr += '        remove {:>8} from ({},{})'.\
                             format(str(diff), myD['row'], idx)
 
+
                 if cfgDic['nh']['prnLevel'] >= 2:
                     print('\n   Naked {}-tuple in {} \n      {}'.\
                         format(tupSiz, house, pp.pformat(myD)))
@@ -138,5 +140,5 @@ def pruneNakedAndHiddenTuples(canidates, house, hiddenOrNaked, tupSiz, cfgDic):
     cpyDic = {'row':cp.deepcopy, 'col':ut.mapRowsToCols, 'sqr':ut.mapRowsToSqrs}
     canidates = cpyDic[house](xCanidates)
 
-    return(numPruned, canidates)
+    return numPruned, canidates
 ############################################################################

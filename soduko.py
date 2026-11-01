@@ -16,11 +16,29 @@ import prune.yWing           as yw
 import prune.pointingPair    as pnp
 import prune.claimCanidates  as cc
 
-VER = 'v2.6.5 - 01-Oct-2026'
+VER = 'v2.6.6 - 31-Oct-2026'
 #############################################################################
 
-def updateCanidatesList(lclSolution,lclCanidates):
-    print('\nUpdating Canidates list')
+def modifyCanidates(c1,c2):
+    print('Modifying Canidates list')
+    # c1 is prunned canidate list
+    # c2 is level 0 canidate list
+    c3 = [[ [] for ii in range(9)] for jj in range(9)]
+    for row in range(9):
+        for col in range(9):
+
+            if c2[row][col] == 0:
+                c3[row][col] = 0
+            else:
+                tempSet = set(c1[row][col])
+                intersectionSet = tempSet.intersection( c2[row][col] )
+                c3[row][col] = list(intersectionSet)
+    return c3
+#############################################################################
+
+def updateCanidatesList(lclSolution):
+    print('Creating Canidates list')
+    lclCanidates = [[ [] for ii in range(9)] for jj in range(9)]
     cols=[[row[i] for row in lclSolution] for i in range(len(lclSolution[0]))]
 
     for rIdx,row in enumerate(lclSolution):
@@ -136,7 +154,7 @@ def pruneYw(lclCanidates, cfgDic):
     numPruned, lclCanidates = yw.pruneyWings(lclCanidates, cfgDic)
     totNumPruned += numPruned
 
-    if cfgDic['xw']['prnLevel'] >= 1:
+    if cfgDic['yw']['prnLevel'] >= 1:
         print('    Pruning yWings. ', end = '')
         print('Prunned: {:3}'.format(numPruned))
 
@@ -162,12 +180,21 @@ def pruneCc(lclCanidates, cfgDic):
 #############################################################################
 
 #if 'ss' in clArgs: input('Return to continue')
-def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,cfgDic):
-    if len(lclPruneSet) == 0:
-        return lclPruneDicOfFuncs, lclCanidates
+def pruneCanidates(lclCanidates,lclPruneSet,cfgDic):
 
-    print('\nPruning canidates list')
+    if len(lclPruneSet) == 0:
+        return lclCanidates
+
+    print('Pruning canidates list')
     cumStr = ''
+
+    pruneDicOfFuncs = {  # Keys = cfgDic keys!
+        'nh' : { 'func': pruneNht, 'numPrunned': []},
+        'PP' : { 'func': prunePp,  'numPrunned': []},
+        'xw' : { 'func': pruneXw,  'numPrunned': []},
+        'yw' : { 'func': pruneYw,  'numPrunned': []},
+        'cc' : { 'func': pruneCc,  'numPrunned': []}
+    }
 
     # Keep prunning until all prune functions return 0 prunes done.
     prunedAtLeastOne = True
@@ -175,7 +202,7 @@ def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,cfgDic):
 
         # Loop over all (enabled) prune functions.
         prunedAtLeastOne = False
-        for theKey,v in lclPruneDicOfFuncs.items():
+        for theKey,v in pruneDicOfFuncs.items():
             if v['func'] is pruneNht and not 'nh' in lclPruneSet: continue
             if v['func'] is prunePp  and not 'pp' in lclPruneSet: continue
             if v['func'] is pruneXw  and not 'xw' in lclPruneSet: continue
@@ -205,8 +232,8 @@ def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,cfgDic):
                     print('  {:9} pass {}'.\
                         format(theKey, passNum, numPrunnedThisPass))
 
-                numPrunnedThisPass, lclCanidates = v['func'](lclCanidates,
-                                                             cfgDic)
+                # Perform prunning.
+                numPrunnedThisPass, lclCanidates = v['func'](lclCanidates,cfgDic)
 
                 if printLevel >= 1:
                     print('  Prunned {:3}'.format(numPrunnedThisPass))
@@ -230,7 +257,7 @@ def pruneCanidates(lclCanidates,lclPruneSet,lclPruneDicOfFuncs,cfgDic):
     #print(cumStr)
     print(62*'*')
 
-    return lclPruneDicOfFuncs, lclCanidates
+    return lclCanidates
 #############################################################################
 
 def fillSolution(lclSolution, lclCanidates, lclfillDicOfFuncs, cfgDic):
@@ -286,33 +313,34 @@ def solvePuzzle(lclPuzzleDict, lclPruneSet, cfgDic):
     'col': { 'func': fr.fillViaRCHistAnal,  'calls': 0, 'replace': 0 },
     'sqr': { 'func': fr.fillViaRCHistAnal,  'calls': 0, 'replace': 0 }}
 
-    pruneDicOfFuncs = {
-    'prune_XW' : { 'func': pruneXw,  'numPrunned': []},
-    'prune_NHT': { 'func': pruneNht, 'numPrunned': []},
-    'prune_PP' : { 'func': prunePp,  'numPrunned': []},
-    'prune_YW' : { 'func': pruneYw,  'numPrunned': []},
-    'prune_CC' : { 'func': pruneCc,  'numPrunned': []}}
     ###########################################################
 
     solution = [x[:] for x in lclPuzzleDict['puzzle'] ]
     lclPuzzleDict['start0s'] = sum(x.count(0) for x in solution)
     fillDicOfFuncs = initfillDicOfFuncsCntrs(fillDicOfFuncs)
 
-    while True:
+    while True:                # Loop on all puzzles specified.
         numZerosBeforeAllFill = sum(x.count(0) for x in solution)
         if sum(x.count(0) for x in solution)==0:
             break
-        numberFilled = 1
-        while numberFilled:
+        numberFilled   = 1
+        prevCansPruned = None
+        while numberFilled:    # Loop on this puzzle till solved ... or not.
 
             if sum(x.count(0) for x in solution)==0:
                 break
 
-            canidates = [[ [] for ii in range(9)] for jj in range(9)]
-            canidates = updateCanidatesList(solution, canidates)
+            cansBaseLine = updateCanidatesList( solution )
 
-            pruneDicOfFuncs,canidates = \
-            pruneCanidates(canidates,lclPruneSet,pruneDicOfFuncs,cfgDic)
+            if prevCansPruned is not None:
+                currCansPruned = modifyCanidates( prevCansPruned, cansBaseLine )
+            else:
+                currCansPruned = copy.deepcopy( cansBaseLine )
+
+            currCansPruned = pruneCanidates( currCansPruned, lclPruneSet, cfgDic )
+            #prevCansPruned = copy.deepcopy(  currCansPruned )
+
+            canidates      = copy.deepcopy(  currCansPruned )
 
             numberFilled, solution, fillDicOfFuncs = \
             fillSolution(solution,canidates,fillDicOfFuncs,cfgDic)

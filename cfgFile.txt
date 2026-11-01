@@ -2,20 +2,20 @@
 # Blank lines and lines containing a # character are ignored.
 # ---------------------------------------------------------------------------
 
-			 is a Prune    Print
-#  Key          Enable   Function      Level   Notes
-# ------------ -------- ------------- ------- -------
-   key= nh         1         1          0      Naked and Hidden pairs, triples, quads in all 3 houses.
-   key= pp         1         1          0      Pointing Pairs in rows and cols.
-   key= xw         1         1          0      X-Wings.
-   key= yw         1         1          0      Y-Wings.
-   key= cc         1         1          0      Claimig Canidates.
-				      
-   key= fill       0         0          0      None5 e
-				      
-   key= analyze    0         0          0      None6 f
-   key= guess      0         0          0      None7 g
-   key= ss         0         0          0      None8 h
+			 is a Prune   Print
+#  Key          Enable   Function     Level   Notes
+# ------------ -------- ------------ ------- -------
+   key= nh         1         1         0      Naked/Hidden pairs,triples,quads in all houses.
+   key= pp         1         1         0      Pointing Pairs in rows and cols.
+   key= xw         1         1         0      X-Wings.
+   key= yw         1         1         0      Y-Wings.
+   key= cc         1         1         0      Claimig Canidates.
+
+   key= fill       0         0         1      None5 e
+
+   key= analyze    0         0         0      None6 f
+   key= guess      0         0         0      None7 g
+   key= ss         0         0         0      None8 h
 
 # ---------------------------------------------------------------------------
 # --------------------  NOTES  ----------------------------------------------

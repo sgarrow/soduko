@@ -149,6 +149,9 @@ puzUsr_22 = [ '000 320 100',
               '030 070 000',
               '005 008 001' ]
 
+# Cells filled RE: one canidate :  9 (44 unfilled cells left)
+#     3 at 0,6    8 at 1,8    6 at 2,7    5 at 2,8    6 at 4,6
+#     1 at 7,6    3 at 7,7    6 at 8,1    9 at 8,3
 puzImp_28 = [ '601 080 092',
               '900 000 410',
               '080 009 700',
